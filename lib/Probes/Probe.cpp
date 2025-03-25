@@ -4,7 +4,6 @@
 
 #include "Probe.h"
 
-
 extern int HSPI_CS;
 
 Probe::Probe(int number, int reference_kohm, int reference_celcius, int reference_beta) {

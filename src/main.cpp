@@ -6,14 +6,14 @@
 
 #include "Api.h"
 #include "Network.h"
-#include "Probe.h"
+
 #include "Power.h"
 #include "Preferences.h"
 #include "Util.h"
 #include "Website.h"
 
 #include "config.h"
-
+#include "Global.h"
 
 // Core task handlers
 TaskHandle_t taskCore0;
@@ -28,6 +28,16 @@ WiFiClient localClient;
 
 // Api/web server
 WebServer webserver(80);
+
+// Probes
+Probe probe_1 = Probe(1);
+Probe probe_2 = Probe(2);
+Probe probe_3 = Probe(3);
+Probe probe_4 = Probe(4);
+Probe probe_5 = Probe(5);
+Probe probe_6 = Probe(6);
+Probe probe_7 = Probe(7);
+Probe probe_8 = Probe(8);
 
 void core_0_code(void* pvParameters);
 void core_1_code(void* pvParameters);
@@ -48,7 +58,6 @@ void setup() {
     SPISettings spiSettings(HSPI_SPD, MSBFIRST, SPI_MODE0);
     SPI.begin(HSPI_SCLK, HSPI_MISO, -1, HSPI_CS);
     SPI.beginTransaction(spiSettings);
-
     
     pinMode(HSPI_CS, OUTPUT); // Prep CS line for data reading
 
@@ -135,14 +144,6 @@ void core_1_code(void* pvParameters) {
 
     digitalWrite(PWR_PRB, LOW);
 
-    Probe probe_1 = Probe(1);
-    Probe probe_2 = Probe(2);
-    Probe probe_3 = Probe(3);
-    Probe probe_4 = Probe(4);
-    Probe probe_5 = Probe(5);
-    Probe probe_6 = Probe(6);
-    Probe probe_7 = Probe(7);
-    Probe probe_8 = Probe(8);
     /*SPI.begin(ADS_SCLK, ADS_MISO, -1, ADS_CS);
     SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1));*/
 

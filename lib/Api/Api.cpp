@@ -1,10 +1,9 @@
-#include <Api.h>
-
 #include <ArduinoJson.h>
 #include <string>
-#include <WebServer.h>
 
-extern WebServer webserver;
+#include "Api.h"
+#include "Global.h"
+
 
 JsonDocument jsondoc;
 char buffer[500];
@@ -24,35 +23,35 @@ void get_api_temperatures()
     
     JsonObject probeData_0 = probeData.add<JsonObject>();
     probeData_0["probeId"] = 1;
-    probeData_0["temperature"] = 105.6;
+    probeData_0["temperature"] = probe_1.calculate_temperature();
     
     JsonObject probeData_1 = probeData.add<JsonObject>();
     probeData_1["probeId"] = 2;
-    probeData_1["temperature"] = 24.6;
+    probeData_1["temperature"] = probe_2.calculate_temperature();
     
     JsonObject probeData_2 = probeData.add<JsonObject>();
     probeData_2["probeId"] = 3;
-    probeData_2["temperature"] = 32;
+    probeData_2["temperature"] = probe_3.calculate_temperature();
     
     JsonObject probeData_3 = probeData.add<JsonObject>();
     probeData_3["probeId"] = 4;
-    probeData_3["temperature"] = 55.9;
+    probeData_3["temperature"] = probe_4.calculate_temperature();
     
     JsonObject probeData_4 = probeData.add<JsonObject>();
     probeData_4["probeId"] = 5;
-    probeData_4["temperature"] = 23.1;
+    probeData_4["temperature"] = probe_5.calculate_temperature();
     
     JsonObject probeData_5 = probeData.add<JsonObject>();
     probeData_5["probeId"] = 6;
-    probeData_5["temperature"] = 24.6;
+    probeData_5["temperature"] = probe_6.calculate_temperature();
     
     JsonObject probeData_6 = probeData.add<JsonObject>();
     probeData_6["probeId"] = 7;
-    probeData_6["temperature"] = nullptr;
+    probeData_6["temperature"] = probe_7.calculate_temperature();
     
     JsonObject probeData_7 = probeData.add<JsonObject>();
     probeData_7["probeId"] = 8;
-    probeData_7["temperature"] = nullptr;
+    probeData_7["temperature"] = probe_8.calculate_temperature();
 
     jsondoc.shrinkToFit();
 
