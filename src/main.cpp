@@ -4,15 +4,15 @@
 #include <WebServer.h>
 #include <Wire.h>
 
-#include <Api.h>
-#include <Network.h>
-#include <Probes.h>
-#include <Power.h>
-#include <Preferences.h>
-#include <Util.h>
-#include <Website.h>
+#include "Api.h"
+#include "Network.h"
+#include "Probe.h"
+#include "Power.h"
+#include "Preferences.h"
+#include "Util.h"
+#include "Website.h"
 
-#include "constants.h"
+#include "config.h"
 
 #define GRILLEYE grilleye
 
@@ -30,15 +30,22 @@ WiFiClient localClient;
 // Api/web server
 WebServer webserver(80);
 
-void core_0_code(void *pvParameters);
-void core_1_code(void *pvParameters);
+void core_0_code(void* pvParameters);
+void core_1_code(void* pvParameters);
 
 
-void setup()
-{
-    
+void setup() {
+
     Serial.begin(115200); // Initialize serial communication at 115200 bits per second
     delay(5000);          // Give serial monitor time to catch up
+
+    // ***********************************
+    // * SPI for probes
+    // ***********************************
+
+    SPISettings spiSettings(HSPI_SPD, MSBFIRST, SPI_MODE0);
+    SPI.begin(HSPI_SCLK, HSPI_MISO, -1, HSPI_CS);
+    SPI.beginTransaction(spiSettings);
 
     // ***********************************
     // * NTP
@@ -63,13 +70,13 @@ void setup()
     // WiFi.mode(WIFI_AP_STA); // AP + STATION
     // WiFi.setSleep(false);   // Disable wifi powersaving for a more
     //                         // stable connection and lower latency
-    
+
     // std::string local_ssid =  generate_hostname(local_ap_ssid_prefix);
     // start_local_ap(local_ssid, local_ap_password);
     // delay(1000);
-    
+
     // connect_to_wifi(wifi_ssid, wifi_password);
-    
+
     // ***********************************
     // * Api + Web
     // ***********************************
@@ -81,30 +88,23 @@ void setup()
     // webserver.onNotFound(not_found);
     // webserver.begin();
 
-    // https://docs.espressif.com/projects/esp-idf/en/v4.3/esp32/api-reference/system/freertos.html
     xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
-    if (GRILLEYE == true)
-    {
-        xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
-    }
+    xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
 }
 
-void core_0_code(void *pvParameters)
-{
+void core_0_code(void* pvParameters) {
     Serial.print("Launching tasks for Core: ");
     Serial.println(xPortGetCoreID());
 
     //* WIFI processes always run on core 0 so we do the same with the webserver/api
 
     //* Loop
-    for (;;)
-    {
+    for (;;) {
         webserver.handleClient();
     }
 }
 
-void core_1_code(void *pvParameters)
-{
+void core_1_code(void* pvParameters) {
 
     Serial.print("Launching tasks for Core: ");
     Serial.println(xPortGetCoreID());
@@ -113,8 +113,8 @@ void core_1_code(void *pvParameters)
     // * Probes
     // ***********************************
 
-    pinMode(ADS_CS, OUTPUT);
-    digitalWrite(ADS_CS, HIGH);
+    pinMode(HSPI_CS, OUTPUT);
+    digitalWrite(HSPI_CS, HIGH);
 
     // power button
     pinMode(BTN_PWR, INPUT);
@@ -130,39 +130,39 @@ void core_1_code(void *pvParameters)
 
     digitalWrite(PWR_PRB, LOW);
 
-    probes.init();
-    probes.selectProbe(8);
+    Probe probe_1 = Probe(1);
+    Probe probe_2 = Probe(2);
+    Probe probe_3 = Probe(3);
+    Probe probe_4 = Probe(4);
+    Probe probe_5 = Probe(5);
+    Probe probe_6 = Probe(6);
+    Probe probe_7 = Probe(7);
+    Probe probe_8 = Probe(8);
     /*SPI.begin(ADS_SCLK, ADS_MISO, -1, ADS_CS);
     SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1));*/
 
     //* Loop
-    for (;;)
-    {
-        uint16_t rawValue = probes.spiReadProbe();
+    for (;;) {
+        Serial.print("1: ");
+        Serial.print(probe_1.calculate_temperature());
+        Serial.print(" -- 2: ");
+        Serial.print(probe_2.calculate_temperature());
+        Serial.print(" -- 3: ");
+        Serial.print(probe_3.calculate_temperature());
+        Serial.print(" -- 4: ");
+        Serial.print(probe_4.calculate_temperature());
+        Serial.print(" -- 5: ");
+        Serial.print(probe_5.calculate_temperature());
+        Serial.print(" -- 6: ");
+        Serial.print(probe_6.calculate_temperature());
+        Serial.print(" -- 7: ");
+        Serial.print(probe_7.calculate_temperature());
+        Serial.print(" -- 8: ");
+        Serial.print(probe_8.calculate_temperature());
 
-        // uint8_t lowByte = rawValue & 0xFF;
-        // uint8_t highByte = (rawValue >> 8) & 0xFF;
-        // Serial.print("High Byte: ");
-        // Serial.print(highByte, BIN);
-        // Serial.print(", Low Byte: ");
-        // Serial.print(lowByte, BIN);
-        std::string printval = "";
-
-        printval = byte_with_leading_0(rawValue, 4);
-        Serial.print(" --- ");
-        Serial.print(printval.c_str());
-        Serial.print(" ");
-        Serial.print(rawValue);
-        Serial.print(" --- ");
-        Serial.print(probes.adc_value_to_voltage(rawValue), 5);
-        Serial.print(" V --- ");
-        Serial.print(probes.calculate_temperature(rawValue), 1);
-        Serial.println(" C");
+        Serial.println(" ");
         delay(400);
     }
 }
 
-void loop()
-{
-    // Does nothing
-}
+void loop() { }
