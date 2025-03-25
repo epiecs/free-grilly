@@ -1,3 +1,11 @@
+grill name generation enzovoort in grill settings duwen
+
+wifi connected variable switchen naargelang status. 
+battery percentage enzo ook via globals inlezen
+
+preferences lezen en schrijven
+
+
 api settings -> fix
 set wifi hostname
 multicast dns setup
