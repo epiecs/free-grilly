@@ -98,7 +98,7 @@ float Probe::calculate_temperature() {
     }
 
     // Calculate the voltage using linear scaling
-    float voltage = (static_cast<float>(adc_value) / 65534) * ADC_REFERENCE_VOLTAGE;
+    float voltage = (static_cast<float>(adc_value) / 65534.0) * ADC_REFERENCE_VOLTAGE;
 
     float ref_kelvin = 1 / (reference_celcius + 273.15);
     float ref_beta = 1 / static_cast<float>(reference_beta);
