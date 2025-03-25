@@ -14,7 +14,6 @@
 
 #include "config.h"
 
-#define GRILLEYE grilleye
 
 // Core task handlers
 TaskHandle_t taskCore0;
@@ -33,9 +32,12 @@ WebServer webserver(80);
 void core_0_code(void* pvParameters);
 void core_1_code(void* pvParameters);
 
-
 void setup() {
 
+    // ***********************************
+    // * Serial
+    // ***********************************
+    
     Serial.begin(115200); // Initialize serial communication at 115200 bits per second
     delay(5000);          // Give serial monitor time to catch up
 
@@ -46,6 +48,9 @@ void setup() {
     SPISettings spiSettings(HSPI_SPD, MSBFIRST, SPI_MODE0);
     SPI.begin(HSPI_SCLK, HSPI_MISO, -1, HSPI_CS);
     SPI.beginTransaction(spiSettings);
+
+    
+    pinMode(HSPI_CS, OUTPUT); // Prep CS line for data reading
 
     // ***********************************
     // * NTP
@@ -62,31 +67,31 @@ void setup() {
     // ***********************************
 
     // Event handlers
-    // WiFi.onEvent(wifi_connected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
-    // WiFi.onEvent(wifi_ip_acquired, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
-    // WiFi.onEvent(wifi_disconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+    WiFi.onEvent(wifi_connected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+    WiFi.onEvent(wifi_ip_acquired, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+    WiFi.onEvent(wifi_disconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
-    // WiFi.disconnect();      // Remove stale settings
-    // WiFi.mode(WIFI_AP_STA); // AP + STATION
-    // WiFi.setSleep(false);   // Disable wifi powersaving for a more
-    //                         // stable connection and lower latency
+    WiFi.disconnect();      // Remove stale settings
+    WiFi.mode(WIFI_AP_STA); // AP + STATION
+    WiFi.setSleep(false);   // Disable wifi powersaving for a more
+                            // stable connection and lower latency
 
-    // std::string local_ssid =  generate_hostname(local_ap_ssid_prefix);
-    // start_local_ap(local_ssid, local_ap_password);
-    // delay(1000);
+    std::string local_ssid =  generate_hostname(local_ap_ssid_prefix);
+    start_local_ap(local_ssid, local_ap_password);
+    delay(1000);
 
-    // connect_to_wifi(wifi_ssid, wifi_password);
+    connect_to_wifi(wifi_ssid, wifi_password);
 
     // ***********************************
     // * Api + Web
     // ***********************************
 
-    // setup_api_routes();
-    // setup_web_routes();
+    setup_api_routes();
+    setup_web_routes();
 
-    // webserver.enableCORS();
-    // webserver.onNotFound(not_found);
-    // webserver.begin();
+    webserver.enableCORS();
+    webserver.onNotFound(not_found);
+    webserver.begin();
 
     xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
     xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
@@ -96,7 +101,8 @@ void core_0_code(void* pvParameters) {
     Serial.print("Launching tasks for Core: ");
     Serial.println(xPortGetCoreID());
 
-    //* WIFI processes always run on core 0 so we do the same with the webserver/api
+    //* WIFI processes always run on core 0 so we do the same with the 
+    //* webserver/api
 
     //* Loop
     for (;;) {
@@ -113,7 +119,6 @@ void core_1_code(void* pvParameters) {
     // * Probes
     // ***********************************
 
-    pinMode(HSPI_CS, OUTPUT);
     digitalWrite(HSPI_CS, HIGH);
 
     // power button
@@ -161,7 +166,7 @@ void core_1_code(void* pvParameters) {
         Serial.print(probe_8.calculate_temperature());
 
         Serial.println(" ");
-        delay(400);
+        delay(1000);
     }
 }
 

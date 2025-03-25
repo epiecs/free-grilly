@@ -1,9 +1,9 @@
-#include <Probe.h>
-
 #include <Arduino.h>
 #include <SPI.h>
-
 #include <math.h>
+
+#include "Probe.h"
+
 
 extern int HSPI_CS;
 
@@ -78,9 +78,7 @@ void Probe::select_probe(int probe_number) {
 }
 
 float Probe::read_adc_voltage() {
-    // Assuming the ADC value ranges from 0 to 65534
-    // and the voltage range is 0V to 2.97V
-
+    
     uint16_t adc_value = Probe::read_adc_value();
 
     if (adc_value > ADC_PROBE_DISCONNECTED_VALUE) {
