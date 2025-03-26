@@ -15,20 +15,10 @@
 #include "config.h"
 #include "Global.h"
 
-// to global variable 
-unsigned long probe_start_millis;  //some global variables available anywhere in the program
-unsigned long core1_current_millis;
-const unsigned long probe_period_millis = 1000;  //the value is a number of milliseconds
-
-
 // Grill
 std::string grill_name              = "Free-Grilly";
 std::string grill_uuid              = "12abc3de-4567-89f0-a123-456b789012c3";
 std::string grill_firmware_version  = "25.03.01";
-
-// Battery
-int battery_percent                 = 0;
-bool battery_charging               = false;
 
 // Battery
 int battery_percent                 = 0;
@@ -49,6 +39,12 @@ Probe probe_5 = Probe(5);
 Probe probe_6 = Probe(6);
 Probe probe_7 = Probe(7);
 Probe probe_8 = Probe(8);
+
+// timers 
+unsigned long millis_core1_current;
+unsigned long millis_probe_start;    
+unsigned long millis_button_start;            
+const unsigned long millis_probe_period = 1000;     // Probe read interval
 
 // Core task handlers
 TaskHandle_t taskCore0;
@@ -134,6 +130,8 @@ void core_0_code(void* pvParameters) {
     }
 }
 
+bool is_button_pressed = false;
+
 void core_1_code(void* pvParameters) {
 
     Serial.print("Launching tasks for Core: ");
@@ -164,8 +162,8 @@ void core_1_code(void* pvParameters) {
 
     //* Loop
     for (;;) {
-        core1_current_millis = millis();  
-        if (core1_current_millis - probe_start_millis >= probe_period_millis) {
+        millis_core1_current = millis();  
+        if (millis_core1_current - millis_probe_start >= millis_probe_period) {
             Serial.print("1: ");
             Serial.print(probe_1.calculate_temperature());
             Serial.print(" -- 2: ");
@@ -184,9 +182,30 @@ void core_1_code(void* pvParameters) {
             Serial.print(probe_8.calculate_temperature());
     
             Serial.println(" ");
-            delay(1000);
-            probe_start_millis = core1_current_millis; 
+            millis_probe_start = millis_core1_current; 
         } 
+
+        if(digitalRead(BTN_PWR) == LOW && not is_button_pressed) {
+            is_button_pressed = true;
+            millis_button_start = millis_core1_current;
+        }
+        else if (digitalRead(BTN_PWR) == HIGH && is_button_pressed)
+        {
+            is_button_pressed = false;
+
+            if(millis_core1_current - millis_button_start < 1000) {
+                Serial.println("Button pressed for less than 1 second");
+            }
+            else if (millis_core1_current - millis_button_start < 10000) {
+                Serial.println("Button pressed for less than 10 seconds - Shutting down");
+            }
+            else if (millis_core1_current - millis_button_start > 10000) {
+                Serial.println("Button pressed for more than 10 seconds");
+            }
+            
+        }
+        
+        
     }
 }
 
