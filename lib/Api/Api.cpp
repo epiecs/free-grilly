@@ -4,7 +4,6 @@
 #include "Api.h"
 #include "Global.h"
 
-
 JsonDocument jsondoc;
 char buffer[500];
 
@@ -12,12 +11,12 @@ void get_api_temperatures()
 {
     jsondoc.clear();
 
-    jsondoc["name"] = "OpenGrill";
-    jsondoc["unique_id"] = "3982a976-c04b-4283-97b8-4fa5d8a9536e";
-    jsondoc["firmware_version"] = "0.0.1";
-    jsondoc["battery"] = 95;
-    jsondoc["battery_charging"] = true;
-    jsondoc["connected"] = true;
+    jsondoc["name"]             = grill_name;
+    jsondoc["unique_id"]        = grill_uuid;
+    jsondoc["firmware_version"] = grill_firmware_version;
+    jsondoc["battery"]          = battery_percent;
+    jsondoc["battery_charging"] = battery_charging;
+    jsondoc["connected"]        = wifi_connected;
     
     JsonArray probeData = jsondoc["probes"].to<JsonArray>();
     

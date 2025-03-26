@@ -62,19 +62,19 @@ bool connect_to_wifi(std::string ssid, std::string password, bool static_ip, IPA
     return true;
 }
 
-void wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
+void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     Serial.println("Connected to wifi");
     print_wifi_connection();
 }
 
-void wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
+void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     Serial.println("Received IP");
     print_wifi_connection();
 }
 
-void wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
+void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     Serial.println("Wifi disconnected");
 

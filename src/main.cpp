@@ -20,16 +20,22 @@ unsigned long probe_start_millis;  //some global variables available anywhere in
 unsigned long core1_current_millis;
 const unsigned long probe_period_millis = 1000;  //the value is a number of milliseconds
 
-// Core task handlers
-TaskHandle_t taskCore0;
-TaskHandle_t taskCore1;
 
-// SPIClass ads8865_spi(HSPI);
-int16_t read_val;
-int8_t dummy;
+// Grill
+std::string grill_name              = "Free-Grilly";
+std::string grill_uuid              = "12abc3de-4567-89f0-a123-456b789012c3";
+std::string grill_firmware_version  = "25.03.01";
 
-// For tcp connections
-WiFiClient localClient;
+// Battery
+int battery_percent                 = 0;
+bool battery_charging               = false;
+
+// Battery
+int battery_percent                 = 0;
+bool battery_charging               = false;
+
+// Wifi
+bool wifi_connected                 = false;
 
 // Api/web server
 WebServer webserver(80);
@@ -43,6 +49,10 @@ Probe probe_5 = Probe(5);
 Probe probe_6 = Probe(6);
 Probe probe_7 = Probe(7);
 Probe probe_8 = Probe(8);
+
+// Core task handlers
+TaskHandle_t taskCore0;
+TaskHandle_t taskCore1;
 
 void core_0_code(void* pvParameters);
 void core_1_code(void* pvParameters);
@@ -81,9 +91,9 @@ void setup() {
     // ***********************************
 
     // Event handlers
-    WiFi.onEvent(wifi_connected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
-    WiFi.onEvent(wifi_ip_acquired, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
-    WiFi.onEvent(wifi_disconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+    WiFi.onEvent(event_wifi_connected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+    WiFi.onEvent(event_wifi_ip_acquired, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+    WiFi.onEvent(event_wifi_disconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     WiFi.disconnect();      // Remove stale settings
     WiFi.mode(WIFI_AP_STA); // AP + STATION
