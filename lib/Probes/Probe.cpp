@@ -85,7 +85,7 @@ float Probe::read_adc_voltage() {
     }
 
     // Calculate the voltage using linear scaling
-    double voltage = (static_cast<double>(adc_value) / 65534.0) * ADC_REFERENCE_VOLTAGE;
+    float voltage = (static_cast<float>(adc_value) / 65534.0) * ADC_REFERENCE_VOLTAGE;
     return voltage;
 }
 
