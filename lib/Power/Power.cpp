@@ -154,13 +154,21 @@ bool pwr::setPowerRail(pwr_state type, int GPIO){
 	switch (type)
 	{
 	case ENABLE:
-		digitalWrite(GPIO, HIGH);
+		digitalWrite(GPIO, LOW);
 		break;
 	case DISABLE:
-		digitalWrite(GPIO, LOW);
+		digitalWrite(GPIO, HIGH);
 		break;
 	}
 	return false;
+}
+
+bool pwr::shutdown(void){
+	esp_sleep_enable_ext0_wakeup(GPIO_NUM_35,0);
+	setPowerRail(DISABLE,PWR_PROBES);
+	setPowerRail(DISABLE,PWR_IC);
+	esp_deep_sleep_start();
+	return true;
 }
 
 bat battery;

@@ -144,11 +144,7 @@ public:
 	// ----------------------------------------- //
 	//          POWER DELIVERY FUNCTIONS         //
 	// ----------------------------------------- //
-	/**
-		initializes the GPIO pins to output.
-		@return true if GPIO pins are set correctly
-	*/
-	bool init(void);
+
 	/**
 		Enable or disable the power to the given power rail
 		@param pwr_state enum specifying the enable or disable of the power rail
@@ -156,6 +152,15 @@ public:
 		@return true on success
 	*/
 	bool setPowerRail(pwr_state type = DISABLE, int GPIO = PWR_SCREEN_LED);
+
+	bool shutdown(void);
+
+private:
+	/**
+		initializes the GPIO pins to output.
+		@return true if GPIO pins are set correctly
+	*/
+	bool init(void);
 };
 
 extern bat battery;

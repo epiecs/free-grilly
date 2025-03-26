@@ -198,6 +198,7 @@ void core_1_code(void* pvParameters) {
             }
             else if (millis_core1_current - millis_button_start < 10000) {
                 Serial.println("Button pressed for less than 10 seconds - Shutting down");
+                power.shutdown();
             }
             else if (millis_core1_current - millis_button_start > 10000) {
                 Serial.println("Button pressed for more than 10 seconds");
