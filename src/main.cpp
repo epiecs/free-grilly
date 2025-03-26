@@ -113,6 +113,12 @@ void setup() {
     webserver.onNotFound(not_found);
     webserver.begin();
 
+    // ***********************************
+    // * Power
+    // ***********************************
+
+    power.startup();
+
     xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
     xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
 }
@@ -145,17 +151,11 @@ void core_1_code(void* pvParameters) {
 
     // power button
     pinMode(BTN_PWR, INPUT);
-    pinMode(PWR_PRB, OUTPUT); // 3.3v line probes!! VT1 VT2
-
-    pinMode(13, OUTPUT); // 3.3v line ICs?
-    digitalWrite(13, LOW);
 
     pinMode(4, OUTPUT); // SCREEN LED!! VT5
     digitalWrite(4, LOW);
 
     pinMode(32, OUTPUT); // BUZZZZZER!! VT5
-
-    digitalWrite(PWR_PRB, LOW);
 
     /*SPI.begin(ADS_SCLK, ADS_MISO, -1, ADS_CS);
     SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1));*/

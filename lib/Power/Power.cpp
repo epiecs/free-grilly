@@ -171,5 +171,12 @@ bool pwr::shutdown(void){
 	return true;
 }
 
+bool pwr::startup(void){
+	init();
+	setPowerRail(ENABLE,PWR_IC);
+	setPowerRail(ENABLE,PWR_PROBES);
+	return true;
+}
+
 bat battery;
 pwr power;

@@ -154,6 +154,7 @@ public:
 	bool setPowerRail(pwr_state type = DISABLE, int GPIO = PWR_SCREEN_LED);
 
 	bool shutdown(void);
+	bool startup(void);
 
 private:
 	/**
