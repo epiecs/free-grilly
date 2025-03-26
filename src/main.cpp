@@ -15,6 +15,11 @@
 #include "config.h"
 #include "Global.h"
 
+// to global variable 
+unsigned long probe_start_millis;  //some global variables available anywhere in the program
+unsigned long core1_current_millis;
+const unsigned long probe_period_millis = 1000;  //the value is a number of milliseconds
+
 // Core task handlers
 TaskHandle_t taskCore0;
 TaskHandle_t taskCore1;
@@ -149,25 +154,29 @@ void core_1_code(void* pvParameters) {
 
     //* Loop
     for (;;) {
-        Serial.print("1: ");
-        Serial.print(probe_1.calculate_temperature());
-        Serial.print(" -- 2: ");
-        Serial.print(probe_2.calculate_temperature());
-        Serial.print(" -- 3: ");
-        Serial.print(probe_3.calculate_temperature());
-        Serial.print(" -- 4: ");
-        Serial.print(probe_4.calculate_temperature());
-        Serial.print(" -- 5: ");
-        Serial.print(probe_5.calculate_temperature());
-        Serial.print(" -- 6: ");
-        Serial.print(probe_6.calculate_temperature());
-        Serial.print(" -- 7: ");
-        Serial.print(probe_7.calculate_temperature());
-        Serial.print(" -- 8: ");
-        Serial.print(probe_8.calculate_temperature());
-
-        Serial.println(" ");
-        delay(1000);
+        core1_current_millis = millis();  
+        if (core1_current_millis - probe_start_millis >= probe_period_millis) {
+            Serial.print("1: ");
+            Serial.print(probe_1.calculate_temperature());
+            Serial.print(" -- 2: ");
+            Serial.print(probe_2.calculate_temperature());
+            Serial.print(" -- 3: ");
+            Serial.print(probe_3.calculate_temperature());
+            Serial.print(" -- 4: ");
+            Serial.print(probe_4.calculate_temperature());
+            Serial.print(" -- 5: ");
+            Serial.print(probe_5.calculate_temperature());
+            Serial.print(" -- 6: ");
+            Serial.print(probe_6.calculate_temperature());
+            Serial.print(" -- 7: ");
+            Serial.print(probe_7.calculate_temperature());
+            Serial.print(" -- 8: ");
+            Serial.print(probe_8.calculate_temperature());
+    
+            Serial.println(" ");
+            delay(1000);
+            probe_start_millis = core1_current_millis; 
+        } 
     }
 }
 
