@@ -1,0 +1,113 @@
+openapi: '3.0.4'
+info:
+  title: Free-Grilly
+  version: '25.3.27'
+  description: The local Free-Grilly api
+
+externalDocs:
+  url: https://github.com/epiecs/free-grilly
+  description: Git repository
+
+servers:
+  - url: http://{free-grilly-ip}/api
+    variables:
+      free-grilly-ip:
+        default: 192.168.200.10
+        description: Your Free-Grilly ip address
+
+tags:
+  - name: grill
+    description: Grill overview with current status and temperatures
+  - name: settings
+    description: Management of settings
+
+components:
+  schemas:
+    Grill:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Free-Grilly
+          description: The chosen grill name
+        unique_id:
+          type: string
+          format: uuid
+          example: 12abc3de-4567-89f0-a123-456b789012c3
+          description: The unique id in UUIDv4 format
+        firmware_version:
+          type: string
+          format: yy.mm.dd
+          example: 25.3.1
+          description: The current firmware version in CalVer
+        battery:
+          type: integer
+          example: 95
+          description: The current - estimated - battery %
+        battery_charging:
+          type: boolean
+          example: true
+          description: If the battery is charging
+        wifi_connected:
+          type: boolean
+          example: true
+          description: If the grill is connected to a wifi network
+        wifi_ssid:
+          type: string
+          example: my-home-wifi
+          description: The name of the wifi network that the grill is connected to
+        wifi_signal:
+          type: integer
+          format: -dbm
+          example: -61
+          description: The wifi signal expressed in dbm. The lower the better
+        probes:
+          type: array
+          minItems: 8
+          maxItems: 8
+          items:
+            type: object
+            properties:
+              probe_id:
+                type: integer
+                description: The number of the prober
+              temperature:
+                type: number
+                nullable: true
+                format: float
+                description: The temperature in Celcius
+            example:
+              - probe_id: 1
+                temperature: 23.71832
+              - probe_id: 2
+                temperature: null
+              - probe_id: 3
+                temperature: 110.12578
+              - probe_id: 4
+                temperature: 250.12578
+              - probe_id: 5
+                temperature: null
+              - probe_id: 6
+                temperature: null
+              - probe_id: 7
+                temperature: null
+              - probe_id: 8
+                temperature: null
+
+paths:
+  /temperatures:
+    get:
+      tags:
+        - grill
+      summary: Current grill info and probes
+      description: >
+        Get the current needed basic grill information + all the probes and 
+        their temperatures
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Grill"
+                
