@@ -1,7 +1,7 @@
 grill name generation enzovoort in grill settings duwen
 
 wifi connected variable switchen naargelang status. 
-battery percentage enzo ook via globals inlezen
+battery percentage enzo ook via globals inlezen -- DONE --
 
 preferences lezen en schrijven
 

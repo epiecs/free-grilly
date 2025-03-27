@@ -8,7 +8,7 @@
 #define BAT_I2C                            0x55   // I2C address
 #define BAT_DEVICE_ID	                   0x0421 // Default device ID
 #define BAT_FLAGS   	                   0x06   // Flags
-#define BAT_FLAG_CHARGE  	               (1<<8) // Charge flag bit definition
+#define BAT_FLAG_CHARGE  	               (1<<0) // Charge flag bit definition
 #define BAT_TIMEOUT         		       200    // Timeout that can be used after writing
 
 #define BAT_CONTROL_DEVICE_TYPE		       0x01   // Control code for initialization with the IC
@@ -56,6 +56,13 @@ public:
 	*	@return true if communication was successful
 	*/
 	bool init(void);
+	/**
+	*	@brief Set battery statistics in global variables
+	*	@return true if global variable is set 
+	*/
+	bool read_battery(void);
+
+private:
 
 	// ***********************************
 	// * Battery characteristics
@@ -93,8 +100,6 @@ public:
 	*	@return true if battery is charging
 	*/
 	bool chargeFlag(void);
-
-private:
 
 	// ***********************************
 	// * I2C Init functions

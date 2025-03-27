@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Power.h>
 #include <Wire.h>
+#include "Global.h"
 
 // Initializes class variables
 bat::bat() : _deviceAddress(BAT_I2C) {}
@@ -64,7 +65,7 @@ uint16_t bat::soc(soc_measure type) {
 	return soc;
 }
 
-float bat::temp(temp_unit type){
+float bat::temp(temp_unit type) {
 	uint16_t temp = 0;
     temp = readWord(BAT_TEMP);
 	switch (type)
@@ -79,17 +80,22 @@ float bat::temp(temp_unit type){
 	return false;
 }
 
-bool bat::chargeFlag(void)
-{
+bool bat::chargeFlag(void) {
 	uint16_t flagState = flags();
-	return flagState & BAT_FLAG_CHARGE;
+	bool is_charging = flagState & BAT_FLAG_CHARGE;
+	return !is_charging;
+}
+
+bool bat::read_battery(void) {
+	battery_percent  = soc(FILTERED);
+	battery_charging = chargeFlag();
+	return true;
 }
 
 
 // ----------------------------------------------------------------------------------------------- //
 
-uint16_t bat::flags(void)
-{
+uint16_t bat::flags(void) {
 	return readWord(BAT_FLAGS);
 }
 
@@ -150,7 +156,7 @@ bool pwr::init(void) {
 	return true; 
 }
 
-bool pwr::setPowerRail(pwr_state type, int GPIO){
+bool pwr::setPowerRail(pwr_state type, int GPIO) {
 	switch (type)
 	{
 	case ENABLE:
@@ -163,7 +169,7 @@ bool pwr::setPowerRail(pwr_state type, int GPIO){
 	return false;
 }
 
-bool pwr::shutdown(void){
+bool pwr::shutdown(void) {
 	esp_sleep_enable_ext0_wakeup(GPIO_NUM_35,0);
 	setPowerRail(DISABLE,PWR_PROBES);
 	setPowerRail(DISABLE,PWR_IC);
@@ -171,7 +177,7 @@ bool pwr::shutdown(void){
 	return true;
 }
 
-bool pwr::startup(void){
+bool pwr::startup(void) {
 	init();
 	setPowerRail(ENABLE,PWR_IC);
 	setPowerRail(ENABLE,PWR_PROBES);

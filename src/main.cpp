@@ -43,8 +43,10 @@ Probe probe_8 = Probe(8);
 // timers 
 unsigned long millis_core1_current;
 unsigned long millis_probe_start;    
-unsigned long millis_button_start;            
+unsigned long millis_button_start;        
+unsigned long millis_battery_start;     
 const unsigned long millis_probe_period = 1000;     // Probe read interval
+const unsigned long millis_battery_period = 10000;   // Battery read interval
 
 // Core task handlers
 TaskHandle_t taskCore0;
@@ -117,6 +119,7 @@ void setup() {
     // * Power
     // ***********************************
 
+    battery.init();
     power.startup();
 
     xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
@@ -162,6 +165,7 @@ void core_1_code(void* pvParameters) {
 
     //* Loop
     for (;;) {
+        //* Probe code
         millis_core1_current = millis();  
         if (millis_core1_current - millis_probe_start >= millis_probe_period) {
             Serial.print("1: ");
@@ -185,6 +189,7 @@ void core_1_code(void* pvParameters) {
             millis_probe_start = millis_core1_current; 
         } 
 
+        //* Button code 
         if(digitalRead(BTN_PWR) == LOW && not is_button_pressed) {
             is_button_pressed = true;
             millis_button_start = millis_core1_current;
@@ -206,7 +211,16 @@ void core_1_code(void* pvParameters) {
             
         }
         
-        
+        //* Battery code 
+        if (millis_core1_current - millis_battery_start >= millis_battery_period) {
+            battery.read_battery();
+            Serial.print("SOC: ");
+            Serial.print(battery_percent);
+            Serial.print(" -- is charging?: ");
+            Serial.print(battery_charging);
+            Serial.println(" ");
+            millis_battery_start = millis_core1_current; 
+        } 
     }
 }
 
