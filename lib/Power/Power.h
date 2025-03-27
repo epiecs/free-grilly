@@ -1,8 +1,9 @@
+#pragma once
 #include <Arduino.h>
 
-// ----------------------------------------- //
-//                Definitions                //
-// ----------------------------------------- //
+// ***********************************
+// * Definitions
+// ***********************************
 
 #define BAT_I2C                            0x55   // I2C address
 #define BAT_DEVICE_ID	                   0x0421 // Default device ID
@@ -51,89 +52,92 @@ class bat {
 public:
 	bat();
 	/**
-		Verifies communication with the battery IC.
-		@return true if communication was successful.
+	*	@brief Verifies communication with the battery IC
+	*	@return true if communication was successful
 	*/
 	bool init(void);
 
-	// ----------------------------------------- //
-	//          BATTERY CHARACTERISTICS          //
-	// ----------------------------------------- //
+	// ***********************************
+	// * Battery characteristics
+	// ***********************************
+
 	/**
-		Reads and returns the battery voltage
-		@return battery voltage measured in V
+	*	@brief Reads and returns the battery voltage
+	*	@return battery voltage measured in V
 	*/
 	float voltage(void);
 	/**
-		Reads and returns the specified current
-		@param current_measure enum specifying current value to be read
-		@return battery current measured in A
+	*	@brief Reads and returns the specified current
+	*	@param current_measure enum specifying current value to be read
+	*	@return battery current measured in A
 	*/
 	float current(current_measure type = AVG);
 	/**
-		Reads and returns measured average power
-		@return average power in W
+	*	@brief Reads and returns measured average power
+	*	@return average power in W
 	*/
 	float power(void);
 	/**
-		Reads and returns specified state of charge measurement
-		@return state of charge measurement in %
+	*	@brief Reads and returns specified state of charge measurement
+	*	@return state of charge measurement in %
 	*/
 	uint16_t soc(soc_measure type = FILTERED);
 	/**
-		Reads and returns specified temperature measurement
-		@param temp_unit enum specifying celcius or farenheit
-		@return specified temperature measurement in degrees C or F
+	*	@brief Reads and returns specified temperature measurement
+	*	@param temp_unit enum specifying celcius or farenheit
+	*	@return specified temperature measurement in degrees C or F
 	*/
 	float temp(temp_unit type = C);
 	/**
-		Check if the battery is charging
-		@return true if battery is charging
+	*	@brief Check if the battery is charging
+	*	@return true if battery is charging
 	*/
 	bool chargeFlag(void);
 
 private:
-	// ----------------------------------------- //
-	//              INIT FUNCTION                //
-	// ----------------------------------------- //
-	uint8_t _deviceAddress;  // Stores the battery ic I2C address
+
+	// ***********************************
+	// * I2C Init functions
+	// ***********************************
+
+	uint8_t _deviceAddress;  					  // Stores the battery ic I2C address
 	/**
-		Read the device type - should be 0x0421
-		@return 16-bit value read from DEVICE_TYPE subcommand
+	*	@brief Read the device type - should be 0x0421
+	*	@return 16-bit value read from DEVICE_TYPE subcommand
 	*/
 	uint16_t deviceType(void);
 	/**
-		Read the flags() command
-		@return 16-bit representation of flags() command register
+	*	@brief Read the flags() command
+	*	@return 16-bit representation of flags() command register
 	*/
 	uint16_t flags(void);
 	/**
-		Read a 16-bit command word from the battery ic
-		@param subAddress is the command to be read from
-		@return 16-bit value of the command's contents
+	*	@brief Read a 16-bit command word from the battery ic
+	*	@param subAddress is the command to be read from
+	*	@return 16-bit value of the command's contents
 	*/
 	uint16_t readWord(uint16_t subAddress);
 	/**
-		Read a 16-bit subcommand() from the battery ic control()
-		@param function is the subcommand of control() to be read
-		@return 16-bit value of the subcommand's contents
+	*	@brief Read a 16-bit subcommand() from the battery ic control()
+	*	@param function is the subcommand of control() to be read
+	*	@return 16-bit value of the subcommand's contents
 	*/
 	uint16_t readControlWord(uint16_t function);
 
+	// ***********************************
+	// * I2C read and write routines
+	// ***********************************
 
-	// ----------------------------------------- //
-	//        I2C READ AND WRITE ROUTINES        //
-	// ----------------------------------------- //
 	/**
-		Read a specified number of bytes over I2C at a given subAddress
-		@param subAddress is the 8-bit address of the data to be read dest is the data buffer to be written to count is the number of bytes to be read
-		@return true on success
+	*	@brief Read a specified number of bytes over I2C at a given subAddress
+	*	@param subAddress is the 8-bit address of the data to be read dest is the data buffer to be written to count is the number of bytes to be read
+	*	@return true on success
 	*/
 	uint16_t i2cReadBytes(uint8_t subAddress, uint8_t* dest, uint8_t count);
 	/**
-		Write a specified number of bytes over I2C to a given subAddress
-		@param subAddress is the 8-bit address of the data to be written to src is the data buffer to be written count is the number of bytes to be written
-		@return true on success
+	*	@brief Write a specified number of bytes over I2C to a given subAddress
+	*	@param subAddress is the 8-bit address of the data to be written to src is the data buffer to be written count is the number of bytes to be written
+	*	@return true on success
 	*/
 	uint16_t i2cWriteBytes(uint8_t subAddress, uint8_t* src, uint8_t count);
 };
@@ -141,25 +145,38 @@ private:
 class pwr {
 public:
 	pwr();
-	// ----------------------------------------- //
-	//          POWER DELIVERY FUNCTIONS         //
-	// ----------------------------------------- //
+
+	// ***********************************
+	// * Power delivery functions
+	// ***********************************
 
 	/**
-		Enable or disable the power to the given power rail
-		@param pwr_state enum specifying the enable or disable of the power rail
-		@param GPIO GPIO pin of the power rail
-		@return true on success
+	*	@brief Enable or disable the power to the given power rail
+	*	@param pwr_state enum specifying the enable or disable of the power rail
+	*	@param GPIO GPIO pin of the power rail
+	*	@return true on success
 	*/
 	bool setPowerRail(pwr_state type = DISABLE, int GPIO = PWR_SCREEN_LED);
-
+	/**
+	*	@brief Disables the power rails and put the device in deep sleep
+	*	@return true on success
+	*/
 	bool shutdown(void);
+	/**
+	*	@brief Disables the power rails and put the device in deep sleep
+	*	@return true on success
+	*/
 	bool startup(void);
 
 private:
+
+	// ***********************************
+	// * Power Init functions
+	// ***********************************
+
 	/**
-		initializes the GPIO pins to output.
-		@return true if GPIO pins are set correctly
+	*	@brief initializes the GPIO pins to output.
+	*	@return true if GPIO pins are set correctly
 	*/
 	bool init(void);
 };
