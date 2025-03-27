@@ -95,7 +95,7 @@ components:
                 temperature: null
 
 paths:
-  /temperatures:
+  /grill:
     get:
       tags:
         - grill

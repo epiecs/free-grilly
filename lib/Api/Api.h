@@ -1,7 +1,7 @@
 #include <WebServer.h>
 
 
-void get_api_temperatures();
+void get_api_grill();
 
 void get_api_probes();
 void post_api_probes();

@@ -7,7 +7,7 @@
 JsonDocument jsondoc;
 char buffer[500];
 
-void get_api_temperatures()
+void get_api_grill()
 {
     jsondoc.clear();
 
@@ -126,7 +126,7 @@ void post_api_settings()
 
 void setup_api_routes()
 {
-    webserver.on("/api/temperatures", HTTP_GET, get_api_temperatures);
+    webserver.on("/api/grill", HTTP_GET, get_api_grill);
 
     webserver.on("/api/probes", HTTP_GET, get_api_probes);
     webserver.on("/api/probes", HTTP_POST, post_api_probes);
