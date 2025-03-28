@@ -1,24 +1,26 @@
 #include <ArduinoJson.h>
 #include <string>
+#include <WiFi.h>
 
 #include "Api.h"
 #include "Global.h"
 
 JsonDocument jsondoc;
-char buffer[500];
+char buffer[600];
 
 void get_api_grill()
 {
     jsondoc.clear();
 
-    jsondoc["name"]             = grill_name;
-    jsondoc["unique_id"]        = grill_uuid;
-    jsondoc["firmware_version"] = grill_firmware_version;
-    jsondoc["battery"]          = battery_percent;
-    jsondoc["battery_charging"] = battery_charging;
-    jsondoc["wifi_connected"]   = wifi_connected;
-    jsondoc["wifi_ssid"]        = "WOZ";
-    jsondoc["wifi_signal"]      = "-61";
+    jsondoc["name"]               = grill_name;
+    jsondoc["unique_id"]          = grill_uuid;
+    jsondoc["firmware_version"]   = grill_firmware_version;
+    jsondoc["battery_percentage"] = battery_percentage;
+    jsondoc["battery_charging"]   = battery_charging;
+    jsondoc["wifi_connected"]     = wifi_connected;
+    jsondoc["wifi_ssid"]          = wifi_ssid;
+    jsondoc["wifi_ip"]            = wifi_ip.toString().c_str();
+    jsondoc["wifi_signal"]        = WiFi.RSSI();
     
     JsonArray probeData = jsondoc["probes"].to<JsonArray>();
     

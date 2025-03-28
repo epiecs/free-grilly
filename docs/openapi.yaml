@@ -1,4 +1,4 @@
-openapi: '3.0.4'
+openapi: '3.1.1'
 info:
   title: Free-Grilly
   version: '25.3.27'
@@ -40,7 +40,7 @@ components:
           format: yy.mm.dd
           example: 25.3.1
           description: The current firmware version in CalVer
-        battery:
+        battery_percentage:
           type: integer
           example: 95
           description: The current - estimated - battery %
@@ -60,7 +60,11 @@ components:
           type: integer
           format: -dbm
           example: -61
-          description: The wifi signal expressed in dbm. The lower the better
+          description: The wifi signal expressed in dbm. The closer to 0 the better.
+        wifi_ip:
+          type: string
+          example: 192.168.0.10
+          description: The wifi ip when connected to your network
         probes:
           type: array
           minItems: 8
@@ -72,8 +76,9 @@ components:
                 type: integer
                 description: The number of the prober
               temperature:
-                type: number
-                nullable: true
+                type: 
+                  - "number"
+                  - "null"
                 format: float
                 description: The temperature in Celcius
             example:
@@ -95,7 +100,7 @@ components:
                 temperature: null
 
 paths:
-  /grill:
+  /temperatures:
     get:
       tags:
         - grill
@@ -109,5 +114,5 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Grill"
+                $ref: '#/components/schemas/Grill'
                 

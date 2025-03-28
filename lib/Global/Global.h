@@ -9,11 +9,15 @@ extern std::string grill_uuid;
 extern std::string grill_firmware_version;
 
 // Battery
-extern int battery_percent;
+extern int battery_percentage;
 extern bool battery_charging;
 
 // Wifi
 extern bool wifi_connected;
+extern int wifi_signal;
+extern IPAddress wifi_ip;
+extern std::string wifi_ssid;
+extern std::string wifi_password;
 
 // Webserver for api
 extern WebServer webserver;

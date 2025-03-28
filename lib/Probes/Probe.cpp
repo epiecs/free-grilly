@@ -20,8 +20,9 @@ Probe::Probe(int number, int reference_kohm, int reference_celcius, int referenc
 
 uint16_t Probe::read_adc_value() {
     Probe::select_probe(Probe::number);
-    delay(ADC_READ_DELAY_MS);
-
+    
+    vTaskDelay(ADC_READ_DELAY_MS);
+    
     digitalWrite(HSPI_CS, HIGH);
     delayMicroseconds(1);
     digitalWrite(HSPI_CS, LOW);

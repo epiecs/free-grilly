@@ -3,6 +3,8 @@
 #include <string>
 #include <WiFi.h>
 
+#include "Global.h"
+
 constexpr int CONNECT_TIMEOUT_SECONDS = 15;
 
 void start_local_ap(std::string ssid, std::string password, IPAddress ip, IPAddress subnet, IPAddress gateway)
@@ -64,18 +66,24 @@ bool connect_to_wifi(std::string ssid, std::string password, bool static_ip, IPA
 
 void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
+    wifi_connected = true;
+    
     Serial.println("Connected to wifi");
     print_wifi_connection();
 }
 
 void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 {
+    wifi_ip = WiFi.localIP();
+    
     Serial.println("Received IP");
     print_wifi_connection();
 }
 
 void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
+    wifi_connected = false;
+
     Serial.println("Wifi disconnected");
 
     Serial.print("Reason: ");
@@ -87,7 +95,7 @@ void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 
 void print_wifi_connection()
 {
-    String rssi = String(WiFi.RSSI());
+    // String rssi = String(WiFi.RSSI());
 
     Serial.printf("Connected to wifi SSID: %s \n", WiFi.SSID().c_str());
     Serial.printf("IP:      %s \n", WiFi.localIP().toString().c_str());
@@ -95,7 +103,7 @@ void print_wifi_connection()
     Serial.printf("Subnet:  %s \n", WiFi.subnetMask().toString().c_str());
     Serial.printf("DNS:     %s \n", WiFi.dnsIP(0).toString().c_str());
     Serial.printf("DNS 2:   %s \n", WiFi.dnsIP(1).toString().c_str());
-    Serial.printf("RSSI:    %s \n", rssi.c_str());
+    Serial.printf("RSSI:    %d \n", WiFi.RSSI());
 }
 
 std::string get_wifi_connection_status(int statuscode)

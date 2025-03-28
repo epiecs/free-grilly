@@ -1,3 +1,14 @@
+settings class voorzien voor preferences
+preferences uitwerken
+
+class voorzien voor grill met daarin uuid generatie + initiele ssid naam
+
+fix voor openapi spec
+
+global.h verder correct uitwerken zodat alles er in staat
+config.h verder uitwerken en correct comment headers voorzien
+
+
 grill name generation enzovoort in grill settings duwen
 
 wifi connected variable switchen naargelang status. 

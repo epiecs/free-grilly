@@ -12,43 +12,15 @@
 #include "Util.h"
 #include "Website.h"
 
-#include "config.h"
-#include "Global.h"
+// ************************************
+// * Config.h initializes variables
+// * Global.h marks variables as extern
+// ************************************
+#include "Config.h"     // Config initialisation
+#include "Global.h"     // Make needed vars external
 
-// Grill
-std::string grill_name              = "Free-Grilly";
-std::string grill_uuid              = "12abc3de-4567-89f0-a123-456b789012c3";
-std::string grill_firmware_version  = "25.03.01";
 
-// Battery
-int battery_percent                 = 0;
-bool battery_charging               = false;
-
-// Wifi
-bool wifi_connected                 = false;
-
-// Api/web server
-WebServer webserver(80);
-
-// Probes
-Probe probe_1 = Probe(1);
-Probe probe_2 = Probe(2);
-Probe probe_3 = Probe(3);
-Probe probe_4 = Probe(4);
-Probe probe_5 = Probe(5);
-Probe probe_6 = Probe(6);
-Probe probe_7 = Probe(7);
-Probe probe_8 = Probe(8);
-
-// timers 
-unsigned long millis_core1_current;
-unsigned long millis_probe_start;    
-unsigned long millis_button_start;        
-unsigned long millis_battery_start;     
-const unsigned long millis_probe_period = 1000;     // Probe read interval
-const unsigned long millis_battery_period = 10000;   // Battery read interval
-
-// Core task handlers
+//* Core task handlers
 TaskHandle_t taskCore0;
 TaskHandle_t taskCore1;
 
@@ -56,6 +28,10 @@ void core_0_code(void* pvParameters);
 void core_1_code(void* pvParameters);
 
 void setup() {
+
+    // TODO REMOVE - just for debugging
+    wifi_ssid               = "WOZ";
+    wifi_password           = "schotelantenne";
 
     // ***********************************
     // * Serial
@@ -215,7 +191,7 @@ void core_1_code(void* pvParameters) {
         if (millis_core1_current - millis_battery_start >= millis_battery_period) {
             battery.read_battery();
             Serial.print("SOC: ");
-            Serial.print(battery_percent);
+            Serial.print(battery_percentage);
             Serial.print(" -- is charging?: ");
             Serial.print(battery_charging);
             Serial.println(" ");

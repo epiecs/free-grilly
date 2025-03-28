@@ -87,8 +87,8 @@ bool bat::chargeFlag(void) {
 }
 
 bool bat::read_battery(void) {
-	battery_percent  = soc(FILTERED);
-	battery_charging = chargeFlag();
+	battery_percentage  = soc(FILTERED);
+	battery_charging 	= chargeFlag();
 	return true;
 }
 
