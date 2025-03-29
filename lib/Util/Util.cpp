@@ -3,12 +3,12 @@
 #include <string>
 #include <WiFi.h>
 
-std::string generate_hostname(std::string prefix){
+String generate_hostname(String prefix){
     
     String get_base_mac = WiFi.macAddress();
     const char* base_mac = get_base_mac.c_str();
     
-    std::string hostname = prefix + std::string("_") 
+    String hostname = prefix + String("_") 
                             + base_mac[9] + base_mac[10]
                             + base_mac[12] + base_mac[13]
                             + base_mac[15] + base_mac[16];

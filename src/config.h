@@ -1,8 +1,10 @@
 #include <string>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <Preferences.h>
 
 #include "Probe.h"
+#include "GrillConfig.h"
 
 // Power button
 #define BTN_PWR 35
@@ -23,6 +25,13 @@ extern const int HSPI_MISO 	        =        12;		// HSPI data pin
 
 
 // ***********************************
+// * Settings - nvram storage
+// ***********************************
+
+Preferences settings_storage;
+GrillConfig grill_config_helper = GrillConfig();
+
+// ***********************************
 // * Timers
 // ***********************************
 
@@ -37,9 +46,9 @@ const unsigned long millis_battery_period = 10000;   // Battery read interval
 // * Grill
 // ***********************************
 
-std::string grill_name              = "Free-Grilly";
-std::string grill_uuid              = "12abc3de-4567-89f0-a123-456b789012c3";
-std::string grill_firmware_version  = "25.03.01";
+String grill_name                   = "";
+String grill_uuid                   = "";
+String grill_firmware_version       = "25.03.01";
 
 // ***********************************
 // * Battery
@@ -52,10 +61,10 @@ bool battery_charging               = false;
 // * Timezone / NTP
 // ***********************************
 
-std::string timezone                = "Europe/Brussels";
-std::string ntp_server_1            = "ptbtime1.ptb.de";
-std::string ntp_server_2            = "time-a-wwv.nist.gov";
-std::string ntp_server_3            = "ntp.nict.jp";
+String timezone                     = "Europe/Brussels";
+String ntp_server_1                 = "ptbtime1.ptb.de";
+String ntp_server_2                 = "time-a-wwv.nist.gov";
+String ntp_server_3                 = "ntp.nict.jp";
 
 // ***********************************
 // * Wifi
@@ -64,8 +73,8 @@ std::string ntp_server_3            = "ntp.nict.jp";
 bool wifi_connected                 = false;
 int wifi_signal                     = -99;
 
-std::string wifi_ssid               = "";
-std::string wifi_password           = "";
+String wifi_ssid                    = "";
+String wifi_password                = "";
 
 bool wifi_static_ip                 = true;
 IPAddress wifi_ip(10, 30, 10, 235);
@@ -75,8 +84,8 @@ IPAddress wifi_dns(10, 30, 50, 254);
 IPAddress wifi_dns2(0, 0, 0, 0);
 
 // Local AP
-std::string local_ap_ssid_prefix    = "FreeGrilly";
-std::string local_ap_password       = "";
+String local_ap_ssid_prefix    = "FreeGrilly";
+String local_ap_password       = "";
 
 // ***********************************
 // * Api / Webserver

@@ -3,10 +3,11 @@
 #include <SPI.h>
 #include <WebServer.h>
 #include <Wire.h>
+#include <string>
 
 #include "Api.h"
+#include "GrillConfig.h"
 #include "Network.h"
-
 #include "Power.h"
 #include "Preferences.h"
 #include "Util.h"
@@ -14,11 +15,8 @@
 
 // ************************************
 // * Config.h initializes variables
-// * Global.h marks variables as extern
 // ************************************
-#include "Config.h"     // Config initialisation
-#include "Global.h"     // Make needed vars external
-
+#include "Config.h"
 
 //* Core task handlers
 TaskHandle_t taskCore0;
@@ -28,10 +26,11 @@ void core_0_code(void* pvParameters);
 void core_1_code(void* pvParameters);
 
 void setup() {
-
-    // TODO REMOVE - just for debugging
-    wifi_ssid               = "WOZ";
-    wifi_password           = "schotelantenne";
+    // ***********************************
+    // * Load nvram settings and init
+    // ***********************************
+    settings_storage.begin("free-grilly", false);
+    grill_config_helper.initialize_settings();
 
     // ***********************************
     // * Serial
@@ -74,7 +73,7 @@ void setup() {
     WiFi.setSleep(false);   // Disable wifi powersaving for a more
                             // stable connection and lower latency
 
-    std::string local_ssid =  generate_hostname(local_ap_ssid_prefix);
+    String local_ssid =  generate_hostname(local_ap_ssid_prefix);
     start_local_ap(local_ssid, local_ap_password);
     delay(1000);
 

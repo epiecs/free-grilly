@@ -1,16 +1,16 @@
 #include <string>
 #include <Arduino.h>
 
-std::string generate_hostname(std::string prefix);
+String generate_hostname(String prefix);
 
 // https://forum.arduino.cc/t/how-to-print-the-leading-zeroes/446702/17
 // https://cplusplus.com/doc/oldtutorial/templates/
 // templates need to be in the header; recipe, not a cake
 // https://forum.arduino.cc/t/error-with-a-template-function-in-a-library/909719/9
 template <typename byteType>
-std::string byte_with_leading_0(byteType bytes, int split_every = 128, bool use_prefix = false)
+String byte_with_leading_0(byteType bytes, int split_every = 128, bool use_prefix = false)
 {
-    std::string formatted_representation = "";
+    String formatted_representation = "";
     if (use_prefix)
     {
         formatted_representation += "0b";

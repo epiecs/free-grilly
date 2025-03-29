@@ -1,13 +1,12 @@
 #include <Network.h>
 
-#include <string>
 #include <WiFi.h>
 
 #include "Global.h"
 
 constexpr int CONNECT_TIMEOUT_SECONDS = 15;
 
-void start_local_ap(std::string ssid, std::string password, IPAddress ip, IPAddress subnet, IPAddress gateway)
+void start_local_ap(String ssid, String password, IPAddress ip, IPAddress subnet, IPAddress gateway)
 {
     const char *local_password = NULL;
 
@@ -24,7 +23,7 @@ void start_local_ap(std::string ssid, std::string password, IPAddress ip, IPAddr
     Serial.printf("Local IP: %s \n", WiFi.softAPIP().toString().c_str());
 }
 
-bool connect_to_wifi(std::string ssid, std::string password, bool static_ip, IPAddress ip, IPAddress subnet, IPAddress gateway, IPAddress dns1, IPAddress dns2)
+bool connect_to_wifi(String ssid, String password, bool static_ip, IPAddress ip, IPAddress subnet, IPAddress gateway, IPAddress dns1, IPAddress dns2)
 {
     int timeout = CONNECT_TIMEOUT_SECONDS * 1000;
     int step = 500;
@@ -106,7 +105,7 @@ void print_wifi_connection()
     Serial.printf("RSSI:    %d \n", WiFi.RSSI());
 }
 
-std::string get_wifi_connection_status(int statuscode)
+String get_wifi_connection_status(int statuscode)
 {
     switch (statuscode){
         case ARDUINO_EVENT_WIFI_READY:                return "WiFi interface ready"; break;
@@ -140,7 +139,7 @@ std::string get_wifi_connection_status(int statuscode)
     }
 }
 
-std::string get_wifi_error_status(int statuscode)
+String get_wifi_error_status(int statuscode)
 {
     switch (statuscode){
         case WIFI_REASON_UNSPECIFIED:                        return "Unspecified reason"; break;

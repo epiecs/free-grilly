@@ -1,12 +1,16 @@
+#pragma once
 #include <WebServer.h>
-#include <string>
+#include <Preferences.h>
 
 #include "Probe.h"
 
+// Settings storage
+extern Preferences settings_storage;
+
 // Grill settings
-extern std::string grill_name;
-extern std::string grill_uuid;
-extern std::string grill_firmware_version;
+extern String grill_name;
+extern String grill_uuid;
+extern String grill_firmware_version;
 
 // Battery
 extern int battery_percentage;
@@ -16,8 +20,8 @@ extern bool battery_charging;
 extern bool wifi_connected;
 extern int wifi_signal;
 extern IPAddress wifi_ip;
-extern std::string wifi_ssid;
-extern std::string wifi_password;
+extern String wifi_ssid;
+extern String wifi_password;
 
 // Webserver for api
 extern WebServer webserver;
