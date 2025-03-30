@@ -29,8 +29,8 @@ void setup() {
     // ***********************************
     // * Load nvram settings and init
     // ***********************************
-    settings_storage.begin("free-grilly", false);
-    grill_config_helper.initialize_settings();
+    config::settings_storage.begin("free-grilly", false);
+    config::config_helper.initialize_settings();
 
     // ***********************************
     // * Serial
@@ -73,11 +73,11 @@ void setup() {
     WiFi.setSleep(false);   // Disable wifi powersaving for a more
                             // stable connection and lower latency
 
-    String local_ssid =  generate_hostname(local_ap_ssid_prefix);
-    start_local_ap(local_ssid, local_ap_password);
+    config::local_ap_ssid =  generate_hostname(config::local_ap_ssid_prefix);
+    start_local_ap(config::local_ap_ssid, config::local_ap_password);
     delay(1000);
 
-    connect_to_wifi(wifi_ssid, wifi_password);
+    connect_to_wifi(config::wifi_ssid, config::wifi_password);
 
     // ***********************************
     // * Api + Web

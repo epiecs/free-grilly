@@ -4,24 +4,34 @@
 
 #include "Probe.h"
 
-// Settings storage
-extern Preferences settings_storage;
+namespace config{
 
-// Grill settings
-extern String grill_name;
-extern String grill_uuid;
-extern String grill_firmware_version;
+    // Settings storage
+    extern Preferences settings_storage;
+    
+    // Grill settings
+    extern String grill_name;
+    extern String grill_uuid;
+    extern String grill_firmware_version;
+
+    // Wifi
+    extern bool wifi_connected;
+    extern int wifi_signal;
+    extern IPAddress wifi_ip;
+    extern String wifi_ssid;
+    extern String wifi_password;
+
+    // Local AP
+    extern String local_ap_ssid_prefix;
+    extern String local_ap_ssid;
+    extern String local_ap_password;
+
+}
 
 // Battery
 extern int battery_percentage;
 extern bool battery_charging;
 
-// Wifi
-extern bool wifi_connected;
-extern int wifi_signal;
-extern IPAddress wifi_ip;
-extern String wifi_ssid;
-extern String wifi_password;
 
 // Webserver for api
 extern WebServer webserver;

@@ -65,7 +65,7 @@ bool connect_to_wifi(String ssid, String password, bool static_ip, IPAddress ip,
 
 void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    wifi_connected = true;
+    config::wifi_connected = true;
     
     Serial.println("Connected to wifi");
     print_wifi_connection();
@@ -73,7 +73,7 @@ void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 
 void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    wifi_ip = WiFi.localIP();
+    config::wifi_ip = WiFi.localIP();
     
     Serial.println("Received IP");
     print_wifi_connection();
@@ -81,7 +81,7 @@ void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 
 void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    wifi_connected = false;
+    config::wifi_connected = false;
 
     Serial.println("Wifi disconnected");
 

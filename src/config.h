@@ -6,6 +6,55 @@
 #include "Probe.h"
 #include "GrillConfig.h"
 
+namespace config{
+
+    // ***********************************
+    // * Settings - nvram storage
+    // ***********************************
+
+    Preferences settings_storage;
+    GrillConfig config_helper = GrillConfig();
+
+    // ***********************************
+    // * Grill
+    // ***********************************
+
+    String grill_name                   = "";
+    String grill_uuid                   = "";
+    String grill_firmware_version       = "25.03.01";
+
+    // ***********************************
+    // * Timezone / NTP
+    // ***********************************
+
+    String timezone                     = "Europe/Brussels";
+    String ntp_server_1                 = "ptbtime1.ptb.de";
+    String ntp_server_2                 = "time-a-wwv.nist.gov";
+    String ntp_server_3                 = "ntp.nict.jp";
+
+    // ***********************************
+    // * Wifi
+    // ***********************************
+
+    bool wifi_connected                 = false;
+    int wifi_signal                     = -99;
+
+    String wifi_ssid                    = "";
+    String wifi_password                = "";
+
+    bool wifi_static_ip                 = true;
+    IPAddress wifi_ip(10, 30, 10, 235);
+    IPAddress wifi_subnet(255, 255, 255, 0);
+    IPAddress wifi_gateway(10, 30, 10, 1);
+    IPAddress wifi_dns(10, 30, 50, 254);
+    IPAddress wifi_dns2(0, 0, 0, 0);
+
+    // Local AP
+    String local_ap_ssid_prefix    = "FreeGrilly";
+    String local_ap_ssid           = "";
+    String local_ap_password       = "";
+}
+
 // Power button
 #define BTN_PWR 35
 #define PWR_PRB 27
@@ -25,13 +74,6 @@ extern const int HSPI_MISO 	        =        12;		// HSPI data pin
 
 
 // ***********************************
-// * Settings - nvram storage
-// ***********************************
-
-Preferences settings_storage;
-GrillConfig grill_config_helper = GrillConfig();
-
-// ***********************************
 // * Timers
 // ***********************************
 
@@ -42,13 +84,7 @@ unsigned long millis_battery_start;
 const unsigned long millis_probe_period = 1000;     // Probe read interval
 const unsigned long millis_battery_period = 10000;   // Battery read interval
 
-// ***********************************
-// * Grill
-// ***********************************
 
-String grill_name                   = "";
-String grill_uuid                   = "";
-String grill_firmware_version       = "25.03.01";
 
 // ***********************************
 // * Battery
@@ -57,35 +93,6 @@ String grill_firmware_version       = "25.03.01";
 int battery_percentage              = 0;
 bool battery_charging               = false;
 
-// ***********************************
-// * Timezone / NTP
-// ***********************************
-
-String timezone                     = "Europe/Brussels";
-String ntp_server_1                 = "ptbtime1.ptb.de";
-String ntp_server_2                 = "time-a-wwv.nist.gov";
-String ntp_server_3                 = "ntp.nict.jp";
-
-// ***********************************
-// * Wifi
-// ***********************************
-
-bool wifi_connected                 = false;
-int wifi_signal                     = -99;
-
-String wifi_ssid                    = "";
-String wifi_password                = "";
-
-bool wifi_static_ip                 = true;
-IPAddress wifi_ip(10, 30, 10, 235);
-IPAddress wifi_subnet(255, 255, 255, 0);
-IPAddress wifi_gateway(10, 30, 10, 1);
-IPAddress wifi_dns(10, 30, 50, 254);
-IPAddress wifi_dns2(0, 0, 0, 0);
-
-// Local AP
-String local_ap_ssid_prefix    = "FreeGrilly";
-String local_ap_password       = "";
 
 // ***********************************
 // * Api / Webserver

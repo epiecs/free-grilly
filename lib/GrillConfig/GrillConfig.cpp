@@ -9,10 +9,10 @@
 void GrillConfig::initialize_settings(){
 
     // TODO verder uitwerken
-    grill_name    = settings_storage.getString("grill_name", "Free-Grilly");
-    grill_uuid    = "12abc3de-4567-89f0-a123-456b789012c3";
-    wifi_ssid     = "WOZ";
-    wifi_password = "schotelantenne";
+    config::grill_name    = config::settings_storage.getString("grill_name", "Free-Grilly");
+    config::grill_uuid    = "12abc3de-4567-89f0-a123-456b789012c3";
+    config::wifi_ssid     = "WOZ";
+    config::wifi_password = "schotelantenne";
 }
 
 void GrillConfig::factory_reset() {
