@@ -1,6 +1,8 @@
 #pragma once
 #include <Arduino.h>
 
+#include "Gpio.h"
+
 // ***********************************
 // * Definitions
 // ***********************************
@@ -20,11 +22,6 @@
 #define BAT_SOC_FILTERED           	       0x1C   // State of charge (%) filtered
 #define BAT_SOC_UNFILTERED                 0x30   // State of charge (%) unfiltered
 #define BAT_TEMP                           0x02   // Temperature of the battery (C or F)
-
-#define PWR_SCREEN_LED                     4      // GPIO of the screen LED
-#define PWR_IC		                       13     // GPIO of the IC's
-#define PWR_PROBES		                   27     // GPIO of the probes
-
 
 typedef enum {
 	AVG,
@@ -161,7 +158,7 @@ public:
 	*	@param GPIO GPIO pin of the power rail
 	*	@return true on success
 	*/
-	bool setPowerRail(pwr_state type = DISABLE, int GPIO = PWR_SCREEN_LED);
+	bool setPowerRail(pwr_state type = DISABLE, int GPIO = gpio::power_screen_backlight);
 	/**
 	*	@brief Disables the power rails and put the device in deep sleep
 	*	@return true on success

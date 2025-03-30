@@ -1,3 +1,9 @@
+global.h uiteen trekken in verschillende namespaces
+global.h file ook hernoemen want alles zit toch in de global dir
+global config verder voorzien
+init voorzien in grillconfig class
+
+
 settings class voorzien voor preferences
 preferences uitwerken
 

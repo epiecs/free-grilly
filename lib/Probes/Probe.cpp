@@ -3,8 +3,8 @@
 #include <math.h>
 
 #include "Probe.h"
+#include "Gpio.h"
 
-extern int HSPI_CS;
 
 Probe::Probe(int number, int reference_kohm, int reference_celcius, int reference_beta) {
     Probe::number = number;
@@ -23,9 +23,9 @@ uint16_t Probe::read_adc_value() {
     
     vTaskDelay(ADC_READ_DELAY_MS);
     
-    digitalWrite(HSPI_CS, HIGH);
+    digitalWrite(gpio::hspi_probes_cs, HIGH);
     delayMicroseconds(1);
-    digitalWrite(HSPI_CS, LOW);
+    digitalWrite(gpio::hspi_probes_cs, LOW);
     delayMicroseconds(1);
 
     return SPI.transfer16(0x0000);

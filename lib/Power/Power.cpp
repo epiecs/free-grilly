@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Power.h>
 #include <Wire.h>
+
 #include "Global.h"
 
 // Initializes class variables
@@ -150,9 +151,9 @@ uint16_t bat::i2cWriteBytes(uint8_t subAddress, uint8_t * src, uint8_t count) {
 pwr::pwr() {};
 
 bool pwr::init(void) {
-	pinMode(PWR_SCREEN_LED, OUTPUT);
-	pinMode(PWR_IC, OUTPUT);
-	pinMode(PWR_PROBES, OUTPUT);
+	pinMode(gpio::power_screen_backlight, OUTPUT);
+	pinMode(gpio::power_adc_circuit, OUTPUT);
+	pinMode(gpio::power_probes, OUTPUT);
 	return true; 
 }
 
@@ -171,16 +172,16 @@ bool pwr::setPowerRail(pwr_state type, int GPIO) {
 
 bool pwr::shutdown(void) {
 	esp_sleep_enable_ext0_wakeup(GPIO_NUM_35,0);
-	setPowerRail(DISABLE,PWR_PROBES);
-	setPowerRail(DISABLE,PWR_IC);
+	setPowerRail(DISABLE,gpio::power_probes);
+	setPowerRail(DISABLE,gpio::power_adc_circuit);
 	esp_deep_sleep_start();
 	return true;
 }
 
 bool pwr::startup(void) {
 	init();
-	setPowerRail(ENABLE,PWR_IC);
-	setPowerRail(ENABLE,PWR_PROBES);
+	setPowerRail(ENABLE,gpio::power_adc_circuit);
+	setPowerRail(ENABLE,gpio::power_probes);
 	return true;
 }
 

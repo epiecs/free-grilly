@@ -2,8 +2,6 @@
 #include <WebServer.h>
 #include <Preferences.h>
 
-#include "Probe.h"
-
 namespace config{
 
     // Settings storage
@@ -32,16 +30,7 @@ namespace config{
 extern int battery_percentage;
 extern bool battery_charging;
 
-
 // Webserver for api
 extern WebServer webserver;
 
-// Probes
-extern Probe probe_1;
-extern Probe probe_2;
-extern Probe probe_3;
-extern Probe probe_4;
-extern Probe probe_5;
-extern Probe probe_6;
-extern Probe probe_7;
-extern Probe probe_8;
+// // Probes

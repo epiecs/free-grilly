@@ -6,6 +6,23 @@
 #include "Probe.h"
 #include "GrillConfig.h"
 
+namespace gpio{
+
+    int power_button           = 35;
+    
+    // enable/disable power
+    int power_probes           = 27;
+    int power_screen_backlight =  4;
+    int power_adc_circuit      = 13;
+
+    int battery_i2c_sda        = 21;
+    int battery_i2c_scl        = 22;
+
+    int hspi_probes_sclk 	   = 14;
+    int hspi_probes_cs 	       = 15;
+    int hspi_probes_miso 	   = 12;
+}
+
 namespace config{
 
     // ***********************************
@@ -53,25 +70,28 @@ namespace config{
     String local_ap_ssid_prefix    = "FreeGrilly";
     String local_ap_ssid           = "";
     String local_ap_password       = "";
+
+    // ***********************************
+    // * Probes
+    // ***********************************
+    int hspi_probes_clockspeed 	   =  16000000;
 }
 
-// Power button
-#define BTN_PWR 35
-#define PWR_PRB 27
+namespace grill{
+    
+    // ***********************************
+    // * Probes
+    // ***********************************
 
-// Screen LED
-#define SCRN_LED 4
-
-// I2C - Battery
-#define I2C_SDA 21 // battery
-#define I2C_SCL 22 // battery
-
-// HSPI - Probes
-extern const int HSPI_SPD 	        =  16000000;		// HSPI clock speed
-extern const int HSPI_SCLK 	        =        14;		// HSPI clock pin
-extern const int HSPI_CS 	        =        15;		// HSPI chip Select pin
-extern const int HSPI_MISO 	        =        12;		// HSPI data pin
-
+    Probe probe_1 = Probe(1);
+    Probe probe_2 = Probe(2);
+    Probe probe_3 = Probe(3);
+    Probe probe_4 = Probe(4);
+    Probe probe_5 = Probe(5);
+    Probe probe_6 = Probe(6);
+    Probe probe_7 = Probe(7);
+    Probe probe_8 = Probe(8);
+}
 
 // ***********************************
 // * Timers
@@ -99,16 +119,3 @@ bool battery_charging               = false;
 // ***********************************
 
 WebServer webserver(80);
-
-// ***********************************
-// * Probes
-// ***********************************
-
-Probe probe_1 = Probe(1);
-Probe probe_2 = Probe(2);
-Probe probe_3 = Probe(3);
-Probe probe_4 = Probe(4);
-Probe probe_5 = Probe(5);
-Probe probe_6 = Probe(6);
-Probe probe_7 = Probe(7);
-Probe probe_8 = Probe(8);

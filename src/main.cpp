@@ -43,11 +43,11 @@ void setup() {
     // * SPI for probes
     // ***********************************
 
-    SPISettings spiSettings(HSPI_SPD, MSBFIRST, SPI_MODE0);
-    SPI.begin(HSPI_SCLK, HSPI_MISO, -1, HSPI_CS);
+    SPISettings spiSettings(config::hspi_probes_clockspeed, MSBFIRST, SPI_MODE0);
+    SPI.begin(gpio::hspi_probes_sclk, gpio::hspi_probes_miso, -1, gpio::hspi_probes_cs);
     SPI.beginTransaction(spiSettings);
     
-    pinMode(HSPI_CS, OUTPUT); // Prep CS line for data reading
+    pinMode(gpio::hspi_probes_cs, OUTPUT); // Prep CS line for data reading
 
     // ***********************************
     // * NTP
@@ -125,10 +125,10 @@ void core_1_code(void* pvParameters) {
     // * Probes
     // ***********************************
 
-    digitalWrite(HSPI_CS, HIGH);
+    digitalWrite(gpio::hspi_probes_cs, HIGH);
 
     // power button
-    pinMode(BTN_PWR, INPUT);
+    pinMode(gpio::power_button, INPUT);
 
     pinMode(4, OUTPUT); // SCREEN LED!! VT5
     digitalWrite(4, LOW);
@@ -144,32 +144,32 @@ void core_1_code(void* pvParameters) {
         millis_core1_current = millis();  
         if (millis_core1_current - millis_probe_start >= millis_probe_period) {
             Serial.print("1: ");
-            Serial.print(probe_1.calculate_temperature());
+            Serial.print(grill::probe_1.calculate_temperature());
             Serial.print(" -- 2: ");
-            Serial.print(probe_2.calculate_temperature());
+            Serial.print(grill::probe_2.calculate_temperature());
             Serial.print(" -- 3: ");
-            Serial.print(probe_3.calculate_temperature());
+            Serial.print(grill::probe_3.calculate_temperature());
             Serial.print(" -- 4: ");
-            Serial.print(probe_4.calculate_temperature());
+            Serial.print(grill::probe_4.calculate_temperature());
             Serial.print(" -- 5: ");
-            Serial.print(probe_5.calculate_temperature());
+            Serial.print(grill::probe_5.calculate_temperature());
             Serial.print(" -- 6: ");
-            Serial.print(probe_6.calculate_temperature());
+            Serial.print(grill::probe_6.calculate_temperature());
             Serial.print(" -- 7: ");
-            Serial.print(probe_7.calculate_temperature());
+            Serial.print(grill::probe_7.calculate_temperature());
             Serial.print(" -- 8: ");
-            Serial.print(probe_8.calculate_temperature());
+            Serial.print(grill::probe_8.calculate_temperature());
     
             Serial.println(" ");
             millis_probe_start = millis_core1_current; 
         } 
 
         //* Button code 
-        if(digitalRead(BTN_PWR) == LOW && not is_button_pressed) {
+        if(digitalRead(gpio::power_button) == LOW && not is_button_pressed) {
             is_button_pressed = true;
             millis_button_start = millis_core1_current;
         }
-        else if (digitalRead(BTN_PWR) == HIGH && is_button_pressed)
+        else if (digitalRead(gpio::power_button) == HIGH && is_button_pressed)
         {
             is_button_pressed = false;
 
