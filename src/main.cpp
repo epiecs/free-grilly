@@ -10,7 +10,6 @@
 #include "Network.h"
 #include "Power.h"
 #include "Preferences.h"
-#include "Util.h"
 #include "Website.h"
 #include "Web.h"
 
@@ -28,17 +27,18 @@ void core_1_code(void* pvParameters);
 
 void setup() {
     // ***********************************
-    // * Load nvram settings and init
-    // ***********************************
-    config::settings_storage.begin("free-grilly", false);
-    config::config_helper.initialize_settings();
-
-    // ***********************************
     // * Serial
     // ***********************************
     
     Serial.begin(115200); // Initialize serial communication at 115200 bits per second
     delay(5000);          // Give serial monitor time to catch up
+    
+    // ***********************************
+    // * Load nvram settings and init
+    // ***********************************
+    config::settings_storage.begin("free-grilly", false);
+    config::config_helper.initialize_settings();
+
 
     // ***********************************
     // * SPI for probes
@@ -74,11 +74,26 @@ void setup() {
     WiFi.setSleep(false);   // Disable wifi powersaving for a more
                             // stable connection and lower latency
 
-    config::local_ap_ssid =  generate_hostname(config::local_ap_ssid_prefix);
-    start_local_ap(config::local_ap_ssid, config::local_ap_password);
+    start_local_ap(
+        config::local_ap_ssid, 
+        config::local_ap_password,
+        config::local_ap_ip,
+        config::local_ap_subnet,
+        config::local_ap_gateway
+    );
     delay(1000);
 
-    connect_to_wifi(config::wifi_ssid, config::wifi_password);
+    if(config::wifi_ssid != "")
+    {
+        connect_to_wifi(
+            config::wifi_ssid,
+            config::wifi_password,
+            config::wifi_ip,
+            config::wifi_subnet,
+            config::wifi_gateway,
+            config::wifi_dns
+        );
+    }
 
     // ***********************************
     // * Api + Web
@@ -143,27 +158,27 @@ void core_1_code(void* pvParameters) {
     for (;;) {
         //* Probe code
         millis_core1_current = millis();  
-        if (millis_core1_current - millis_probe_start >= millis_probe_period) {
-            Serial.print("1: ");
-            Serial.print(grill::probe_1.calculate_temperature());
-            Serial.print(" -- 2: ");
-            Serial.print(grill::probe_2.calculate_temperature());
-            Serial.print(" -- 3: ");
-            Serial.print(grill::probe_3.calculate_temperature());
-            Serial.print(" -- 4: ");
-            Serial.print(grill::probe_4.calculate_temperature());
-            Serial.print(" -- 5: ");
-            Serial.print(grill::probe_5.calculate_temperature());
-            Serial.print(" -- 6: ");
-            Serial.print(grill::probe_6.calculate_temperature());
-            Serial.print(" -- 7: ");
-            Serial.print(grill::probe_7.calculate_temperature());
-            Serial.print(" -- 8: ");
-            Serial.print(grill::probe_8.calculate_temperature());
+        // if (millis_core1_current - millis_probe_start >= millis_probe_period) {
+        //     Serial.print("1: ");
+        //     Serial.print(grill::probe_1.calculate_temperature());
+        //     Serial.print(" -- 2: ");
+        //     Serial.print(grill::probe_2.calculate_temperature());
+        //     Serial.print(" -- 3: ");
+        //     Serial.print(grill::probe_3.calculate_temperature());
+        //     Serial.print(" -- 4: ");
+        //     Serial.print(grill::probe_4.calculate_temperature());
+        //     Serial.print(" -- 5: ");
+        //     Serial.print(grill::probe_5.calculate_temperature());
+        //     Serial.print(" -- 6: ");
+        //     Serial.print(grill::probe_6.calculate_temperature());
+        //     Serial.print(" -- 7: ");
+        //     Serial.print(grill::probe_7.calculate_temperature());
+        //     Serial.print(" -- 8: ");
+        //     Serial.print(grill::probe_8.calculate_temperature());
     
-            Serial.println(" ");
-            millis_probe_start = millis_core1_current; 
-        } 
+        //     Serial.println(" ");
+        //     millis_probe_start = millis_core1_current; 
+        // } 
 
         //* Button code 
         if(digitalRead(gpio::power_button) == LOW && not is_button_pressed) {
@@ -187,16 +202,16 @@ void core_1_code(void* pvParameters) {
             
         }
         
-        //* Battery code 
-        if (millis_core1_current - millis_battery_start >= millis_battery_period) {
-            battery.read_battery();
-            Serial.print("SOC: ");
-            Serial.print(grill::battery_percentage);
-            Serial.print(" -- is charging?: ");
-            Serial.print(grill::battery_charging);
-            Serial.println(" ");
-            millis_battery_start = millis_core1_current; 
-        } 
+        // //* Battery code 
+        // if (millis_core1_current - millis_battery_start >= millis_battery_period) {
+        //     battery.read_battery();
+        //     Serial.print("SOC: ");
+        //     Serial.print(grill::battery_percentage);
+        //     Serial.print(" -- is charging?: ");
+        //     Serial.print(grill::battery_charging);
+        //     Serial.println(" ");
+        //     millis_battery_start = millis_core1_current; 
+        // } 
     }
 }
 

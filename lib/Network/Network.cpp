@@ -3,11 +3,16 @@
 #include <WiFi.h>
 
 #include "Config.h"
+#include "Grill.h"
 
 constexpr int CONNECT_TIMEOUT_SECONDS = 15;
 
-void start_local_ap(String ssid, String password, IPAddress ip, IPAddress subnet, IPAddress gateway)
+void start_local_ap(String ssid, String password, String ip, String subnet, String gateway)
 {
+    IPAddress local_ip = local_ip.fromString(ip);
+    IPAddress local_subnet = local_subnet.fromString(subnet);
+    IPAddress local_gateway = local_gateway.fromString(gateway);
+
     const char *local_password = NULL;
 
     if (password != "")
@@ -17,14 +22,19 @@ void start_local_ap(String ssid, String password, IPAddress ip, IPAddress subnet
 
     // Start local ap
     Serial.println("Starting local wifi ap");
-    WiFi.softAPConfig(ip, gateway, subnet);
+    WiFi.softAPConfig(local_ip, local_gateway, local_subnet);
     WiFi.softAP(ssid.c_str(), local_password);
     Serial.printf("Local SSID: %s \n", ssid.c_str());
     Serial.printf("Local IP: %s \n", WiFi.softAPIP().toString().c_str());
 }
 
-bool connect_to_wifi(String ssid, String password, bool static_ip, IPAddress ip, IPAddress subnet, IPAddress gateway, IPAddress dns1, IPAddress dns2)
+bool connect_to_wifi(String ssid, String password, String ip, String subnet, String gateway, String dns)
 {
+    IPAddress wifi_ip = wifi_ip.fromString(ip);
+    IPAddress wifi_subnet = wifi_subnet.fromString(subnet);
+    IPAddress wifi_gateway = wifi_gateway.fromString(gateway);
+    IPAddress wifi_dns = wifi_dns.fromString(dns);
+
     int timeout = CONNECT_TIMEOUT_SECONDS * 1000;
     int step = 500;
 
@@ -48,9 +58,9 @@ bool connect_to_wifi(String ssid, String password, bool static_ip, IPAddress ip,
 
     Serial.println("");
 
-    if (static_ip)
+    if (ip != "0.0.0.0")
     {
-        if (!WiFi.config(ip, gateway, subnet, dns1, dns2))
+        if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns))
         {
             Serial.println("Failed to configure Static IP");
         }
@@ -65,7 +75,7 @@ bool connect_to_wifi(String ssid, String password, bool static_ip, IPAddress ip,
 
 void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    config::wifi_connected = true;
+    grill::wifi_connected = true;
     
     Serial.println("Connected to wifi");
     print_wifi_connection();
@@ -73,7 +83,7 @@ void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 
 void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    config::wifi_ip = WiFi.localIP();
+    config::wifi_ip = WiFi.localIP().toString();
     
     Serial.println("Received IP");
     print_wifi_connection();
@@ -81,7 +91,7 @@ void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 
 void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    config::wifi_connected = false;
+    grill::wifi_connected = false;
 
     Serial.println("Wifi disconnected");
 

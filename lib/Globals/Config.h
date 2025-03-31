@@ -13,9 +13,11 @@ namespace config{
     extern String grill_firmware_version;
 
     // Wifi
-    extern bool wifi_connected;
-    extern int wifi_signal;
-    extern IPAddress wifi_ip;
+    extern String wifi_ip;
+    extern String wifi_subnet;
+    extern String wifi_gateway;
+    extern String wifi_dns;
+
     extern String wifi_ssid;
     extern String wifi_password;
 
@@ -23,5 +25,9 @@ namespace config{
     extern String local_ap_ssid_prefix;
     extern String local_ap_ssid;
     extern String local_ap_password;
+
+    extern String local_ap_ip;
+    extern String local_ap_subnet;
+    extern String local_ap_gateway;
 
 }

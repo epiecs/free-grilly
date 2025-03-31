@@ -19,9 +19,9 @@ void get_api_grill()
     jsondoc["firmware_version"]   = config::grill_firmware_version;
     jsondoc["battery_percentage"] = grill::battery_percentage;
     jsondoc["battery_charging"]   = grill::battery_charging;
-    jsondoc["wifi_connected"]     = config::wifi_connected;
+    jsondoc["wifi_connected"]     = grill::wifi_connected;
     jsondoc["wifi_ssid"]          = config::wifi_ssid;
-    jsondoc["wifi_ip"]            = config::wifi_ip.toString().c_str();
+    jsondoc["wifi_ip"]            = config::wifi_ip;
     jsondoc["wifi_signal"]        = WiFi.RSSI();
     
     JsonArray probeData = jsondoc["probes"].to<JsonArray>();
@@ -78,17 +78,30 @@ void get_api_settings()
 {
     jsondoc.clear();
 
-    jsondoc["name"] = "Opengrill";
-    jsondoc["temperature_unit"] = "celcius";
-    jsondoc["alarm_enabled"] = true;
-    jsondoc["alarm_volume"] = 1;
-    jsondoc["alarm_degrees_before"] = 5;
+    jsondoc["name"]              = config::grill_name;
+    jsondoc["uuid"]              = config::grill_uuid;
+    jsondoc["firmware_version"]  = config::grill_firmware_version;
+    
+    jsondoc["wifi_ssid"]         = config::wifi_ssid;
+    jsondoc["wifi_password"]     = "********";
+    jsondoc["wifi_ip"]           = config::wifi_ip;
+    jsondoc["wifi_subnet"]       = config::wifi_subnet;
+    jsondoc["wifi_gateway"]      = config::wifi_gateway;
+    
+    jsondoc["local_ap_ssid"]     = config::local_ap_ssid;
+    jsondoc["local_ap_password"] = config::local_ap_password;
+
+    jsondoc["local_ap_ssid"]     = config::local_ap_ssid;
+    jsondoc["local_ap_ip"]       = config::local_ap_ip;
+    jsondoc["local_ap_subnet"]   = config::local_ap_subnet;
+    
+    // TODO implement
+    jsondoc["temperature_unit"]         = "celcius";  //TODO have fahrenheit here + also in the main api endpoint
+    jsondoc["alarm_enabled"]            = true;
+    jsondoc["alarm_volume"]             = 1;
+    jsondoc["alarm_degrees_before"]     = 5;
     jsondoc["alarm_on_wifi_disconnect"] = true;
-    jsondoc["auto_shutdown_time"] = 180;
-    jsondoc["wifi_ssid"] = "WOZ";
-    jsondoc["wifi_passphrase"] = "hidden";
-    jsondoc["local_ssid"] = "Opengrill";
-    jsondoc["local_passphrase"] = "";
+    jsondoc["auto_shutdown_time"]       = 180;
 
     jsondoc.shrinkToFit();
 
@@ -109,17 +122,29 @@ void post_api_settings()
     // https://arduinojson.org/v7/tutorial/deserialization/
     jsondoc.clear();
 
-    jsondoc["name"] = "Opengrill";
-    jsondoc["temperature_unit"] = "celcius";
-    jsondoc["alarm_enabled"] = true;
-    jsondoc["alarm_volume"] = 1;
-    jsondoc["alarm_degrees_before"] = 5;
+    jsondoc["name"]              = config::grill_name;
+    jsondoc["uuid"]              = config::grill_uuid;
+    jsondoc["firmware_version"]  = config::grill_firmware_version;
+    
+    jsondoc["wifi_ssid"]         = config::wifi_ssid;
+    jsondoc["wifi_ip"]           = config::wifi_ip;
+    jsondoc["wifi_subnet"]       = config::wifi_subnet;
+    jsondoc["wifi_gateway"]      = config::wifi_gateway;
+    
+    jsondoc["local_ap_ssid"]     = config::local_ap_ssid;
+    jsondoc["local_ap_password"] = config::local_ap_password;
+
+    jsondoc["local_ap_ssid"]     = config::local_ap_ssid;
+    jsondoc["local_ap_ip"]       = config::local_ap_ip;
+    jsondoc["local_ap_subnet"]   = config::local_ap_subnet;
+    
+    // TODO implement
+    jsondoc["temperature_unit"]         = "celcius";  //TODO have fahrenheit here + also in the main api endpoint
+    jsondoc["alarm_enabled"]            = true;
+    jsondoc["alarm_volume"]             = 1;
+    jsondoc["alarm_degrees_before"]     = 5;
     jsondoc["alarm_on_wifi_disconnect"] = true;
-    jsondoc["auto_shutdown_time"] = 180;
-    jsondoc["wifi_ssid"] = "WOZ";
-    jsondoc["wifi_passphrase"] = "hidden";
-    jsondoc["local_ssid"] = "Opengrill";
-    jsondoc["local_passphrase"] = "";
+    jsondoc["auto_shutdown_time"]       = 180;
 
     jsondoc.shrinkToFit();
     serializeJson(jsondoc, buffer);

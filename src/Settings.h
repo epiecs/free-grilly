@@ -65,23 +65,22 @@ namespace config{
     // * Wifi
     // ***********************************
 
-    bool wifi_connected                 = false;
-    int wifi_signal                     = -99;
-
     String wifi_ssid                    = "";
     String wifi_password                = "";
 
-    bool wifi_static_ip                 = true;
-    IPAddress wifi_ip(10, 30, 10, 235);
-    IPAddress wifi_subnet(255, 255, 255, 0);
-    IPAddress wifi_gateway(10, 30, 10, 1);
-    IPAddress wifi_dns(10, 30, 50, 254);
-    IPAddress wifi_dns2(0, 0, 0, 0);
+    String wifi_ip                      = "0.0.0.0";
+    String wifi_subnet                  = "0.0.0.0";
+    String wifi_gateway                 = "0.0.0.0";
+    String wifi_dns                     = "0.0.0.0";
 
     // Local AP
-    String local_ap_ssid_prefix    = "FreeGrilly";
-    String local_ap_ssid           = "";
-    String local_ap_password       = "";
+    String local_ap_ssid_prefix         = "FreeGrilly";
+    String local_ap_ssid                = "";
+    String local_ap_password            = "";
+
+    String local_ap_ip                  = "0.0.0.0"; // default declared in grillconfig.cpp
+    String local_ap_subnet              = "0.0.0.0"; // default declared in grillconfig.cpp
+    String local_ap_gateway             = "0.0.0.0"; // default declared in grillconfig.cpp
 
     // ***********************************
     // * Probes
@@ -91,6 +90,13 @@ namespace config{
 
 namespace grill{
     
+    // ***********************************
+    // * Wifi
+    // ***********************************
+
+    bool wifi_connected                 = false;
+    int wifi_signal                     = -99;
+
     // ***********************************
     // * Battery
     // ***********************************

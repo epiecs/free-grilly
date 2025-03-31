@@ -16,6 +16,11 @@ public:
      */
     void initialize_settings();
 
+    /**
+     * @brief Prints out the current stored config
+     * 
+     */
+    void print();
 
     /**
     * @brief Factory resets the nvram and clears all settings

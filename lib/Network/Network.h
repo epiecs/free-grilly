@@ -3,19 +3,19 @@
 void start_local_ap(
     String ssid,
     String password = "",
-    IPAddress ip = IPAddress(192, 168, 200, 10),
-    IPAddress subnet = IPAddress(255, 255, 255, 0),
-    IPAddress gateway = IPAddress(192, 168, 200, 10));
+    String ip = "0.0.0.0",
+    String subnet = "0.0.0.0",
+    String gateway = "0.0.0.0"
+);
 
 bool connect_to_wifi(
     String ssid,
     String password = "",
-    bool static_ip = false,
-    IPAddress ip = IPAddress(0, 0, 0, 0),
-    IPAddress subnet = IPAddress(0, 0, 0, 0),
-    IPAddress gateway = IPAddress(0, 0, 0, 0),
-    IPAddress dns1 = IPAddress(0, 0, 0, 0),
-    IPAddress dns2 = IPAddress(0, 0, 0, 0));
+    String ip = "0.0.0.0",
+    String subnet = "0.0.0.0",
+    String gateway = "0.0.0.0",
+    String dns = "0.0.0.0"
+);
 
 void print_wifi_connection();
 

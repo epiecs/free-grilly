@@ -2,11 +2,13 @@
 
 namespace grill {
 
-    //TODO refactor battery to its own namespace and then refactor power.h in 2 seperate classes
     // Battery
     extern int battery_percentage;
     extern bool battery_charging;
 
+    // Wifi
+    extern bool wifi_connected;
+    extern int wifi_signal;
 
     extern Probe probe_1;
     extern Probe probe_2;

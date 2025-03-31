@@ -1,15 +1,23 @@
-global.h uiteen trekken in verschillende namespaces
-global.h file ook hernoemen want alles zit toch in de global dir
-global config verder voorzien
-init voorzien in grillconfig class
+openapi spec voor settings voorzien - later aan te vullen
+openapi spec inladen in postman als test
+post van settings voorzien
+preferences.h aanpassen -> via grillconfig class -> template class?
 
 
-settings class voorzien voor preferences
+network ip opslaan
+network ip inladen in main.cpp + functie eens settings saved
+  Aparte wifi settings mss voorzien? -> altijd reconnect doen
+  indien settings post ssid of ww != stored ww ssid reconnect
+  indien settings ip anders ook reconnect
+
+info op bbqgenootschap plaatsen?
+licentie bespreken met jeroen/christos?
+
+
 preferences uitwerken
 
-class voorzien voor grill met daarin uuid generatie + initiele ssid naam
 
-fix voor openapi spec
+fix voor openapi spec -> bug logged, zit in upstream renderer
 
 global.h verder correct uitwerken zodat alles er in staat
 config.h verder uitwerken en correct comment headers voorzien
