@@ -16,7 +16,7 @@
 // ************************************
 // * Config.h initializes variables
 // ************************************
-#include "Config.h"
+#include "Settings.h"
 
 //* Core task handlers
 TaskHandle_t taskCore0;
