@@ -5,6 +5,7 @@
 #include "Api.h"
 #include "Config.h"
 #include "Grill.h"
+#include "Web.h"
 
 JsonDocument jsondoc;
 char buffer[600];
@@ -60,7 +61,7 @@ void get_api_grill()
     jsondoc.shrinkToFit();
 
     serializeJson(jsondoc, buffer);
-    webserver.send(200, "application/json", buffer);
+    web::webserver.send(200, "application/json", buffer);
 }
 
 void get_api_probes() 
@@ -92,16 +93,16 @@ void get_api_settings()
     jsondoc.shrinkToFit();
 
     serializeJson(jsondoc, buffer);
-    webserver.send(200, "application/json", buffer);
+    web::webserver.send(200, "application/json", buffer);
 }
 
 void post_api_settings() 
 {
-    if(webserver.hasArg("plain") == false) { webserver.send(400, "application/json", "{\"error\": \"empty body\"}"); return;}
+    if(web::webserver.hasArg("plain") == false) { web::webserver.send(400, "application/json", "{\"error\": \"empty body\"}"); return;}
 
-    std::string body = webserver.arg("plain").c_str();
+    std::string body = web::webserver.arg("plain").c_str();
     DeserializationError err = deserializeJson(jsondoc, body);
-    if(err) { webserver.send(400, "application/json", "{\"error\": \"malformatted body\"}"); return;}
+    if(err) { web::webserver.send(400, "application/json", "{\"error\": \"malformatted body\"}"); return;}
     
     Serial.println(body.c_str());
     
@@ -124,16 +125,16 @@ void post_api_settings()
     serializeJson(jsondoc, buffer);
     
     // return the body for now, if all checks pass then the body is the correct data for the client.
-    webserver.send(200, "application/json", body.c_str());
+    web::webserver.send(200, "application/json", body.c_str());
 }
 
 void setup_api_routes()
 {
-    webserver.on("/api/grill", HTTP_GET, get_api_grill);
+    web::webserver.on("/api/grill", HTTP_GET, get_api_grill);
 
-    webserver.on("/api/probes", HTTP_GET, get_api_probes);
-    webserver.on("/api/probes", HTTP_POST, post_api_probes);
+    web::webserver.on("/api/probes", HTTP_GET, get_api_probes);
+    web::webserver.on("/api/probes", HTTP_POST, post_api_probes);
     
-    webserver.on("/api/settings", HTTP_GET, get_api_settings);
-    webserver.on("/api/settings", HTTP_POST, post_api_settings);
+    web::webserver.on("/api/settings", HTTP_GET, get_api_settings);
+    web::webserver.on("/api/settings", HTTP_POST, post_api_settings);
 }

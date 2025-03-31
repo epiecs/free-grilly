@@ -12,6 +12,7 @@
 #include "Preferences.h"
 #include "Util.h"
 #include "Website.h"
+#include "Web.h"
 
 // ************************************
 // * Config.h initializes variables
@@ -86,9 +87,9 @@ void setup() {
     setup_api_routes();
     setup_web_routes();
 
-    webserver.enableCORS();
-    webserver.onNotFound(not_found);
-    webserver.begin();
+    web::webserver.enableCORS();
+    web::webserver.onNotFound(not_found);
+    web::webserver.begin();
 
     // ***********************************
     // * Power
@@ -110,7 +111,7 @@ void core_0_code(void* pvParameters) {
 
     //* Loop
     for (;;) {
-        webserver.handleClient();
+        web::webserver.handleClient();
     }
 }
 

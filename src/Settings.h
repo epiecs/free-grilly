@@ -6,6 +6,18 @@
 #include "Probe.h"
 #include "GrillConfig.h"
 
+// ***********************************
+// * Timers
+// ***********************************
+
+unsigned long millis_core1_current;
+unsigned long millis_probe_start;    
+unsigned long millis_button_start;        
+unsigned long millis_battery_start;     
+const unsigned long millis_probe_period = 1000;     // Probe read interval
+const unsigned long millis_battery_period = 10000;   // Battery read interval
+
+
 namespace gpio{
 
     int power_button           = 35;
@@ -100,20 +112,10 @@ namespace grill{
     Probe probe_8 = Probe(8);
 }
 
-// ***********************************
-// * Timers
-// ***********************************
-
-unsigned long millis_core1_current;
-unsigned long millis_probe_start;    
-unsigned long millis_button_start;        
-unsigned long millis_battery_start;     
-const unsigned long millis_probe_period = 1000;     // Probe read interval
-const unsigned long millis_battery_period = 10000;   // Battery read interval
-
-
-// ***********************************
-// * Api / Webserver
-// ***********************************
-
-WebServer webserver(80);
+namespace web{
+    // ***********************************
+    // * Api / Webserver
+    // ***********************************
+    
+    WebServer webserver(80);
+}

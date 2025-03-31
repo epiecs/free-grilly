@@ -25,9 +25,3 @@ namespace config{
     extern String local_ap_password;
 
 }
-
-
-// Webserver for api
-extern WebServer webserver;
-
-// // Probes
