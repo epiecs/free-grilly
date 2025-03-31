@@ -190,9 +190,9 @@ void core_1_code(void* pvParameters) {
         if (millis_core1_current - millis_battery_start >= millis_battery_period) {
             battery.read_battery();
             Serial.print("SOC: ");
-            Serial.print(battery_percentage);
+            Serial.print(grill::battery_percentage);
             Serial.print(" -- is charging?: ");
-            Serial.print(battery_charging);
+            Serial.print(grill::battery_charging);
             Serial.println(" ");
             millis_battery_start = millis_core1_current; 
         } 

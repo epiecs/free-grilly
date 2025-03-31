@@ -16,8 +16,8 @@ void get_api_grill()
     jsondoc["name"]               = config::grill_name;
     jsondoc["unique_id"]          = config::grill_uuid;
     jsondoc["firmware_version"]   = config::grill_firmware_version;
-    jsondoc["battery_percentage"] = battery_percentage;
-    jsondoc["battery_charging"]   = battery_charging;
+    jsondoc["battery_percentage"] = grill::battery_percentage;
+    jsondoc["battery_charging"]   = grill::battery_charging;
     jsondoc["wifi_connected"]     = config::wifi_connected;
     jsondoc["wifi_ssid"]          = config::wifi_ssid;
     jsondoc["wifi_ip"]            = config::wifi_ip.toString().c_str();

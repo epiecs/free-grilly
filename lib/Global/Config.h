@@ -26,9 +26,6 @@ namespace config{
 
 }
 
-// Battery
-extern int battery_percentage;
-extern bool battery_charging;
 
 // Webserver for api
 extern WebServer webserver;

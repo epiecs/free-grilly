@@ -80,6 +80,13 @@ namespace config{
 namespace grill{
     
     // ***********************************
+    // * Battery
+    // ***********************************
+
+    int battery_percentage              = 0;
+    bool battery_charging               = false;
+
+    // ***********************************
     // * Probes
     // ***********************************
 
@@ -103,15 +110,6 @@ unsigned long millis_button_start;
 unsigned long millis_battery_start;     
 const unsigned long millis_probe_period = 1000;     // Probe read interval
 const unsigned long millis_battery_period = 10000;   // Battery read interval
-
-
-
-// ***********************************
-// * Battery
-// ***********************************
-
-int battery_percentage              = 0;
-bool battery_charging               = false;
 
 
 // ***********************************

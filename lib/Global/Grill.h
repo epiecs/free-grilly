@@ -2,6 +2,12 @@
 
 namespace grill {
 
+    //TODO refactor battery to its own namespace and then refactor power.h in 2 seperate classes
+    // Battery
+    extern int battery_percentage;
+    extern bool battery_charging;
+
+
     extern Probe probe_1;
     extern Probe probe_2;
     extern Probe probe_3;

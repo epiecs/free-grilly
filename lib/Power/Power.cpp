@@ -3,6 +3,7 @@
 #include <Wire.h>
 
 #include "Config.h"
+#include "Grill.h"
 
 // Initializes class variables
 bat::bat() : _deviceAddress(BAT_I2C) {}
@@ -88,8 +89,8 @@ bool bat::chargeFlag(void) {
 }
 
 bool bat::read_battery(void) {
-	battery_percentage  = soc(FILTERED);
-	battery_charging 	= chargeFlag();
+	grill::battery_percentage  = soc(FILTERED);
+	grill::battery_charging 	= chargeFlag();
 	return true;
 }
 
