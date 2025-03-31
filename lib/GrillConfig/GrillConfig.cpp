@@ -3,7 +3,7 @@
 #include <Preferences.h>
 #include <nvs_flash.h>
 
-#include "Global.h"
+#include "Config.h"
 
 
 void GrillConfig::initialize_settings(){

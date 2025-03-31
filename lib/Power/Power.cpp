@@ -2,7 +2,7 @@
 #include <Power.h>
 #include <Wire.h>
 
-#include "Global.h"
+#include "Config.h"
 
 // Initializes class variables
 bat::bat() : _deviceAddress(BAT_I2C) {}

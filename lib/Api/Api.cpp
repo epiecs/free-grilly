@@ -3,7 +3,7 @@
 #include <WiFi.h>
 
 #include "Api.h"
-#include "Global.h"
+#include "Config.h"
 #include "Grill.h"
 
 JsonDocument jsondoc;

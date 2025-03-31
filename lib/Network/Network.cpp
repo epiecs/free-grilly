@@ -2,7 +2,7 @@
 
 #include <WiFi.h>
 
-#include "Global.h"
+#include "Config.h"
 
 constexpr int CONNECT_TIMEOUT_SECONDS = 15;
 
