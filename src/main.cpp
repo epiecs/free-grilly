@@ -197,7 +197,6 @@ void core_1_code(void* pvParameters) {
 
             if(millis_core1_current - millis_button_start < 1000) {
                 Serial.println("Button pressed for less than 1 second");
-                display.display_update();
             }
             else if (millis_core1_current - millis_button_start < 10000) {
                 Serial.println("Button pressed for less than 10 seconds - Shutting down");
@@ -219,6 +218,11 @@ void core_1_code(void* pvParameters) {
         //     Serial.println(" ");
         //     millis_battery_start = millis_core1_current; 
         // } 
+
+        if (millis_core1_current - millis_display_start >= millis_display_period) {
+            display.display_update();
+            millis_display_start = millis_core1_current; 
+        } 
     }
 }
 

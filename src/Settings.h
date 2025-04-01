@@ -13,9 +13,11 @@
 unsigned long millis_core1_current;
 unsigned long millis_probe_start;    
 unsigned long millis_button_start;        
-unsigned long millis_battery_start;     
-const unsigned long millis_probe_period = 1000;     // Probe read interval
+unsigned long millis_battery_start; 
+unsigned long millis_display_start;     
+const unsigned long millis_probe_period = 1000;      // ! Probe read interval - will be replaced with display update
 const unsigned long millis_battery_period = 10000;   // Battery read interval
+const unsigned long millis_display_period = 1000;    // Display update interval
 
 
 namespace gpio{
