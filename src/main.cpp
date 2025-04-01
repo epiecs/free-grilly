@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <U8g2lib.h>
 #include <ArduinoJson.h>
 #include <SPI.h>
 #include <WebServer.h>
@@ -13,6 +12,7 @@
 #include "Preferences.h"
 #include "Website.h"
 #include "Web.h"
+#include "Display.h"
 
 // ************************************
 // * Config.h initializes variables
@@ -26,8 +26,6 @@ TaskHandle_t taskCore1;
 void core_0_code(void* pvParameters);
 void core_1_code(void* pvParameters);
 
-U8G2_ST7565_64128N_F_4W_SW_SPI u8g2(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /* cs=*/ 5, /* dc=*/ 17, /* reset=*/ 16); //todo define globally 
-
 void setup() {
     // ***********************************
     // * Serial
@@ -40,7 +38,8 @@ void setup() {
     // * Load nvram settings and init
     // ***********************************
     config::settings_storage.begin("free-grilly", false);
-    config::config_helper.load_settings();
+    config::config_helper.initialize_settings();
+
 
     // ***********************************
     // * SPI for probes
@@ -114,12 +113,12 @@ void setup() {
 
     battery.init();
     power.startup();
+    display.init();
 
     xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
     xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
 
-    u8g2.begin();
-    u8g2.setContrast(20);
+    
 }
 
 void core_0_code(void* pvParameters) {
@@ -198,15 +197,7 @@ void core_1_code(void* pvParameters) {
 
             if(millis_core1_current - millis_button_start < 1000) {
                 Serial.println("Button pressed for less than 1 second");
-                u8g2.clearBuffer(); //todo move to proper function
-                u8g2.setFontMode(1);
-                u8g2.setBitmapMode(1);
-                u8g2.setFont(u8g2_font_5x7_tr);
-                u8g2.drawStr(7, 8, "Free-Grilly");
-                u8g2.setFont(u8g2_font_t0_22_tr);
-                u8g2.setCursor(37, 39);
-                u8g2.print(grill::probe_1.calculate_temperature());
-                u8g2.sendBuffer();
+                display.display_update();
             }
             else if (millis_core1_current - millis_button_start < 10000) {
                 Serial.println("Button pressed for less than 10 seconds - Shutting down");
@@ -214,7 +205,6 @@ void core_1_code(void* pvParameters) {
             }
             else if (millis_core1_current - millis_button_start > 10000) {
                 Serial.println("Button pressed for more than 10 seconds");
-                config::config_helper.factory_reset();
             }
             
         }
