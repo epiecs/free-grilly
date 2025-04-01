@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <U8g2lib.h>
 #include <ArduinoJson.h>
 #include <SPI.h>
 #include <WebServer.h>
@@ -24,6 +25,8 @@ TaskHandle_t taskCore1;
 
 void core_0_code(void* pvParameters);
 void core_1_code(void* pvParameters);
+
+U8G2_ST7565_64128N_F_4W_SW_SPI u8g2(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /* cs=*/ 5, /* dc=*/ 17, /* reset=*/ 16); //todo define globally 
 
 void setup() {
     // ***********************************
@@ -115,6 +118,9 @@ void setup() {
 
     xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
     xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
+
+    u8g2.begin();
+    u8g2.setContrast(20);
 }
 
 void core_0_code(void* pvParameters) {
@@ -131,6 +137,7 @@ void core_0_code(void* pvParameters) {
 }
 
 bool is_button_pressed = false;
+char char_temp_value[4];
 
 void core_1_code(void* pvParameters) {
 
@@ -147,7 +154,7 @@ void core_1_code(void* pvParameters) {
     pinMode(gpio::power_button, INPUT);
 
     pinMode(4, OUTPUT); // SCREEN LED!! VT5
-    digitalWrite(4, LOW);
+    digitalWrite(4, HIGH);
 
     pinMode(32, OUTPUT); // BUZZZZZER!! VT5
 
@@ -158,27 +165,28 @@ void core_1_code(void* pvParameters) {
     for (;;) {
         //* Probe code
         millis_core1_current = millis();  
-        // if (millis_core1_current - millis_probe_start >= millis_probe_period) {
-        //     Serial.print("1: ");
-        //     Serial.print(grill::probe_1.calculate_temperature());
-        //     Serial.print(" -- 2: ");
-        //     Serial.print(grill::probe_2.calculate_temperature());
-        //     Serial.print(" -- 3: ");
-        //     Serial.print(grill::probe_3.calculate_temperature());
-        //     Serial.print(" -- 4: ");
-        //     Serial.print(grill::probe_4.calculate_temperature());
-        //     Serial.print(" -- 5: ");
-        //     Serial.print(grill::probe_5.calculate_temperature());
-        //     Serial.print(" -- 6: ");
-        //     Serial.print(grill::probe_6.calculate_temperature());
-        //     Serial.print(" -- 7: ");
-        //     Serial.print(grill::probe_7.calculate_temperature());
-        //     Serial.print(" -- 8: ");
-        //     Serial.print(grill::probe_8.calculate_temperature());
+        if (millis_core1_current - millis_probe_start >= millis_probe_period) {
+            Serial.print("1: ");
+            Serial.print(grill::probe_1.calculate_temperature());
+            Serial.print(" -- 2: ");
+            Serial.print(grill::probe_2.calculate_temperature());
+            Serial.print(" -- 3: ");
+            Serial.print(grill::probe_3.calculate_temperature());
+            Serial.print(" -- 4: ");
+            Serial.print(grill::probe_4.calculate_temperature());
+            Serial.print(" -- 5: ");
+            Serial.print(grill::probe_5.calculate_temperature());
+            Serial.print(" -- 6: ");
+            Serial.print(grill::probe_6.calculate_temperature());
+            Serial.print(" -- 7: ");
+            Serial.print(grill::probe_7.calculate_temperature());
+            Serial.print(" -- 8: ");
+            Serial.print(grill::probe_8.calculate_temperature());
     
-        //     Serial.println(" ");
-        //     millis_probe_start = millis_core1_current; 
-        // } 
+            Serial.println(" ");
+
+            millis_probe_start = millis_core1_current; 
+        } 
 
         //* Button code 
         if(digitalRead(gpio::power_button) == LOW && not is_button_pressed) {
@@ -191,6 +199,12 @@ void core_1_code(void* pvParameters) {
 
             if(millis_core1_current - millis_button_start < 1000) {
                 Serial.println("Button pressed for less than 1 second");
+                u8g2.clearBuffer(); //todo move to proper function
+                u8g2.setFontMode(1);
+                u8g2.setBitmapMode(1);
+                u8g2.setFont(u8g2_font_5x7_tr);
+                u8g2.drawStr(7, 8, "Free-Grilly");
+                u8g2.sendBuffer();
             }
             else if (millis_core1_current - millis_button_start < 10000) {
                 Serial.println("Button pressed for less than 10 seconds - Shutting down");
