@@ -1,4 +1,4 @@
-openapi: '3.1.1'
+openapi: '3.0.4'
 info:
   title: Free-Grilly
   version: '25.3.27'
@@ -76,9 +76,8 @@ components:
                 type: integer
                 description: The number of the prober
               temperature:
-                type: 
-                  - "number"
-                  - "null"
+                type: number
+                nullable: true
                 format: float
                 description: The temperature in Celcius
             example:
@@ -98,9 +97,74 @@ components:
                 temperature: null
               - probe_id: 8
                 temperature: null
+    Settings:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Free-Grilly
+          description: The chosen grill name
+        unique_id:
+          type: string
+          format: uuid
+          example: 12abc3de-4567-89f0-a123-456b789012c3
+          description: The unique id in UUIDv4 format
+          readOnly: true
+        firmware_version:
+          type: string
+          format: yy.mm.dd
+          example: 25.3.1
+          description: The current firmware version in CalVer
+          readOnly: true
+        wifi_ssid:
+          type: string
+          example: my-home-wifi
+          description: The name of the wifi network that the grill is connected to
+        wifi_password:
+          type: string
+          example: "********"
+          description: The wifi password.
+          writeOnly: true
+        wifi_ip:
+          type: string
+          example: 192.168.0.10
+          description: The wifi ip when connected to your network
+        wifi_subnet:
+          type: string
+          example: 255.255.255.0
+          description: The wifi subnet
+        wifi_gateway:
+          type: string
+          example: 192.168.0.1
+          description: The wifi gateway
+        wifi_dns:
+          type: string
+          example: 9.9.9.9
+          description: The wifi dns
+        local_ap_ssid:
+          type: string
+          example: FreeGrilly
+          description: The name of the grill's local wifi network
+        local_ap_password:
+          type: string
+          example: "********"
+          description: The local wifi password
+          writeOnly: true
+        local_ap_ip:
+          type: string
+          example: 192.168.200.10
+          description: The local wifi ip
+        local_ap_subnet:
+          type: string
+          example: 255.255.255.0
+          description: The local wifi subnet
+        local_ap_gateway:
+          type: string
+          example: 192.168.200.1
+          description: The local wifi gateway
 
 paths:
-  /temperatures:
+  /grill:
     get:
       tags:
         - grill
@@ -115,4 +179,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Grill'
+  /settings:
+    get:
+      tags:
+        - settings
+      summary: Grill settings
+      description: >
+        Endpoint to view current settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+    post:
+      tags:
+        - settings
+      summary: Grill settings
+      description: >
+        Endpoint to edit settings
+      requestBody:
+        required: true
+        description: Settings to set
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Settings'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
                 

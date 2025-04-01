@@ -10,6 +10,17 @@
 JsonDocument jsondoc;
 char buffer[600];
 
+void setup_api_routes()
+{
+    web::webserver.on("/api/grill", HTTP_GET, get_api_grill);
+
+    web::webserver.on("/api/probes", HTTP_GET, get_api_probes);
+    web::webserver.on("/api/probes", HTTP_POST, post_api_probes);
+    
+    web::webserver.on("/api/settings", HTTP_GET, get_api_settings);
+    web::webserver.on("/api/settings", HTTP_POST, post_api_settings);
+}
+
 void get_api_grill()
 {
     jsondoc.clear();
@@ -127,6 +138,7 @@ void post_api_settings()
     jsondoc["firmware_version"]  = config::grill_firmware_version;
     
     jsondoc["wifi_ssid"]         = config::wifi_ssid;
+    jsondoc["wifi_password"]     = config::wifi_password;
     jsondoc["wifi_ip"]           = config::wifi_ip;
     jsondoc["wifi_subnet"]       = config::wifi_subnet;
     jsondoc["wifi_gateway"]      = config::wifi_gateway;
@@ -134,32 +146,21 @@ void post_api_settings()
     jsondoc["local_ap_ssid"]     = config::local_ap_ssid;
     jsondoc["local_ap_password"] = config::local_ap_password;
 
-    jsondoc["local_ap_ssid"]     = config::local_ap_ssid;
     jsondoc["local_ap_ip"]       = config::local_ap_ip;
     jsondoc["local_ap_subnet"]   = config::local_ap_subnet;
+    jsondoc["local_ap_gateway"]  = config::local_ap_gateway;
     
     // TODO implement
-    jsondoc["temperature_unit"]         = "celcius";  //TODO have fahrenheit here + also in the main api endpoint
-    jsondoc["alarm_enabled"]            = true;
-    jsondoc["alarm_volume"]             = 1;
-    jsondoc["alarm_degrees_before"]     = 5;
-    jsondoc["alarm_on_wifi_disconnect"] = true;
-    jsondoc["auto_shutdown_time"]       = 180;
+    // jsondoc["temperature_unit"]         = "celcius";  //TODO have fahrenheit here + also in the main api endpoint
+    // jsondoc["alarm_enabled"]            = true;
+    // jsondoc["alarm_volume"]             = 1;
+    // jsondoc["alarm_degrees_before"]     = 5;
+    // jsondoc["alarm_on_wifi_disconnect"] = true;
+    // jsondoc["auto_shutdown_time"]       = 180;
 
     jsondoc.shrinkToFit();
     serializeJson(jsondoc, buffer);
     
     // return the body for now, if all checks pass then the body is the correct data for the client.
     web::webserver.send(200, "application/json", body.c_str());
-}
-
-void setup_api_routes()
-{
-    web::webserver.on("/api/grill", HTTP_GET, get_api_grill);
-
-    web::webserver.on("/api/probes", HTTP_GET, get_api_probes);
-    web::webserver.on("/api/probes", HTTP_POST, post_api_probes);
-    
-    web::webserver.on("/api/settings", HTTP_GET, get_api_settings);
-    web::webserver.on("/api/settings", HTTP_POST, post_api_settings);
 }

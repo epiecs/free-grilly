@@ -48,10 +48,10 @@ void GrillConfig::load_settings(){
     // shorter keys since keys should max be 15 chars
     config::local_ap_ssid     = config::settings_storage.getString("l_ap_ssid", "");
     config::local_ap_password = config::settings_storage.getString("l_ap_password", "");
+    
     config::local_ap_ip       = config::settings_storage.getString("l_ap_ip", local_ap_ip_default);
     config::local_ap_subnet   = config::settings_storage.getString("l_ap_subnet", local_ap_subnet_default);
     config::local_ap_gateway  = config::settings_storage.getString("l_ap_gateway", local_ap_gateway_default);
-
 
     GrillConfig::print();
 }
