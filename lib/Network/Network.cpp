@@ -1,9 +1,22 @@
 #include <Network.h>
 
 #include <WiFi.h>
+#include <Preferences.h>
 
 #include "Config.h"
 #include "Grill.h"
+
+// TODO works, have to fix circular dependancy in grillconfig?
+// #include <Network.h>
+
+// #include <WebServer.h>
+// #include <Preferences.h>
+// #include <WiFi.h>
+
+// #include "GrillConfig.h"
+// #include "Probe.h"
+// #include "Config.h"
+// #include "Grill.h"
 
 constexpr int CONNECT_TIMEOUT_SECONDS = 15;
 
@@ -35,6 +48,7 @@ bool connect_to_wifi(String ssid, String password, String ip, String subnet, Str
     IPAddress wifi_subnet;  wifi_subnet.fromString(subnet);
     IPAddress wifi_gateway; wifi_gateway.fromString(gateway);
     IPAddress wifi_dns;     wifi_dns.fromString(dns);
+    IPAddress wifi_dns2(0,0,0,0);
 
     int timeout = CONNECT_TIMEOUT_SECONDS * 1000;
     int step = 500;
@@ -61,7 +75,7 @@ bool connect_to_wifi(String ssid, String password, String ip, String subnet, Str
 
     if (ip != "0.0.0.0")
     {
-        if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns))
+        if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns, wifi_dns2))
         {
             Serial.println("Failed to configure Static IP");
         }

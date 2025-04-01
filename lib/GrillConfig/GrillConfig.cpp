@@ -2,9 +2,12 @@
 
 #include <esp_random.h>
 #include <Preferences.h>
+#include <WebServer.h>
 #include <UUID.h>
 
 #include <nvs_flash.h>
+
+#include "Network.h"
 
 #include "Config.h"
 #include "Util.h"
@@ -28,7 +31,7 @@ void GrillConfig::load_settings(){
     }else if(config::settings_storage.getBool("initialized") == false){
         initialize_settings();
     }
-    
+
     // ***********************************
     // * Read from nvs
     // ***********************************
@@ -52,6 +55,39 @@ void GrillConfig::load_settings(){
     config::local_ap_ip       = config::settings_storage.getString("l_ap_ip", local_ap_ip_default);
     config::local_ap_subnet   = config::settings_storage.getString("l_ap_subnet", local_ap_subnet_default);
     config::local_ap_gateway  = config::settings_storage.getString("l_ap_gateway", local_ap_gateway_default);
+
+    GrillConfig::print();
+}
+
+void GrillConfig::save_settings(){
+    Serial.println("Saving settings");
+
+    config::settings_storage.putString("grill_name", config::grill_name);
+
+    bool reload_wifi     = check_wifi_reload_needed();
+    bool reload_local_ap = check_local_ap_reload_needed();
+
+    Serial.println("check if reload is needed");
+
+    config::settings_storage.putString("wifi_ssid", config::wifi_ssid);
+    config::settings_storage.putString("wifi_password", config::wifi_password);
+    config::settings_storage.putString("wifi_ip", config::wifi_ip);
+    config::settings_storage.putString("wifi_subnet", config::wifi_subnet);
+    config::settings_storage.putString("wifi_gateway", config::wifi_gateway);
+    config::settings_storage.putString("wifi_dns", config::wifi_dns);
+    
+    config::settings_storage.putString("l_ap_ssid", config::local_ap_ssid);
+    config::settings_storage.putString("l_ap_password", config::local_ap_password);
+    config::settings_storage.putString("l_ap_ip", config::local_ap_ip);
+    config::settings_storage.putString("l_ap_subnet", config::local_ap_subnet);
+    config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
+
+    if(reload_wifi){
+        connect_to_wifi(config::wifi_ssid, config::wifi_password, config::wifi_ip, config::wifi_subnet, config::wifi_gateway, config::wifi_dns);
+    }
+    if(reload_local_ap){
+        start_local_ap(config::local_ap_ssid, config::local_ap_password,config::local_ap_ip,config::local_ap_subnet,config::local_ap_gateway);
+    }
 
     GrillConfig::print();
 }
@@ -128,11 +164,29 @@ void GrillConfig::print(){
 
 }
 
-// https://forum.arduino.cc/t/how-to-save-ipaddress-to-esp32-preferences/1034330/5
-// IPAddress _ip;
-// uint32_t ip_addr = (uint32_t) _ip;
-// now you can store it in the preferences as integer.
+bool GrillConfig::check_wifi_reload_needed(){
+    
+    bool reload_needed = false;
+    
+    if(config::wifi_ssid     != config::settings_storage.getString("wifi_ssid"))     {reload_needed = true;}
+    if(config::wifi_password != config::settings_storage.getString("wifi_password")) {reload_needed = true;};    
+    if(config::wifi_ip       != config::settings_storage.getString("wifi_ip"))       {reload_needed = true;};
+    if(config::wifi_subnet   != config::settings_storage.getString("wifi_subnet"))   {reload_needed = true;};
+    if(config::wifi_gateway  != config::settings_storage.getString("wifi_gateway"))  {reload_needed = true;};
+    if(config::wifi_dns      != config::settings_storage.getString("wifi_dns"))      {reload_needed = true;};
 
-// The reverse transformation is not more difficult
+    return reload_needed;
+}
 
-// IPAddress _ip = ip_addr;
+bool GrillConfig::check_local_ap_reload_needed(){
+    
+    bool reload_needed = false;
+
+    if(config::local_ap_ssid     != config::settings_storage.getString("l_ap_ssid"))     {reload_needed = true;}
+    if(config::local_ap_password != config::settings_storage.getString("l_ap_password")) {reload_needed = true;};    
+    if(config::local_ap_ip       != config::settings_storage.getString("l_ap_ip"))       {reload_needed = true;};
+    if(config::local_ap_subnet   != config::settings_storage.getString("l_ap_subnet"))   {reload_needed = true;};
+    if(config::local_ap_gateway  != config::settings_storage.getString("l_ap_gateway"))  {reload_needed = true;};
+
+    return reload_needed;
+}

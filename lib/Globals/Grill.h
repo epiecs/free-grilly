@@ -1,4 +1,4 @@
-#include "Probe.h"
+class Probe;
 
 namespace grill {
 

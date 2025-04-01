@@ -1,4 +1,4 @@
-#include <WebServer.h>
+class WebServer;
 
 namespace web{
     // Webserver for api

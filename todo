@@ -1,9 +1,6 @@
 print_wifi_connection -> local ap settings ook tonen
 
-openapi spec voor settings voorzien - later aan te vullen
-openapi spec inladen in postman als test
-post van settings voorzien
-preferences.h aanpassen -> via grillconfig class -> template class?
+settings post -> validate schema
 
 
 network ip opslaan
@@ -28,26 +25,11 @@ config.h verder uitwerken en correct comment headers voorzien
 grill name generation enzovoort in grill settings duwen
 
 wifi connected variable switchen naargelang status. 
-battery percentage enzo ook via globals inlezen -- DONE --
 
-preferences lezen en schrijven
-
-
-api settings -> fix
-set wifi hostname
 multicast dns setup
 
 validate json schema -> Schemas.h?
   list loop
-
-generate uuid4 for unique identifier
-
-local ap ssid and password
-factory reset settings
-default ap is open
-
-how to do event handling?
-  if settings are updated how to we run needed functions?
 
 settings page GET/POST
   no wifimulti, if users want to change the ap they should go to the local ap and change the settings

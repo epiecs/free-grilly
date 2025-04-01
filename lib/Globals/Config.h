@@ -1,12 +1,16 @@
 #pragma once
-#include <WebServer.h>
-#include <Preferences.h>
+
+// Forward declarations
+class WebServer;
+class Preferences;
+class GrillConfig;
 
 namespace config{
 
     // Settings storage
     extern Preferences settings_storage;
-    
+    extern GrillConfig config_helper;
+
     // Grill settings
     extern String grill_name;
     extern String grill_uuid;
