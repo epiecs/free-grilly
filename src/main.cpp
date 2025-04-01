@@ -204,6 +204,9 @@ void core_1_code(void* pvParameters) {
                 u8g2.setBitmapMode(1);
                 u8g2.setFont(u8g2_font_5x7_tr);
                 u8g2.drawStr(7, 8, "Free-Grilly");
+                u8g2.setFont(u8g2_font_t0_22_tr);
+                u8g2.setCursor(37, 39);
+                u8g2.print(grill::probe_1.calculate_temperature());
                 u8g2.sendBuffer();
             }
             else if (millis_core1_current - millis_button_start < 10000) {
