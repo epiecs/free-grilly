@@ -40,8 +40,7 @@ void setup() {
     // * Load nvram settings and init
     // ***********************************
     config::settings_storage.begin("free-grilly", false);
-    config::config_helper.initialize_settings();
-
+    config::config_helper.load_settings();
 
     // ***********************************
     // * SPI for probes
@@ -215,6 +214,7 @@ void core_1_code(void* pvParameters) {
             }
             else if (millis_core1_current - millis_button_start > 10000) {
                 Serial.println("Button pressed for more than 10 seconds");
+                config::config_helper.factory_reset();
             }
             
         }

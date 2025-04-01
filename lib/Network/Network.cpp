@@ -9,9 +9,9 @@ constexpr int CONNECT_TIMEOUT_SECONDS = 15;
 
 void start_local_ap(String ssid, String password, String ip, String subnet, String gateway)
 {
-    IPAddress local_ip = local_ip.fromString(ip);
-    IPAddress local_subnet = local_subnet.fromString(subnet);
-    IPAddress local_gateway = local_gateway.fromString(gateway);
+    IPAddress local_ip;         local_ip.fromString(ip);
+    IPAddress local_subnet;     local_subnet.fromString(subnet);
+    IPAddress local_gateway;    local_gateway.fromString(gateway);
 
     const char *local_password = NULL;
 
@@ -22,6 +22,7 @@ void start_local_ap(String ssid, String password, String ip, String subnet, Stri
 
     // Start local ap
     Serial.println("Starting local wifi ap");
+
     WiFi.softAPConfig(local_ip, local_gateway, local_subnet);
     WiFi.softAP(ssid.c_str(), local_password);
     Serial.printf("Local SSID: %s \n", ssid.c_str());
@@ -30,10 +31,10 @@ void start_local_ap(String ssid, String password, String ip, String subnet, Stri
 
 bool connect_to_wifi(String ssid, String password, String ip, String subnet, String gateway, String dns)
 {
-    IPAddress wifi_ip = wifi_ip.fromString(ip);
-    IPAddress wifi_subnet = wifi_subnet.fromString(subnet);
-    IPAddress wifi_gateway = wifi_gateway.fromString(gateway);
-    IPAddress wifi_dns = wifi_dns.fromString(dns);
+    IPAddress wifi_ip;      wifi_ip.fromString(ip);
+    IPAddress wifi_subnet;  wifi_subnet.fromString(subnet);
+    IPAddress wifi_gateway; wifi_gateway.fromString(gateway);
+    IPAddress wifi_dns;     wifi_dns.fromString(dns);
 
     int timeout = CONNECT_TIMEOUT_SECONDS * 1000;
     int step = 500;

@@ -14,7 +14,13 @@ public:
      * @brief Initializes all settings from the nvram.
      *
      */
+    
     void initialize_settings();
+    /**
+     * @brief Loads all preferences from the nvram.
+     *
+     */
+    void load_settings();
 
     /**
      * @brief Prints out the current stored config
