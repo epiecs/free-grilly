@@ -1,8 +1,5 @@
 print_wifi_connection -> local ap settings ook tonen
 
-settings post -> validate schema
-
-
 network ip opslaan
 network ip inladen in main.cpp + functie eens settings saved
   Aparte wifi settings mss voorzien? -> altijd reconnect doen
@@ -11,15 +8,6 @@ network ip inladen in main.cpp + functie eens settings saved
 
 info op bbqgenootschap plaatsen?
 licentie bespreken met jeroen/christos?
-
-
-preferences uitwerken
-
-
-fix voor openapi spec -> bug logged, zit in upstream renderer
-
-global.h verder correct uitwerken zodat alles er in staat
-config.h verder uitwerken en correct comment headers voorzien
 
 
 grill name generation enzovoort in grill settings duwen
@@ -32,7 +20,6 @@ validate json schema -> Schemas.h?
   list loop
 
 settings page GET/POST
-  no wifimulti, if users want to change the ap they should go to the local ap and change the settings
   frontend -> on change wifi try to connect and if successfull return 200 and redirect option
 
 press side button
@@ -40,17 +27,6 @@ press side button
   hold <10s   -> shutdown
   hold >10s   -> factory reset, clear preferences
   which beep signals?
-
-WIFI
-hostname : https://randomnerdtutorials.com/esp32-useful-wi-fi-functions-arduino/ -> change esp32 hostname
-
-  // allow to address the device by the given name e.g. http://webserver
-  WiFi.setHostname(HOSTNAME);
-
-
-wifimulti: https://randomnerdtutorials.com/esp32-wifimulti/
-
-favicon
 
 
 --> https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/WebServer/WebServer.ino
@@ -65,6 +41,3 @@ wifi scanner for settings page to scan for wifi + setup
 
 ---
 multicast dns https://johnwargo.com/posts/2023/arduino-esp32-web-server-on-a-processor-core/#:~:text=Multicast%20DNS
-
----
-generate unique hostname extension based on the last 3 byte of the mac
