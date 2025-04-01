@@ -108,7 +108,8 @@ float Probe::calculate_temperature() {
     float temperature = (1 / (ref_kelvin + ref_beta * log_volt)) - 273.15;
 
     // Store temp in public property
-    Probe::temperature = temperature;
+    Probe::celcius    = temperature;
+    Probe::fahrenheit = (temperature * 1.8) + 32;
 
     return temperature;
 }

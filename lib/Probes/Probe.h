@@ -33,7 +33,8 @@ public:
 	int reference_celcius;								// Reference temperature in C from the datasheet
 	int reference_beta;									// Beta value from the datasheet
 
-	float temperature;									// The last known temperature in Celcius
+	float celcius;										// The last known temperature in Celcius
+	float fahrenheit;							        // The last known temperature in Fahrenheit
 														// gets stored on calculate_temperature
 	/**
 	 * @brief Construct a new Probe object
