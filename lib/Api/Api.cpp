@@ -130,8 +130,8 @@ void post_api_settings()
     if(err) { web::webserver.send(400, "application/json", "{\"error\": \"malformatted body\"}"); return;}
 
     JsonObject post_data = jsondoc.as<JsonObject>();
-    
-    // TODO validate schema!!
+
+    // Data ingress
     config::grill_name             = post_data["name"].as<String>();
     
     config::wifi_ssid              = post_data["wifi_ssid"].as<String>();
