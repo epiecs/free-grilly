@@ -1,4 +1,6 @@
-print_wifi_connection -> local ap settings ook tonen
+local ap password moet > 8 karakters zijn
+local ap indien geen password of leeg moet de functie anders aangeroepen worden
+
 
 network ip opslaan
 network ip inladen in main.cpp + functie eens settings saved

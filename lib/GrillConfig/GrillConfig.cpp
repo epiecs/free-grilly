@@ -133,10 +133,13 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putString("l_ap_subnet", local_ap_subnet_default);
     config::settings_storage.putString("l_ap_gateway", local_ap_gateway_default);
 
+    GrillConfig::print();
 }
 
 void GrillConfig::factory_reset() {
+    config::settings_storage.putBool("initialized", false);
     Serial.println("Erasing nvram");
+    nvs_flash_deinit();
     nvs_flash_erase();
     nvs_flash_init();
     Serial.println("Nvram erased");
@@ -146,21 +149,39 @@ void GrillConfig::factory_reset() {
 }
 
 void GrillConfig::print(){
- 
-    Serial.print("grill_name: ");
+    
+    Serial.println(" ");
+    Serial.println("|++++++++++ NVRAM Settings ++++++++++|");
+    Serial.print("-- Initialized: ");
+    Serial.println(config::settings_storage.getBool("initialized"));
+    Serial.print("-- grill_name: ");
     Serial.println(config::grill_name);
-    Serial.print("grill_uuid: ");
+    Serial.print("-- grill_uuid: ");
     Serial.println(config::grill_uuid);
-    Serial.print("wifi_ssid: ");
+    Serial.print("-- wifi_ssid: ");
     Serial.println(config::wifi_ssid);
-    Serial.print("wifi_password: ");
-    Serial.println(config::wifi_password);
-    Serial.print("local_ap_ssid: ");
+    Serial.print("-- wifi_password: ");
+    Serial.println("hidden - ********");
+    // Serial.println(config::wifi_password);
+    Serial.print("-- wifi_ip: ");
+    Serial.println(config::wifi_ip);
+    Serial.print("-- wifi_subnet: ");
+    Serial.println(config::wifi_subnet);
+    Serial.print("-- wifi_gateway: ");
+    Serial.println(config::wifi_gateway);
+    Serial.print("-- wifi_dns: ");
+    Serial.println(config::wifi_dns);
+    Serial.print("-- local_ap_ssid: ");
     Serial.println(config::local_ap_ssid);
-    Serial.print("local_ap_ip: ");
+    Serial.print("-- local_ap_password: ");
+    Serial.println("hidden - ********");
+    // Serial.println(config::local_ap_password);
+    Serial.print("-- local_ap_ip: ");
     Serial.println(config::local_ap_ip);
-    Serial.print("local_ap_subnet: ");
+    Serial.print("-- local_ap_subnet: ");
     Serial.println(config::local_ap_subnet);
+    Serial.println("|++++++++++ NVRAM Settings ++++++++++|");
+    Serial.println(" ");
 
 }
 

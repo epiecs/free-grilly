@@ -38,7 +38,7 @@ void setup() {
     // * Load nvram settings and init
     // ***********************************
     config::settings_storage.begin("free-grilly", false);
-    config::config_helper.initialize_settings();
+    config::config_helper.load_settings();
 
 
     // ***********************************
@@ -117,8 +117,6 @@ void setup() {
 
     xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
     xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
-
-    
 }
 
 void core_0_code(void* pvParameters) {
@@ -204,6 +202,7 @@ void core_1_code(void* pvParameters) {
             }
             else if (millis_core1_current - millis_button_start > 10000) {
                 Serial.println("Button pressed for more than 10 seconds");
+                config::config_helper.factory_reset();
             }
             
         }

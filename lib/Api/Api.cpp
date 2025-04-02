@@ -42,35 +42,35 @@ void get_api_grill()
     
     JsonObject probeData_0 = probeData.add<JsonObject>();
     probeData_0["probe_id"] = 1;
-    probeData_0["temperature"] = grill::probe_1.calculate_temperature();
+    probeData_0["temperature"] = grill::probe_1.celcius;
     
     JsonObject probeData_1 = probeData.add<JsonObject>();
     probeData_1["probe_id"] = 2;
-    probeData_1["temperature"] = grill::probe_2.calculate_temperature();
+    probeData_1["temperature"] = grill::probe_2.celcius;
     
     JsonObject probeData_2 = probeData.add<JsonObject>();
     probeData_2["probe_id"] = 3;
-    probeData_2["temperature"] = grill::probe_3.calculate_temperature();
+    probeData_2["temperature"] = grill::probe_3.celcius;
     
     JsonObject probeData_3 = probeData.add<JsonObject>();
     probeData_3["probe_id"] = 4;
-    probeData_3["temperature"] = grill::probe_4.calculate_temperature();
+    probeData_3["temperature"] = grill::probe_4.celcius;
     
     JsonObject probeData_4 = probeData.add<JsonObject>();
     probeData_4["probe_id"] = 5;
-    probeData_4["temperature"] = grill::probe_5.calculate_temperature();
+    probeData_4["temperature"] = grill::probe_5.celcius;
     
     JsonObject probeData_5 = probeData.add<JsonObject>();
     probeData_5["probe_id"] = 6;
-    probeData_5["temperature"] = grill::probe_6.calculate_temperature();
+    probeData_5["temperature"] = grill::probe_6.celcius;
     
     JsonObject probeData_6 = probeData.add<JsonObject>();
     probeData_6["probe_id"] = 7;
-    probeData_6["temperature"] = grill::probe_7.calculate_temperature();
+    probeData_6["temperature"] = grill::probe_7.celcius;
     
     JsonObject probeData_7 = probeData.add<JsonObject>();
     probeData_7["probe_id"] = 8;
-    probeData_7["temperature"] = grill::probe_8.calculate_temperature();
+    probeData_7["temperature"] = grill::probe_8.celcius;
 
     jsondoc.shrinkToFit();
 
