@@ -1,18 +1,12 @@
-local ap password moet > 8 karakters zijn
+local ap password moet > 8 karakters zijn -> api 400 status?
 local ap indien geen password of leeg moet de functie anders aangeroepen worden
 
+main.cpp opsplitsen in tasks
+task maken die elke run de probes leest en de global confs update
 
-network ip opslaan
-network ip inladen in main.cpp + functie eens settings saved
-  Aparte wifi settings mss voorzien? -> altijd reconnect doen
-  indien settings post ssid of ww != stored ww ssid reconnect
-  indien settings ip anders ook reconnect
 
 info op bbqgenootschap plaatsen?
 licentie bespreken met jeroen/christos?
-
-
-grill name generation enzovoort in grill settings duwen
 
 wifi connected variable switchen naargelang status. 
 
