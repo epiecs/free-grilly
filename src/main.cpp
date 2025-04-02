@@ -209,15 +209,15 @@ void core_1_code(void* pvParameters) {
         }
         
         // //* Battery code 
-        // if (millis_core1_current - millis_battery_start >= millis_battery_period) {
-        //     battery.read_battery();
+        if (millis_core1_current - millis_battery_start >= millis_battery_period) {
+            battery.read_battery();
         //     Serial.print("SOC: ");
         //     Serial.print(grill::battery_percentage);
         //     Serial.print(" -- is charging?: ");
         //     Serial.print(grill::battery_charging);
         //     Serial.println(" ");
         //     millis_battery_start = millis_core1_current; 
-        // } 
+        } 
 
         if (millis_core1_current - millis_display_start >= millis_display_period) {
             display.display_update();
