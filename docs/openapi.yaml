@@ -1,4 +1,4 @@
-openapi: '3.0.4'
+openapi: '3.1.1'
 info:
   title: Free-Grilly
   version: '25.3.27'
@@ -76,8 +76,9 @@ components:
                 type: integer
                 description: The number of the prober
               temperature:
-                type: number
-                nullable: true
+                type: 
+                  - "number"
+                  - "null"
                 format: float
                 description: The temperature in Celcius
             example:
