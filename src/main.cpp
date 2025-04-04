@@ -19,12 +19,12 @@
 // ************************************
 #include "Settings.h"
 
-//* Core task handlers
-TaskHandle_t taskCore0;
-TaskHandle_t taskCore1;
-
-void core_0_code(void* pvParameters);
-void core_1_code(void* pvParameters);
+// Task functions
+void task_battery(void* pvParameters);
+void task_powerbutton(void* pvParameters);
+void task_probes(void* pvParameters);
+void task_screen(void* pvParameters);
+void task_webserver(void* pvParameters);
 
 void setup() {
     // ***********************************
@@ -115,76 +115,43 @@ void setup() {
     power.startup();
     display.init();
 
-    xTaskCreatePinnedToCore(core_0_code, "Core0", 10000, NULL, 1, &taskCore0, 0);
-    xTaskCreatePinnedToCore(core_1_code, "Core1", 10000, NULL, 1, &taskCore1, 1);
+
+    // Each task starts with a stack of 10000
+    // Higher prio int means higher priority
+    xTaskCreate(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask);
+    xTaskCreate(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask);
+    xTaskCreate(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask);
+    xTaskCreate(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask);
+    xTaskCreate(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask);
 }
 
-void core_0_code(void* pvParameters) {
-    Serial.print("Launching tasks for Core: ");
-    Serial.println(xPortGetCoreID());
+// ***********************************
+// * TASKS
+// ***********************************
 
-    //* WIFI processes always run on core 0 so we do the same with the 
-    //* webserver/api
+// ***********************************
+// * API
+// ***********************************
 
-    //* Loop
+void task_webserver(void* pvParameters) {
+    Serial.println("Launching task :: API");
+    
     for (;;) {
         web::webserver.handleClient();
     }
 }
 
-bool is_button_pressed = false;
-char char_temp_value[4];
+// ***********************************
+// * Power Button
+// ***********************************
 
-void core_1_code(void* pvParameters) {
-
-    Serial.print("Launching tasks for Core: ");
-    Serial.println(xPortGetCoreID());
-
-    // ***********************************
-    // * Probes
-    // ***********************************
-
-    digitalWrite(gpio::hspi_probes_cs, HIGH);
-
-    // power button
-    pinMode(gpio::power_button, INPUT);
-
-    pinMode(4, OUTPUT); // SCREEN LED!! VT5
-    digitalWrite(4, HIGH);
-
-    pinMode(32, OUTPUT); // BUZZZZZER!! VT5
-
-    /*SPI.begin(ADS_SCLK, ADS_MISO, -1, ADS_CS);
-    SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1));*/
-
-    //* Loop
-    for (;;) {
-        //* Probe code
-        millis_core1_current = millis();  
-        if (millis_core1_current - millis_probe_start >= millis_probe_period) {
-            Serial.print("1: ");
-            Serial.print(grill::probe_1.calculate_temperature());
-            Serial.print(" -- 2: ");
-            Serial.print(grill::probe_2.calculate_temperature());
-            Serial.print(" -- 3: ");
-            Serial.print(grill::probe_3.calculate_temperature());
-            Serial.print(" -- 4: ");
-            Serial.print(grill::probe_4.calculate_temperature());
-            Serial.print(" -- 5: ");
-            Serial.print(grill::probe_5.calculate_temperature());
-            Serial.print(" -- 6: ");
-            Serial.print(grill::probe_6.calculate_temperature());
-            Serial.print(" -- 7: ");
-            Serial.print(grill::probe_7.calculate_temperature());
-            Serial.print(" -- 8: ");
-            Serial.print(grill::probe_8.calculate_temperature());
+void task_powerbutton(void* pvParameters) {
+    Serial.println("Launching task :: POWER BUTTON");
     
-            Serial.println(" ");
-
-            millis_probe_start = millis_core1_current; 
-        } 
-
-        //* Button code 
+    bool is_button_pressed = false;
+    pinMode(gpio::power_button, INPUT);
+    
+    for (;;) {
         if(digitalRead(gpio::power_button) == LOW && not is_button_pressed) {
             is_button_pressed = true;
             millis_button_start = millis_core1_current;
@@ -206,23 +173,109 @@ void core_1_code(void* pvParameters) {
             }
             
         }
-        
-        // //* Battery code 
-        if (millis_core1_current - millis_battery_start >= millis_battery_period) {
-            battery.read_battery();
-        //     Serial.print("SOC: ");
-        //     Serial.print(grill::battery_percentage);
-        //     Serial.print(" -- is charging?: ");
-        //     Serial.print(grill::battery_charging);
-        //     Serial.println(" ");
-        //     millis_battery_start = millis_core1_current; 
-        } 
-
-        if (millis_core1_current - millis_display_start >= millis_display_period) {
-            display.display_update();
-            millis_display_start = millis_core1_current; 
-        } 
     }
 }
 
-void loop() { }
+// ***********************************
+// * Probes
+// ***********************************
+
+void task_probes(void* pvParameters) {
+    Serial.println("Launching task :: PROBES");
+    
+    for (;;) {
+        grill::probe_1.calculate_temperature();
+        grill::probe_2.calculate_temperature();
+        grill::probe_3.calculate_temperature();
+        grill::probe_4.calculate_temperature();
+        grill::probe_5.calculate_temperature();
+        grill::probe_6.calculate_temperature();
+        grill::probe_7.calculate_temperature();
+        grill::probe_8.calculate_temperature();
+
+        delay(500);
+    }
+}
+
+// ***********************************
+// * Battery
+// ***********************************
+
+void task_battery(void* pvParameters) {
+    Serial.println("Launching task :: BATTERY");
+    
+    for (;;) {
+        battery.read_battery();
+
+        delay(1000);
+    }
+}
+
+// ***********************************
+// * Screen
+// ***********************************
+
+void task_screen(void* pvParameters) {
+    Serial.println("Launching task :: SCREEN");
+    
+    pinMode(4, OUTPUT); // SCREEN LED!! VT5
+    digitalWrite(4, HIGH);
+    
+    // TODO BUZZER PIN
+    pinMode(32, OUTPUT); // BUZZZZZER!! VT5
+    
+    for (;;) {
+        display.display_update();
+    
+        delay(1000);
+    }
+}
+
+float stack_free = 0;
+float stack_used = 0;
+
+void loop() { 
+    
+    // The high water mark is the maximum value of stack that is still free
+    // https://www.freertos.org/Why-FreeRTOS/FAQs/Memory-usage-boot-times-context#how-big-should-the-stack-be
+
+    Serial.println("|++++++++++++++ STACK +++++++++++++++|");
+    
+    stack_free = (float)uxTaskGetStackHighWaterMark(task::webserverTask);
+    stack_used = task::webserverStackSize - stack_free;
+    Serial.print("WEBSERVER stack used: ");
+    Serial.print(stack_used);
+    Serial.print("/");
+    Serial.println(task::webserverStackSize);
+
+    stack_free = (float)uxTaskGetStackHighWaterMark(task::probesTask);
+    stack_used = task::probesStackSize - stack_free;
+    Serial.print("PROBES stack used: ");
+    Serial.print(stack_used);
+    Serial.print("/");
+    Serial.println(task::probesStackSize);
+
+    stack_free = (float)uxTaskGetStackHighWaterMark(task::screenTask);
+    stack_used = task::screenStackSize - stack_free;
+    Serial.print("SCREEN stack used: ");
+    Serial.print(stack_used);
+    Serial.print("/");
+    Serial.println(task::screenStackSize);
+
+    stack_free = (float)uxTaskGetStackHighWaterMark(task::powerbuttonTask);
+    stack_used = task::powerbuttonStackSize - stack_free;
+    Serial.print("POWERBUTTON stack used: ");
+    Serial.print(stack_used);
+    Serial.print("/");
+    Serial.println(task::powerbuttonStackSize);
+
+    stack_free = (float)uxTaskGetStackHighWaterMark(task::batteryTask);
+    stack_used = task::batteryStackSize - stack_free;
+    Serial.print("Battery stack used: ");
+    Serial.print(stack_used);
+    Serial.print("/");
+    Serial.println(task::batteryStackSize);
+    
+
+    delay(1000);
+}

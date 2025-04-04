@@ -128,3 +128,19 @@ namespace web{
     
     WebServer webserver(80);
 }
+
+namespace task{
+    TaskHandle_t batteryTask;
+    TaskHandle_t powerbuttonTask;
+    TaskHandle_t probesTask;
+    TaskHandle_t screenTask;
+    TaskHandle_t webserverTask;
+    
+    int batteryStackSize     = 10000;
+    int powerbuttonStackSize = 10000;
+    int probesStackSize      = 10000;
+    int screenStackSize      = 10000;
+    int webserverStackSize   = 10000;
+}
+
+
