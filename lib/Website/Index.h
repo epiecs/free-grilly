@@ -136,30 +136,43 @@ const char HTML_INDEX[] PROGMEM = R"=====(
 
         // Selectors
 
-        e_probe_1_temperature        = document.getElementById("probe-1-temperature");
-        e_probe_2_temperature        = document.getElementById("probe-2-temperature");
-        e_probe_3_temperature        = document.getElementById("probe-3-temperature");
-        e_probe_4_temperature        = document.getElementById("probe-4-temperature");
-        e_probe_5_temperature        = document.getElementById("probe-5-temperature");
-        e_probe_6_temperature        = document.getElementById("probe-6-temperature");
-        e_probe_7_temperature        = document.getElementById("probe-7-temperature");
-        e_probe_8_temperature        = document.getElementById("probe-8-temperature");
-        e_probe_1_target_temperature = document.getElementById("probe-1-target");
-        e_probe_2_target_temperature = document.getElementById("probe-2-target");
-        e_probe_3_target_temperature = document.getElementById("probe-3-target");
-        e_probe_4_target_temperature = document.getElementById("probe-4-target");
-        e_probe_5_target_temperature = document.getElementById("probe-5-target");
-        e_probe_6_target_temperature = document.getElementById("probe-6-target");
-        e_probe_7_target_temperature = document.getElementById("probe-7-target");
-        e_probe_8_target_temperature = document.getElementById("probe-8-target");
+        const e_probes = new Array(8);
         
-        e_grill_name                 = document.getElementById("grill-name");
+        e_probes[1] = {};
+        e_probes[2] = {};
+        e_probes[3] = {};
+        e_probes[4] = {};
+        e_probes[5] = {};
+        e_probes[6] = {};
+        e_probes[7] = {};
+        e_probes[8] = {};
 
-        e_grill_battery_percentage   = document.getElementById("grill-battery-percentage");
-        e_grill_battery_charging     = document.getElementById("grill-battery-charging");
+
+        e_probes[1]["temperature"]        = document.getElementById("probe-1-temperature");
+        e_probes[2]["temperature"]        = document.getElementById("probe-2-temperature");
+        e_probes[3]["temperature"]        = document.getElementById("probe-3-temperature");
+        e_probes[4]["temperature"]        = document.getElementById("probe-4-temperature");
+        e_probes[5]["temperature"]        = document.getElementById("probe-5-temperature");
+        e_probes[6]["temperature"]        = document.getElementById("probe-6-temperature");
+        e_probes[7]["temperature"]        = document.getElementById("probe-7-temperature");
+        e_probes[8]["temperature"]        = document.getElementById("probe-8-temperature");
+
+        e_probes[1]["target_temperature"] = document.getElementById("probe-1-target");
+        e_probes[2]["target_temperature"] = document.getElementById("probe-2-target");
+        e_probes[3]["target_temperature"] = document.getElementById("probe-3-target");
+        e_probes[4]["target_temperature"] = document.getElementById("probe-4-target");
+        e_probes[5]["target_temperature"] = document.getElementById("probe-5-target");
+        e_probes[6]["target_temperature"] = document.getElementById("probe-6-target");
+        e_probes[7]["target_temperature"] = document.getElementById("probe-7-target");
+        e_probes[8]["target_temperature"] = document.getElementById("probe-8-target");
         
-        e_wifi_connected             = document.getElementById("grill-wifi-connected");
-        e_wifi_strength              = document.getElementById("grill-wifi-strength");
+        e_grill_name                      = document.getElementById("grill-name");
+
+        e_grill_battery_percentage        = document.getElementById("grill-battery-percentage");
+        e_grill_battery_charging          = document.getElementById("grill-battery-charging");
+        
+        e_wifi_connected                  = document.getElementById("grill-wifi-connected");
+        e_wifi_strength                   = document.getElementById("grill-wifi-strength");
 
         let wifi_signal_strength = 0;
 
@@ -168,8 +181,6 @@ const char HTML_INDEX[] PROGMEM = R"=====(
             try {
                 const response = await fetch(base_url + "/api/grill");
                 data = await response.json();
-
-                console.log(data);     
                 
                 // Grill name
                 e_grill_name.textContent = data.name;
@@ -198,24 +209,16 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                 e_wifi_strength.textContent = 140 + wifi_signal_strength + " %";
 
 
-                e_probe_1_temperature.textContent        = data['probes'][0]['temperature'].toFixed(2) + " C";
-                e_probe_2_temperature.textContent        = data['probes'][1]['temperature'].toFixed(2) + " C";
-                e_probe_3_temperature.textContent        = data['probes'][2]['temperature'].toFixed(2) + " C";
-                e_probe_4_temperature.textContent        = data['probes'][3]['temperature'].toFixed(2) + " C";
-                e_probe_5_temperature.textContent        = data['probes'][4]['temperature'].toFixed(2) + " C";
-                e_probe_6_temperature.textContent        = data['probes'][5]['temperature'].toFixed(2) + " C";
-                e_probe_7_temperature.textContent        = data['probes'][6]['temperature'].toFixed(2) + " C";
-                e_probe_8_temperature.textContent        = data['probes'][7]['temperature'].toFixed(2) + " C";
-                e_probe_1_target_temperature.textContent = data['probes'][0]['target_temperature'].toFixed(2) + " C";
-                e_probe_2_target_temperature.textContent = data['probes'][1]['target_temperature'].toFixed(2) + " C";
-                e_probe_3_target_temperature.textContent = data['probes'][2]['target_temperature'].toFixed(2) + " C";
-                e_probe_4_target_temperature.textContent = data['probes'][3]['target_temperature'].toFixed(2) + " C";
-                e_probe_5_target_temperature.textContent = data['probes'][4]['target_temperature'].toFixed(2) + " C";
-                e_probe_6_target_temperature.textContent = data['probes'][5]['target_temperature'].toFixed(2) + " C";
-                e_probe_7_target_temperature.textContent = data['probes'][6]['target_temperature'].toFixed(2) + " C";
-                e_probe_8_target_temperature.textContent = data['probes'][7]['target_temperature'].toFixed(2) + " C";
-
-                
+                for(let probe_nr = 0; probe_nr < 8; probe_nr++)
+                {
+                    if(data['probes'][probe_nr]['connected'] == true){
+                        e_probes[probe_nr + 1]["temperature"].textContent = data['probes'][probe_nr]['temperature'].toFixed(2) + " C";
+                    }else{
+                        e_probes[probe_nr + 1]["temperature"].textContent = "-";
+                    }
+                    
+                    e_probes[probe_nr + 1]["target_temperature"].textContent = data['probes'][probe_nr]['target_temperature'].toFixed(2) + " C";;
+                }
 
             } catch (error) {
                 console.error('Grill is unreachable:', error);
