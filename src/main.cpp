@@ -271,7 +271,7 @@ void loop() {
 
     stack_free = (float)uxTaskGetStackHighWaterMark(task::batteryTask);
     stack_used = task::batteryStackSize - stack_free;
-    Serial.print("Battery stack used: ");
+    Serial.print("BATTERY stack used: ");
     Serial.print(stack_used);
     Serial.print("/");
     Serial.println(task::batteryStackSize);

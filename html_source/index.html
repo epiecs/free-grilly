@@ -1,5 +1,3 @@
-const char HTML_INDEX[] PROGMEM = R"=====(
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -127,7 +125,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
     <script type="text/javascript">
 
         //Only used during tests, the real implementation uses relative urls
-        const base_url = "";
+        const base_url = "http://10.30.10.235";
         
         const api_polling_interval = 1000;
         const api_unreachable_intervals = 10;
@@ -219,6 +217,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
 
             } catch (error) {
                 console.error('Grill is unreachable:', error);
+                //TODO set reachable to disabled here once incorporated in webpage
             }
 
         }
@@ -235,6 +234,3 @@ const char HTML_INDEX[] PROGMEM = R"=====(
     </script>
   </body>
 </html>
-
-
-)=====";

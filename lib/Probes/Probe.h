@@ -35,7 +35,11 @@ public:
 
 	float celcius;										// The last known temperature in Celcius
 	float fahrenheit;							        // The last known temperature in Fahrenheit
-														// gets stored on calculate_temperature
+														// Gets stored on calculate_temperature
+
+	float target_temperature = 0;						// The target temperature
+	bool connected = false;								// If the probe is connected
+	
 	/**
 	 * @brief Construct a new Probe object
 	 * 

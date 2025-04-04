@@ -81,23 +81,48 @@ components:
                   - "null"
                 format: float
                 description: The temperature in Celcius
+              target_temperature:
+                type: 
+                  - "number"
+                  - "null"
+                format: float
+                description: The target temperature in Celcius
+              connected:
+                type: boolean
+                description: Is the probe connected
             example:
               - probe_id: 1
                 temperature: 23.71832
+                target_temperature: 23.71832
+                connected: true
               - probe_id: 2
                 temperature: null
+                target_temperature: null
+                connected: false
               - probe_id: 3
                 temperature: 110.12578
+                target_temperature: 110.12578
+                connected: true
               - probe_id: 4
                 temperature: 250.12578
+                target_temperature: 250.12578
+                connected: true
               - probe_id: 5
                 temperature: null
+                target_temperature: null
+                connected: false
               - probe_id: 6
                 temperature: null
+                target_temperature: null
+                connected: false
               - probe_id: 7
                 temperature: null
+                target_temperature: null
+                connected: false
               - probe_id: 8
                 temperature: null
+                target_temperature: null
+                connected: false
     Settings:
       type: object
       properties:

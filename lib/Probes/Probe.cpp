@@ -94,6 +94,10 @@ float Probe::calculate_temperature() {
     uint16_t adc_value = Probe::read_adc_value();
 
     if (adc_value > ADC_PROBE_DISCONNECTED_VALUE) {
+        Probe::celcius    = 0;
+        Probe::fahrenheit = 32;
+        Probe::connected  = false;
+        
         return nanf(""); // If disconnected return NaN
     }
 
@@ -110,6 +114,7 @@ float Probe::calculate_temperature() {
     // Store temp in public property
     Probe::celcius    = temperature;
     Probe::fahrenheit = (temperature * 1.8) + 32;
+    Probe::connected  = true;
 
     return temperature;
 }
