@@ -6,6 +6,11 @@ local ap indien geen password of leeg moet de functie anders aangeroepen worden
 info op bbqgenootschap plaatsen?
 licentie bespreken met jeroen/christos?
 
+
+# TODO hoe probe types bijhouden
+# TODO custom settings
+# TODO preferences.h probe settings opslaan
+
 wifi connected variable switchen naargelang status. 
 
 multicast dns setup

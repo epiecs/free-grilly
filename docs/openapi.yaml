@@ -18,8 +18,10 @@ servers:
 tags:
   - name: grill
     description: Grill overview with current status and temperatures
+  - name: probes
+    description: Probes
   - name: settings
-    description: Management of settings
+    description: Setting management
 
 components:
   schemas:
@@ -74,7 +76,7 @@ components:
             properties:
               probe_id:
                 type: integer
-                description: The number of the prober
+                description: The number of the probe
               temperature:
                 type: 
                   - "number"
@@ -123,6 +125,68 @@ components:
                 temperature: null
                 target_temperature: null
                 connected: false
+    
+    Probe:
+      type: object
+      properties:
+        probe_id:
+          type: integer
+          description: The number of the probe
+          readOnly: true
+        temperature:
+          type: 
+            - "number"
+            - "null"
+          format: float
+          readOnly: true
+          description: The temperature in Celcius
+        target_temperature:
+          type: 
+            - "number"
+            - "null"
+          format: float
+          description: The target temperature in Celcius
+        connected:
+          type: boolean
+          description: Is the probe connected
+          readOnly: true
+        probe_type:
+          type: string
+          description: >
+            The probe type connected to the grilleye. There are several built-in probe types. If 
+            you have the spec sheet of your probe you can try and setup a custom probe and provide 
+            the values. Not all probes will work so YMMV.
+          example: GRILLEYE_IRIS
+          default: GRILLEYE_IRIS
+          $ref:  "#/components/schemas/probe_type"
+        reference_kohm:
+          type: 
+            - "number"
+            - "null"
+          format: float
+          example: 100
+          default: 100
+          description: The reference resistance value from the spec sheet in kOhm - only used with type CUSTOM
+        reference_celcius:
+          type: 
+            - "number"
+            - "null"
+          format: float
+          example: 25
+          default: 25
+          description: The reference celcius value from the spec sheet - only used with type CUSTOM
+        reference_beta:
+          type: 
+            - "number"
+            - "null"
+          format: float
+          examples: 
+            - 4250
+            - null
+          default: 4250
+          description: The reference beta coefficient value from the spec sheet - only used with type CUSTOM
+        
+    
     Settings:
       type: object
       properties:
@@ -189,6 +253,17 @@ components:
           example: 192.168.200.1
           description: The local wifi gateway
 
+    ##
+    # Enums
+    ##
+    probe_type:
+      type: string
+      example: GRILLEYE_IRIS
+      enum:
+        - CUSTOM
+        - GRILLEYE_IRIS
+        - IKEA_FANTAST
+
 paths:
   /grill:
     get:
@@ -205,6 +280,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Grill'
+  
+  /probes:
+    get:
+      tags:
+        - probes
+      summary: Probes
+      description: >
+        View current probe settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 8
+                maxItems: 8
+                items:
+                  $ref: '#/components/schemas/Probe'
+    post:
+      tags:
+        - probes
+      summary: Probes
+      description: >
+        Edit probes
+      requestBody:
+        required: true
+        description: Settings to set
+        content:
+            application/json:
+              schema:
+                type: array
+                minItems: 8
+                maxItems: 8
+                items:
+                  $ref: '#/components/schemas/Probe'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 8
+                maxItems: 8
+                items:
+                  $ref: '#/components/schemas/Probe'
+  
   /settings:
     get:
       tags:
