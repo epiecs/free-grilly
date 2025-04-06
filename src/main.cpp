@@ -138,8 +138,8 @@ void task_webserver(void* pvParameters) {
     while (true){
         web::webserver.handleClient();
     }
-}
 
+}
 // ***********************************
 // * Power Button
 // ***********************************
@@ -148,31 +148,49 @@ void task_powerbutton(void* pvParameters) {
     Serial.println("Launching task :: POWER BUTTON");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
     
-    bool is_button_pressed = false;
+    // Reference timers
+    unsigned long millis_pressed        = 0;
+    unsigned long millis_current        = 0;
+    unsigned long millis_button_start   = 0;
+
+    // Time in ms that defines each button press breakpoint
+    int short_press_time   = 1000;
+    int medium_press_time  = 5000;
+    int long_press_time    = 10000;
+
+    bool button_pressed    = false;
     pinMode(gpio::power_button, INPUT);
     
-    for (;;) {
-    //     if(digitalRead(gpio::power_button) == LOW && not is_button_pressed) {
-    //         is_button_pressed = true;
-    //         millis_button_start = millis_core1_current;
-    //     }
-    //     else if (digitalRead(gpio::power_button) == HIGH && is_button_pressed)
-    //     {
-    //         is_button_pressed = false;
+    while(true){
+        if(digitalRead(gpio::power_button) == LOW && not button_pressed) {
+            button_pressed = true;
+            millis_button_start = millis();
+        }
+        else if (digitalRead(gpio::power_button) == HIGH && button_pressed)
+        {
+            button_pressed = false;
+            millis_pressed = millis() - millis_button_start;
 
-    //         if(millis_core1_current - millis_button_start < 1000) {
-    //             Serial.println("Button pressed for less than 1 second");
-    //         }
-    //         else if (millis_core1_current - millis_button_start < 10000) {
-    //             Serial.println("Button pressed for less than 10 seconds - Shutting down");
-    //             power.shutdown();
-    //         }
-    //         else if (millis_core1_current - millis_button_start > 10000) {
-    //             Serial.println("Button pressed for more than 10 seconds");
-    //             config::config_helper.factory_reset();
-    //         }
-            
-    //     }
+            Serial.print("Button pressed for: ");
+            Serial.println(millis_pressed);
+
+            if(millis_pressed < short_press_time) {
+                Serial.println("Button pressed for less than 1 second");
+                // TODO switch between wifi/probes screen
+            }
+            else if (millis_pressed < medium_press_time) {
+                Serial.println("Button pressed 1-5 seconds");
+                // TODO show about + help -> pressing times
+            }
+            else if (millis_pressed < long_press_time) {
+                Serial.println("Button pressed 5-10 seconds");
+                power.shutdown();
+            }
+            else if (millis_pressed > long_press_time) {
+                Serial.println("Button pressed for more than 10 seconds");
+                config::config_helper.factory_reset();
+            }            
+        }
 
         delay(100);
     }
@@ -240,6 +258,7 @@ void task_screen(void* pvParameters) {
     
     for (;;) {
         display.display_update();
+        // Serial.println("screen update");
     
         delay(1000);
     }

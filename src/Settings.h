@@ -6,20 +6,6 @@
 #include "Probe.h"
 #include "GrillConfig.h"
 
-// ***********************************
-// * Timers
-// ***********************************
-
-unsigned long millis_core1_current;
-unsigned long millis_probe_start;    
-unsigned long millis_button_start;        
-unsigned long millis_battery_start; 
-unsigned long millis_display_start;     
-const unsigned long millis_probe_period = 1000;     // Probe read update interval
-const unsigned long millis_battery_period = 10000;  // Battery read interval
-const unsigned long millis_display_period = 500;    // Display update interval
-
-
 namespace gpio{
 
     int power_button           = 35;
@@ -56,7 +42,7 @@ namespace config{
 
     String grill_name                   = "";
     String grill_uuid                   = "";
-    String grill_firmware_version       = "25.03.01";
+    String grill_firmware_version       = "25.04.06";
 
     // ***********************************
     // * Timezone / NTP
@@ -141,12 +127,10 @@ namespace task{
     TaskHandle_t webserverTask;
     TaskHandle_t stackmonitorTask;
     
-    int batteryStackSize     = 10000;
-    int powerbuttonStackSize = 10000;
-    int probesStackSize      = 10000;
-    int screenStackSize      = 10000;
-    int webserverStackSize   = 40000;
-    int stackmonitorStackSize   = 40000;
+    int batteryStackSize      = 10000;
+    int powerbuttonStackSize  = 10000;
+    int probesStackSize       = 10000;
+    int screenStackSize       = 10000;
+    int webserverStackSize    = 10000;
+    int stackmonitorStackSize = 10000;
 }
-
-

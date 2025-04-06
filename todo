@@ -1,3 +1,6 @@
+checken hoe we detecten dat we uit deep sleep komen -> buzzer
+  hoe detecten indien batterij plat is? -> altijd in setup gewoon beep geven?
+
 in grillconfig ook init doen van probes met base settings
   we hebbben de set_type functie voor probes, hoe afvuren zodat we altijd correcte waarden hebben?
 

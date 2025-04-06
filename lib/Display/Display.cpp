@@ -30,7 +30,7 @@ bool disp::display_update(void) {
     // ***********************************
     screen.drawXBMP(114, 0, 14, 8, battery_icon);
 
-    if     (grill::battery_percentage >= 90)                                  { screen.drawBox(115, 1, 10, 6); }
+    if     (grill::battery_percentage >= 90)                                    { screen.drawBox(115, 1, 10, 6); }
     else if(grill::battery_percentage >= 80 and grill::battery_percentage < 90) { screen.drawBox(115, 1, 9 , 6); }
     else if(grill::battery_percentage >= 70 and grill::battery_percentage < 80) { screen.drawBox(115, 1, 8 , 6); }
     else if(grill::battery_percentage >= 60 and grill::battery_percentage < 70) { screen.drawBox(115, 1, 7 , 6); }
