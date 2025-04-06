@@ -157,8 +157,11 @@ components:
             you have the spec sheet of your probe you can try and setup a custom probe and provide 
             the values. Not all probes will work so YMMV.
           example: GRILLEYE_IRIS
-          default: GRILLEYE_IRIS
-          $ref:  "#/components/schemas/probe_type"
+          default: GRILLEYE_IRIS    
+          enum:
+            - CUSTOM
+            - GRILLEYE_IRIS
+            - IKEA_FANTAST
         reference_kohm:
           type: 
             - "number"
@@ -252,17 +255,6 @@ components:
           type: string
           example: 192.168.200.1
           description: The local wifi gateway
-
-    ##
-    # Enums
-    ##
-    probe_type:
-      type: string
-      example: GRILLEYE_IRIS
-      enum:
-        - CUSTOM
-        - GRILLEYE_IRIS
-        - IKEA_FANTAST
 
 paths:
   /grill:
