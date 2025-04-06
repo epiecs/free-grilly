@@ -11,6 +11,9 @@ Probe::Probe(int number, int reference_kohm, int reference_celcius, int referenc
     Probe::reference_kohm = reference_kohm;
     Probe::reference_celcius = reference_celcius;
     Probe::reference_beta = reference_beta;
+    
+    // Default type
+    Probe::set_type("GRILLEYE_IRIS");
 
     pinMode(MUX_SELECTOR_A, OUTPUT);
     pinMode(MUX_SELECTOR_B, OUTPUT);
@@ -117,4 +120,27 @@ float Probe::calculate_temperature() {
     Probe::connected  = true;
 
     return temperature;
+}
+
+void Probe::set_type(String probe_type){
+    
+    if(probe_type == "GRILLEYE_IRIS"){
+        Probe::reference_beta    = 4250;
+        Probe::reference_celcius = 25;
+        Probe::reference_kohm    = 100;
+        Probe::type              = "GRILLEYE_IRIS";
+        return;
+    }
+
+    if(probe_type == "IKEA_FANTAST"){
+        Probe::reference_beta    = 4250;
+        Probe::reference_celcius = 25;
+        Probe::reference_kohm    = 230;
+        Probe::type              = "IKEA_FANTAST";
+        return;
+    }
+
+    // default value if not known is custom
+    Probe::type              = "CUSTOM";
+    return;
 }

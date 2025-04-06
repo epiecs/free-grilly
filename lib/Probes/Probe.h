@@ -33,6 +33,8 @@ public:
 	int reference_celcius;								// Reference temperature in C from the datasheet
 	int reference_beta;									// Beta value from the datasheet
 
+	String type;										// The probe type
+
 	float celcius;										// The last known temperature in Celcius
 	float fahrenheit;							        // The last known temperature in Fahrenheit
 														// Gets stored on calculate_temperature
@@ -70,4 +72,11 @@ public:
 	 * @return float The temperature in Celcius
 	 */
 	float calculate_temperature();
+
+	/**
+	 * @brief Set the probe type.
+	 * 
+	 * @param probe_type 
+	 */
+	void set_type(String probe_type);
 };
