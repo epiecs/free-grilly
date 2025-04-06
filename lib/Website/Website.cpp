@@ -6,23 +6,32 @@
 #include "Web.h"
 
 #include "Index.h"
+#include "Probes.h"
+#include "Settings.h"
+#include "About.h"
 
 extern WebServer webserver;
 
 void setup_web_routes() {
     web::webserver.on("/", get_index);
+    web::webserver.on("/probes", get_probes);
     web::webserver.on("/settings", get_settings);
-    web::webserver.on("/settings", HTTP_POST, post_settings);
+    web::webserver.on("/about", get_about);
 }
 
 void get_index() {
-    Serial.println("Loaded index page");
     web::webserver.send(200, "text/html", HTML_INDEX);
 }
+void get_probes() {
+    web::webserver.send(200, "text/html", HTML_PROBES);
+}
+void get_settings() {
+    web::webserver.send(200, "text/html", HTML_SETTINGS);
+}
+void get_about() {
+    web::webserver.send(200, "text/html", HTML_ABOUT);
+}
 
-void get_settings() {}
-
-void post_settings() {}
 
 void not_found() {
     Serial.println("404 - Not Found");

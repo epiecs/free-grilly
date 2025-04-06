@@ -15,8 +15,8 @@ unsigned long millis_probe_start;
 unsigned long millis_button_start;        
 unsigned long millis_battery_start; 
 unsigned long millis_display_start;     
-const unsigned long millis_probe_period = 1000;      // Probe read update interval
-const unsigned long millis_battery_period = 10000;   // Battery read interval
+const unsigned long millis_probe_period = 1000;     // Probe read update interval
+const unsigned long millis_battery_period = 10000;  // Battery read interval
 const unsigned long millis_display_period = 500;    // Display update interval
 
 

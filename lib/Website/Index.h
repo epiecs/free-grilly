@@ -11,20 +11,43 @@ const char HTML_INDEX[] PROGMEM = R"=====(
     <link rel="icon" href="data:,">
   </head>
   <body>
-    <div class="container">
-        <div class="my-2 row">
-            <div class="col-4 col-lg-7">
-                <h5 id="grill-name">Free Grilly </h5>
-            </div>
-        
-            <div class="col-8 col-lg-5 text-end">
-                <span class="badge bg-success" id="grill-battery"><i id="grill-battery-charging" class="bi bi-lightning-charge-fill"></i> <span id="grill-battery-percentage">100</span>%</span>
-                <span class="badge bg-danger" id="grill-wifi-connected"><i class="bi bi-wifi"></i> <span id="grill-wifi-strength">0%</span></span>
-                <a href="/settings" class="btn btn-primary btn-sm"><span class="align-middle"></span>Settings <i class="bi bi-gear align-middle"></i></a>
+    <nav class="navbar navbar-expand bg-body-tertiary">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Temperatures</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/probes">Probes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="row pt-1 row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-2">
-            <div class="col">
+    </nav>
+    <div class="container">
+        <div class="my-2 row">
+            <div class="col-5 col-lg-7">
+                <h5 id="grill-name">Free Grilly</h5>
+            </div>
+        
+            <div class="col-7 col-lg-5 text-end">
+                <span class="badge bg-success" id="grill-battery"><i id="grill-battery-charging" class="bi bi-lightning-charge-fill"></i> <span id="grill-battery-percentage">0</span>%</span>
+                <span class="badge bg-danger" id="grill-wifi-connected"><i class="bi bi-wifi"></i> <span id="grill-wifi-strength">0%</span></span>
+            </div>
+        </div>
+        <!-- <div class="row pt-1 row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-2"> -->
+        <div class="row">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -36,7 +59,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -48,7 +71,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -60,7 +83,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -72,7 +95,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -84,7 +107,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -96,7 +119,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -108,7 +131,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="my-2 col-sm-12 col-md-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -168,6 +191,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
         
         e_grill_name                      = document.getElementById("grill-name");
 
+        e_grill_battery                   = document.getElementById("grill-battery");
         e_grill_battery_percentage        = document.getElementById("grill-battery-percentage");
         e_grill_battery_charging          = document.getElementById("grill-battery-charging");
         
@@ -181,33 +205,53 @@ const char HTML_INDEX[] PROGMEM = R"=====(
             try {
                 const response = await fetch(base_url + "/api/grill");
                 data = await response.json();
+
+                console.log(data);     
                 
                 // Grill name
                 e_grill_name.textContent = data.name;
                 
-                // Battery
-                e_grill_battery_percentage.textContent = data.battery_percentage;
-                
                 // Wifi
                 if(data['wifi_connected'] == true){
                     e_wifi_connected.classList.remove("bg-danger");
-                    e_wifi_connected.classList.add("bg-success");
+
+                    wifi_signal_strength = 140 + data['wifi_signal'];
+                    e_wifi_strength.textContent = wifi_signal_strength + " %";
+
+                    if(wifi_signal_strength > 60){
+                        e_wifi_connected.classList.add("bg-success");
+                    } else {
+                        e_wifi_connected.classList.add("bg-warning");
+                    }
                 } else {
                     e_wifi_connected.classList.remove("bg-success");
                     e_wifi_connected.classList.add("bg-danger");
                 }
 
-                wifi_signal_strength = data['wifi_signal'];
-
                 // battery
+                e_grill_battery_percentage.textContent = data.battery_percentage;
+
                 if(data['battery_charging'] == true){
                     e_grill_battery_charging.style.display = "inline-block";
                 } else {
                     e_grill_battery_charging.style.display = "none";
                 }
 
-                e_wifi_strength.textContent = 140 + wifi_signal_strength + " %";
+                if(data.battery_percentage > 50){
+                    e_grill_battery.classList.remove("bg-danger");
+                    e_grill_battery.classList.remove("bg-warning");
+                    e_grill_battery.classList.add("bg-success");
+                } else if(data.battery_percentage > 30){
+                    e_grill_battery.classList.remove("bg-danger");
+                    e_grill_battery.classList.remove("bg-success");
+                    e_grill_battery.classList.add("bg-warning");
+                } else {
+                    e_grill_battery.classList.remove("bg-warning");
+                    e_grill_battery.classList.remove("bg-success");
+                    e_grill_battery.classList.add("bg-danger");
+                }
 
+                //* grill-battery
 
                 for(let probe_nr = 0; probe_nr < 8; probe_nr++)
                 {
@@ -222,6 +266,7 @@ const char HTML_INDEX[] PROGMEM = R"=====(
 
             } catch (error) {
                 console.error('Grill is unreachable:', error);
+                //TODO set reachable to disabled here once incorporated in webpage
             }
 
         }

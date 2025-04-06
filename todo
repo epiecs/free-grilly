@@ -1,9 +1,7 @@
+python script to build html pages?
+
 local ap password moet > 8 karakters zijn -> api 400 status?
 local ap indien geen password of leeg moet de functie anders aangeroepen worden
-
-main.cpp opsplitsen in tasks
-task maken die elke run de probes leest en de global confs update
-
 
 info op bbqgenootschap plaatsen?
 licentie bespreken met jeroen/christos?

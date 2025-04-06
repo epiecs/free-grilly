@@ -1,3 +1,5 @@
+const char HTML_PROBES[] PROGMEM = R"=====(
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -148,7 +150,7 @@
     <script type="text/javascript">
 
         //Only used during tests, the real implementation uses relative urls
-        const base_url = "http://10.30.10.235";
+        const base_url = "";
         
         const api_polling_interval = 1000;
         const api_unreachable_intervals = 10;
@@ -281,3 +283,6 @@
     </script>
   </body>
 </html>
+
+
+)=====";
