@@ -14,10 +14,6 @@ Probe::Probe(int number, int reference_kohm, int reference_celcius, int referenc
     
     // Default type
     Probe::set_type("GRILLEYE_IRIS");
-
-    pinMode(MUX_SELECTOR_A, OUTPUT);
-    pinMode(MUX_SELECTOR_B, OUTPUT);
-    pinMode(MUX_SELECTOR_C, OUTPUT);
 }
 
 
@@ -38,44 +34,44 @@ void Probe::select_probe(int probe_number) {
 
     switch (probe_number) {
         case 1:
-            digitalWrite(MUX_SELECTOR_A, LOW);
-            digitalWrite(MUX_SELECTOR_B, LOW);
-            digitalWrite(MUX_SELECTOR_C, HIGH);
+            digitalWrite(gpio::mux_selector_a, LOW);
+            digitalWrite(gpio::mux_selector_b, LOW);
+            digitalWrite(gpio::mux_selector_c, HIGH);
             break;
         case 2:
-            digitalWrite(MUX_SELECTOR_A, LOW);
-            digitalWrite(MUX_SELECTOR_B, HIGH);
-            digitalWrite(MUX_SELECTOR_C, HIGH);
+            digitalWrite(gpio::mux_selector_a, LOW);
+            digitalWrite(gpio::mux_selector_b, HIGH);
+            digitalWrite(gpio::mux_selector_c, HIGH);
             break;
         case 3:
-            digitalWrite(MUX_SELECTOR_A, HIGH);
-            digitalWrite(MUX_SELECTOR_B, HIGH);
-            digitalWrite(MUX_SELECTOR_C, HIGH);
+            digitalWrite(gpio::mux_selector_a, HIGH);
+            digitalWrite(gpio::mux_selector_b, HIGH);
+            digitalWrite(gpio::mux_selector_c, HIGH);
             break;
         case 4:
-            digitalWrite(MUX_SELECTOR_A, HIGH);
-            digitalWrite(MUX_SELECTOR_B, LOW);
-            digitalWrite(MUX_SELECTOR_C, HIGH);
+            digitalWrite(gpio::mux_selector_a, HIGH);
+            digitalWrite(gpio::mux_selector_b, LOW);
+            digitalWrite(gpio::mux_selector_c, HIGH);
             break;
         case 5:
-            digitalWrite(MUX_SELECTOR_A, LOW);
-            digitalWrite(MUX_SELECTOR_B, HIGH);
-            digitalWrite(MUX_SELECTOR_C, LOW);
+            digitalWrite(gpio::mux_selector_a, LOW);
+            digitalWrite(gpio::mux_selector_b, HIGH);
+            digitalWrite(gpio::mux_selector_c, LOW);
             break;
         case 6:
-            digitalWrite(MUX_SELECTOR_A, HIGH);
-            digitalWrite(MUX_SELECTOR_B, HIGH);
-            digitalWrite(MUX_SELECTOR_C, LOW);
+            digitalWrite(gpio::mux_selector_a, HIGH);
+            digitalWrite(gpio::mux_selector_b, HIGH);
+            digitalWrite(gpio::mux_selector_c, LOW);
             break;
         case 7:
-            digitalWrite(MUX_SELECTOR_A, HIGH);
-            digitalWrite(MUX_SELECTOR_B, LOW);
-            digitalWrite(MUX_SELECTOR_C, LOW);
+            digitalWrite(gpio::mux_selector_a, HIGH);
+            digitalWrite(gpio::mux_selector_b, LOW);
+            digitalWrite(gpio::mux_selector_c, LOW);
             break;
         case 8:
-            digitalWrite(MUX_SELECTOR_A, LOW);
-            digitalWrite(MUX_SELECTOR_B, LOW);
-            digitalWrite(MUX_SELECTOR_C, LOW);
+            digitalWrite(gpio::mux_selector_a, LOW);
+            digitalWrite(gpio::mux_selector_b, LOW);
+            digitalWrite(gpio::mux_selector_c, LOW);
             break;
     }
 }

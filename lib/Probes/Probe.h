@@ -15,10 +15,6 @@ private:
 	
 	const int 	ADC_READ_DELAY_MS			   =     1; // Delay needed for accurate readings. If we switch to fast we get overlaps.
 
-	const int   MUX_SELECTOR_A                 =    33; // MUX pin A
-	const int   MUX_SELECTOR_B                 =    25; // MUX pin B
-	const int   MUX_SELECTOR_C                 =    26; // MUX pin C
-
 	/**
 	 * @brief Selects the wanted probe via the MUX pinouts
 	 * 

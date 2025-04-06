@@ -12,4 +12,8 @@ namespace gpio{
     extern int hspi_probes_sclk;
     extern int hspi_probes_cs;
     extern int hspi_probes_miso;
+
+    extern int mux_selector_a;
+    extern int mux_selector_b;
+    extern int mux_selector_c;
 }

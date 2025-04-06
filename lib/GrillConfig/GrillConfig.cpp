@@ -10,6 +10,7 @@
 #include "Network.h"
 
 #include "Config.h"
+#include "Grill.h"
 #include "Util.h"
 
 UUID uuid_generator;

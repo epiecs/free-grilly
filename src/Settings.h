@@ -35,6 +35,10 @@ namespace gpio{
     int hspi_probes_sclk 	   = 14;
     int hspi_probes_cs 	       = 15;
     int hspi_probes_miso 	   = 12;
+
+    int mux_selector_a         = 33;
+    int mux_selector_b         = 25;
+    int mux_selector_c         = 26;
 }
 
 namespace config{

@@ -183,6 +183,10 @@ void task_powerbutton(void* pvParameters) {
 void task_probes(void* pvParameters) {
     Serial.println("Launching task :: PROBES");
     
+    pinMode(gpio::mux_selector_a, OUTPUT);
+    pinMode(gpio::mux_selector_b, OUTPUT);
+    pinMode(gpio::mux_selector_c, OUTPUT);
+
     for (;;) {
         grill::probe_1.calculate_temperature();
         grill::probe_2.calculate_temperature();
