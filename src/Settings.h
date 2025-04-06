@@ -139,12 +139,14 @@ namespace task{
     TaskHandle_t probesTask;
     TaskHandle_t screenTask;
     TaskHandle_t webserverTask;
+    TaskHandle_t stackmonitorTask;
     
     int batteryStackSize     = 10000;
     int powerbuttonStackSize = 10000;
     int probesStackSize      = 10000;
     int screenStackSize      = 10000;
-    int webserverStackSize   = 10000;
+    int webserverStackSize   = 40000;
+    int stackmonitorStackSize   = 40000;
 }
 
 

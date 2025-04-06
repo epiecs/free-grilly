@@ -1,3 +1,8 @@
+in grillconfig ook init doen van probes met base settings
+  we hebbben de set_type functie voor probes, hoe afvuren zodat we altijd correcte waarden hebben?
+
+api post voor probes -> set_type aanroepen
+
 python script to build html pages?
 
 local ap password moet > 8 karakters zijn -> api 400 status?
@@ -10,8 +15,6 @@ licentie bespreken met jeroen/christos?
 # TODO hoe probe types bijhouden
 # TODO custom settings
 # TODO preferences.h probe settings opslaan
-
-wifi connected variable switchen naargelang status. 
 
 multicast dns setup
 

@@ -25,6 +25,7 @@ void task_powerbutton(void* pvParameters);
 void task_probes(void* pvParameters);
 void task_screen(void* pvParameters);
 void task_webserver(void* pvParameters);
+void task_stackmonitor(void* pvParameters);
 
 void setup() {
     // ***********************************
@@ -95,34 +96,24 @@ void setup() {
             config::wifi_dns
         );
     }
-
+    
     // ***********************************
-    // * Api + Web
-    // ***********************************
-
-    setup_api_routes();
-    setup_web_routes();
-
-    web::webserver.enableCORS();
-    web::webserver.onNotFound(not_found);
-    web::webserver.begin();
-
-    // ***********************************
-    // * Power
+    // * Launch tasks
     // ***********************************
 
-    battery.init();
-    power.startup();
-    display.init();
+    // xTaskCreate(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask);
+    // xTaskCreate(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask);
+    // xTaskCreate(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask);
+    // xTaskCreate(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask);
+    // xTaskCreate(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask);
+    // xTaskCreate(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask);
 
-
-    // Each task starts with a stack of 10000
-    // Higher prio int means higher priority
-    xTaskCreate(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask);
-    xTaskCreate(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask);
-    xTaskCreate(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask);
-    xTaskCreate(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask);
-    xTaskCreate(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask);
+    xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
+    xTaskCreatePinnedToCore(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask, 1);
+    xTaskCreatePinnedToCore(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask, 1);
+    xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
+    xTaskCreatePinnedToCore(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask, 1);
+    xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 }
 
 // ***********************************
@@ -130,13 +121,21 @@ void setup() {
 // ***********************************
 
 // ***********************************
-// * API
+// * API / WEB
 // ***********************************
 
 void task_webserver(void* pvParameters) {
     Serial.println("Launching task :: API");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
     
-    for (;;) {
+    setup_api_routes();
+    setup_web_routes();
+
+    web::webserver.enableCORS();
+    web::webserver.onNotFound(not_found);
+    web::webserver.begin();
+
+    while (true){
         web::webserver.handleClient();
     }
 }
@@ -147,32 +146,35 @@ void task_webserver(void* pvParameters) {
 
 void task_powerbutton(void* pvParameters) {
     Serial.println("Launching task :: POWER BUTTON");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
     
     bool is_button_pressed = false;
     pinMode(gpio::power_button, INPUT);
     
     for (;;) {
-        if(digitalRead(gpio::power_button) == LOW && not is_button_pressed) {
-            is_button_pressed = true;
-            millis_button_start = millis_core1_current;
-        }
-        else if (digitalRead(gpio::power_button) == HIGH && is_button_pressed)
-        {
-            is_button_pressed = false;
+    //     if(digitalRead(gpio::power_button) == LOW && not is_button_pressed) {
+    //         is_button_pressed = true;
+    //         millis_button_start = millis_core1_current;
+    //     }
+    //     else if (digitalRead(gpio::power_button) == HIGH && is_button_pressed)
+    //     {
+    //         is_button_pressed = false;
 
-            if(millis_core1_current - millis_button_start < 1000) {
-                Serial.println("Button pressed for less than 1 second");
-            }
-            else if (millis_core1_current - millis_button_start < 10000) {
-                Serial.println("Button pressed for less than 10 seconds - Shutting down");
-                power.shutdown();
-            }
-            else if (millis_core1_current - millis_button_start > 10000) {
-                Serial.println("Button pressed for more than 10 seconds");
-                config::config_helper.factory_reset();
-            }
+    //         if(millis_core1_current - millis_button_start < 1000) {
+    //             Serial.println("Button pressed for less than 1 second");
+    //         }
+    //         else if (millis_core1_current - millis_button_start < 10000) {
+    //             Serial.println("Button pressed for less than 10 seconds - Shutting down");
+    //             power.shutdown();
+    //         }
+    //         else if (millis_core1_current - millis_button_start > 10000) {
+    //             Serial.println("Button pressed for more than 10 seconds");
+    //             config::config_helper.factory_reset();
+    //         }
             
-        }
+    //     }
+
+        delay(100);
     }
 }
 
@@ -182,6 +184,7 @@ void task_powerbutton(void* pvParameters) {
 
 void task_probes(void* pvParameters) {
     Serial.println("Launching task :: PROBES");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
     
     pinMode(gpio::mux_selector_a, OUTPUT);
     pinMode(gpio::mux_selector_b, OUTPUT);
@@ -207,7 +210,11 @@ void task_probes(void* pvParameters) {
 
 void task_battery(void* pvParameters) {
     Serial.println("Launching task :: BATTERY");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
     
+    battery.init();
+    power.startup();
+
     for (;;) {
         battery.read_battery();
 
@@ -221,10 +228,13 @@ void task_battery(void* pvParameters) {
 
 void task_screen(void* pvParameters) {
     Serial.println("Launching task :: SCREEN");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
     
     pinMode(4, OUTPUT); // SCREEN LED!! VT5
     digitalWrite(4, HIGH);
     
+    display.init();
+
     // TODO BUZZER PIN
     pinMode(32, OUTPUT); // BUZZZZZER!! VT5
     
@@ -235,51 +245,66 @@ void task_screen(void* pvParameters) {
     }
 }
 
-float stack_free = 0;
-float stack_used = 0;
+// ***********************************
+// * Stack monitor
+// ***********************************
 
-void loop() { 
+void task_stackmonitor(void* pvParameters) {
+    Serial.println("Launching task :: STACK MONITOR");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
     
-    // The high water mark is the maximum value of stack that is still free
-    // https://www.freertos.org/Why-FreeRTOS/FAQs/Memory-usage-boot-times-context#how-big-should-the-stack-be
-
-    Serial.println("|++++++++++++++ STACK +++++++++++++++|");
+    float stack_free = 0;
+    float stack_used = 0;
     
-    stack_free = (float)uxTaskGetStackHighWaterMark(task::webserverTask);
-    stack_used = task::webserverStackSize - stack_free;
-    Serial.print("WEBSERVER stack used: ");
-    Serial.print(stack_used);
-    Serial.print("/");
-    Serial.println(task::webserverStackSize);
+    for (;;) {
+         // The high water mark is the maximum value of stack that is still free
+        // https://www.freertos.org/Why-FreeRTOS/FAQs/Memory-usage-boot-times-context#how-big-should-the-stack-be
 
-    stack_free = (float)uxTaskGetStackHighWaterMark(task::probesTask);
-    stack_used = task::probesStackSize - stack_free;
-    Serial.print("PROBES stack used: ");
-    Serial.print(stack_used);
-    Serial.print("/");
-    Serial.println(task::probesStackSize);
+        Serial.println("|++++++++++++++ STACK +++++++++++++++|");
+        
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::webserverTask);
+        stack_used = task::webserverStackSize - stack_free;
+        Serial.print("WEBSERVER stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::webserverStackSize);
 
-    stack_free = (float)uxTaskGetStackHighWaterMark(task::screenTask);
-    stack_used = task::screenStackSize - stack_free;
-    Serial.print("SCREEN stack used: ");
-    Serial.print(stack_used);
-    Serial.print("/");
-    Serial.println(task::screenStackSize);
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::probesTask);
+        stack_used = task::probesStackSize - stack_free;
+        Serial.print("PROBES stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::probesStackSize);
 
-    stack_free = (float)uxTaskGetStackHighWaterMark(task::powerbuttonTask);
-    stack_used = task::powerbuttonStackSize - stack_free;
-    Serial.print("POWERBUTTON stack used: ");
-    Serial.print(stack_used);
-    Serial.print("/");
-    Serial.println(task::powerbuttonStackSize);
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::screenTask);
+        stack_used = task::screenStackSize - stack_free;
+        Serial.print("SCREEN stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::screenStackSize);
 
-    stack_free = (float)uxTaskGetStackHighWaterMark(task::batteryTask);
-    stack_used = task::batteryStackSize - stack_free;
-    Serial.print("BATTERY stack used: ");
-    Serial.print(stack_used);
-    Serial.print("/");
-    Serial.println(task::batteryStackSize);
-    
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::powerbuttonTask);
+        stack_used = task::powerbuttonStackSize - stack_free;
+        Serial.print("POWERBUTTON stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::powerbuttonStackSize);
 
-    delay(1000);
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::batteryTask);
+        stack_used = task::batteryStackSize - stack_free;
+        Serial.print("BATTERY stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::batteryStackSize);
+        
+
+        delay(5000);
+    }
+}
+
+
+
+void loop() {
+    // To make sure that the loop idle does not block freeRTOS
+    delay(10000);
 }

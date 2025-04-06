@@ -5,25 +5,29 @@
 
 #include "Web.h"
 
-#include "Index.h"
-#include "Probes.h"
-#include "Settings.h"
-#include "About.h"
+#include "HtmlIndex.h"
+#include "HtmlProbes.h"
+#include "HtmlSettings.h"
+#include "HtmlAbout.h"
 
 extern WebServer webserver;
 
 void setup_web_routes() {
-    web::webserver.on("/", get_index);
     web::webserver.on("/probes", get_probes);
     web::webserver.on("/settings", get_settings);
     web::webserver.on("/about", get_about);
+    
+    web::webserver.on("/", get_index);
 }
 
 void get_index() {
     web::webserver.send(200, "text/html", HTML_INDEX);
 }
 void get_probes() {
+
+    Serial.println("Handling probes");
     web::webserver.send(200, "text/html", HTML_PROBES);
+    Serial.println("Delivered probes");
 }
 void get_settings() {
     web::webserver.send(200, "text/html", HTML_SETTINGS);
