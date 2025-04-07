@@ -1,10 +1,12 @@
-checken hoe we detecten dat we uit deep sleep komen -> buzzer
-  hoe detecten indien batterij plat is? -> altijd in setup gewoon beep geven?
+hold button to boot? how to with interrupt?
+
 
 in grillconfig ook init doen van probes met base settings
   we hebbben de set_type functie voor probes, hoe afvuren zodat we altijd correcte waarden hebben?
 
 api post voor probes -> set_type aanroepen
+
+wifimulti gebruiken voor overschakeling van 1 ap naar het andere indien settings veranderd worden? -> gaat niet met local ap..
 
 python script to build html pages?
 
