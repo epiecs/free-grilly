@@ -1,10 +1,14 @@
 class Probe;
+class Buzzer;
 
 namespace grill {
 
     // Battery
     extern int battery_percentage;
     extern bool battery_charging;
+
+    // Buzzer
+    extern Buzzer buzzer;
 
     // Wifi
     extern bool wifi_connected;

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Api.h"
+#include "Buzzer.h"
 #include "GrillConfig.h"
 #include "Network.h"
 #include "Power.h"
@@ -28,12 +29,23 @@ void task_webserver(void* pvParameters);
 void task_stackmonitor(void* pvParameters);
 
 void setup() {
+
+    // ***********************************
+    // * Startup Buzzer
+    // ***********************************
+    
+    grill::buzzer.beep(2, 100);
+
+        
+    // grill::buzzer.set_volume(5);
+    // grill::buzzer.play_all_notes();
+
     // ***********************************
     // * Serial
     // ***********************************
     
     Serial.begin(115200); // Initialize serial communication at 115200 bits per second
-    delay(5000);          // Give serial monitor time to catch up
+    // delay(5000);          // Give serial monitor time to catch up
     
     // ***********************************
     // * Load nvram settings and init
@@ -50,12 +62,6 @@ void setup() {
     SPI.beginTransaction(spiSettings);
     
     pinMode(gpio::hspi_probes_cs, OUTPUT); // Prep CS line for data reading
-
-    // ***********************************
-    // * Non task bound GPIO
-    // ***********************************
-    
-    pinMode(gpio::buzzer, OUTPUT);
 
     // ***********************************
     // * NTP
@@ -118,7 +124,7 @@ void setup() {
     xTaskCreatePinnedToCore(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask, 1);
     xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
     xTaskCreatePinnedToCore(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask, 1);
-    xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
+    // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 }
 
 // ***********************************

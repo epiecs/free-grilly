@@ -4,6 +4,7 @@
 #include <Preferences.h>
 
 #include "Probe.h"
+#include "Buzzer.h"
 #include "GrillConfig.h"
 
 namespace gpio{
@@ -98,6 +99,12 @@ namespace grill{
 
     int battery_percentage              = 0;
     bool battery_charging               = false;
+
+    // ***********************************
+    // * Buzzer
+    // ***********************************
+
+    Buzzer buzzer;    
 
     // ***********************************
     // * Probes
