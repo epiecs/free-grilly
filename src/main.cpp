@@ -41,7 +41,6 @@ void setup() {
     config::settings_storage.begin("free-grilly", false);
     config::config_helper.load_settings();
 
-
     // ***********************************
     // * SPI for probes
     // ***********************************
@@ -51,6 +50,12 @@ void setup() {
     SPI.beginTransaction(spiSettings);
     
     pinMode(gpio::hspi_probes_cs, OUTPUT); // Prep CS line for data reading
+
+    // ***********************************
+    // * Non task bound GPIO
+    // ***********************************
+    
+    pinMode(gpio::buzzer, OUTPUT);
 
     // ***********************************
     // * NTP
@@ -248,14 +253,11 @@ void task_screen(void* pvParameters) {
     Serial.println("Launching task :: SCREEN");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
     
-    pinMode(4, OUTPUT); // SCREEN LED!! VT5
-    digitalWrite(4, HIGH);
+    pinMode(gpio::power_screen_backlight, OUTPUT);
+    digitalWrite(gpio::power_screen_backlight, HIGH);
     
     display.init();
 
-    // TODO BUZZER PIN
-    pinMode(32, OUTPUT); // BUZZZZZER!! VT5
-    
     for (;;) {
         display.display_update();
         // Serial.println("screen update");

@@ -6,6 +6,8 @@ namespace gpio{
     extern int power_screen_backlight;
     extern int power_adc_circuit;
     
+    extern int buzzer;
+
     extern int battery_i2c_sda;
     extern int battery_i2c_scl;
 

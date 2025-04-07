@@ -15,6 +15,8 @@ namespace gpio{
     int power_screen_backlight =  4;
     int power_adc_circuit      = 13;
 
+    int buzzer                 = 32;
+    
     int battery_i2c_sda        = 21;
     int battery_i2c_scl        = 22;
 
