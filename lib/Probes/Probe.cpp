@@ -16,7 +16,6 @@ Probe::Probe(int number, int reference_kohm, int reference_celcius, int referenc
     Probe::set_type("GRILLEYE_IRIS");
 }
 
-
 uint16_t Probe::read_adc_value() {
     Probe::select_probe(Probe::number);
     
@@ -118,7 +117,7 @@ float Probe::calculate_temperature() {
     return temperature;
 }
 
-void Probe::set_type(String probe_type){
+void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){
     
     if(probe_type == "GRILLEYE_IRIS"){
         Probe::reference_beta    = 4250;
@@ -135,8 +134,10 @@ void Probe::set_type(String probe_type){
         Probe::type              = "IKEA_FANTAST";
         return;
     }
-
-    // default value if not known is custom
+    
+    Probe::reference_beta    = reference_beta;
+    Probe::reference_celcius = reference_celcius;
+    Probe::reference_kohm    = reference_kohm;
     Probe::type              = "CUSTOM";
     return;
 }

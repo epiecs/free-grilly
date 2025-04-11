@@ -29,12 +29,13 @@ public:
 	int reference_celcius;								// Reference temperature in C from the datasheet
 	int reference_beta;									// Beta value from the datasheet
 
-	String type;										// The probe type
+	String type = "GRILLEYE_IRIS";						// The probe type
 
 	float celcius;										// The last known temperature in Celcius
 	float fahrenheit;							        // The last known temperature in Fahrenheit
 														// Gets stored on calculate_temperature
 
+	float minimum_temperature = 0;						// The minimum, used for temperature ranges
 	float target_temperature = 0;						// The target temperature
 	bool connected = false;								// If the probe is connected
 	
@@ -70,9 +71,12 @@ public:
 	float calculate_temperature();
 
 	/**
-	 * @brief Set the probe type.
+	 * @brief Set the type of probe used. 
 	 * 
-	 * @param probe_type 
+	 * @param probe_type the type of probe used
+	 * @param reference_kohm optional, only needed for custom type
+	 * @param reference_celcius optional, only needed for custom type
+	 * @param reference_beta optional, only needed for custom type
 	 */
-	void set_type(String probe_type);
+	void set_type(String probe_type, int reference_kohm = 100, int reference_celcius = 25, int reference_beta = 4250);
 };

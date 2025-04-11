@@ -11,6 +11,7 @@
 
 #include "Config.h"
 #include "Grill.h"
+#include "Probe.h"
 #include "Util.h"
 
 UUID uuid_generator;
@@ -24,13 +25,19 @@ String local_ap_ip_default      = "192.168.200.10";
 String local_ap_subnet_default  = "255.255.255.0";
 String local_ap_gateway_default = "192.168.200.10";
 
+// ***********************************
+// * Settings
+// ***********************************
+
 void GrillConfig::load_settings(){
 
     //Check if nvram is clear or if initialized == false and initialize
     if(config::settings_storage.isKey("initialized") == false){
         initialize_settings();
+        initialize_probes();
     }else if(config::settings_storage.getBool("initialized") == false){
         initialize_settings();
+        initialize_probes();
     }
 
     // ***********************************
@@ -57,7 +64,7 @@ void GrillConfig::load_settings(){
     config::local_ap_subnet   = config::settings_storage.getString("l_ap_subnet", local_ap_subnet_default);
     config::local_ap_gateway  = config::settings_storage.getString("l_ap_gateway", local_ap_gateway_default);
 
-    GrillConfig::print();
+    GrillConfig::print_settings();
 }
 
 void GrillConfig::save_settings(){
@@ -90,7 +97,7 @@ void GrillConfig::save_settings(){
         start_local_ap(config::local_ap_ssid, config::local_ap_password,config::local_ap_ip,config::local_ap_subnet,config::local_ap_gateway);
     }
 
-    GrillConfig::print();
+    GrillConfig::print_settings();
 }
 
 void GrillConfig::initialize_settings(){
@@ -134,23 +141,10 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putString("l_ap_subnet", local_ap_subnet_default);
     config::settings_storage.putString("l_ap_gateway", local_ap_gateway_default);
 
-    GrillConfig::print();
+    GrillConfig::print_settings();
 }
 
-void GrillConfig::factory_reset() {
-    // https://github.com/espressif/esp-idf/issues/2777
-    config::settings_storage.putBool("initialized", false);
-    Serial.println("Erasing nvram");
-    nvs_flash_deinit();
-    nvs_flash_erase();
-    nvs_flash_init();
-    Serial.println("Nvram erased");
-    
-    Serial.println("Rebooting!");
-    ESP.restart();
-}
-
-void GrillConfig::print(){
+void GrillConfig::print_settings(){
     
     Serial.println(" ");
     Serial.println("|++++++++++ NVRAM Settings ++++++++++|");
@@ -185,6 +179,246 @@ void GrillConfig::print(){
     Serial.println("|++++++++++ NVRAM Settings ++++++++++|");
     Serial.println(" ");
 
+}
+
+// ***********************************
+// * Probes
+// ***********************************
+
+void GrillConfig::load_probes(){
+
+    String type = "";
+    int kohm = 0;
+    int beta = 0;
+    int temp = 0;
+
+    type = config::settings_storage.getString("p1_type");
+    kohm = config::settings_storage.getInt("p1_ref_kohm");
+    temp = config::settings_storage.getInt("p1_ref_temp");
+    beta = config::settings_storage.getInt("p1_ref_beta");
+    grill::probe_1.set_type(type, kohm, temp, beta);
+    
+    type = config::settings_storage.getString("p2_type");
+    kohm = config::settings_storage.getInt("p2_ref_kohm");
+    temp = config::settings_storage.getInt("p2_ref_temp");
+    beta = config::settings_storage.getInt("p2_ref_beta");
+    grill::probe_2.set_type(type, kohm, temp, beta);
+    
+    type = config::settings_storage.getString("p3_type");
+    kohm = config::settings_storage.getInt("p3_ref_kohm");
+    temp = config::settings_storage.getInt("p3_ref_temp");
+    beta = config::settings_storage.getInt("p3_ref_beta");
+    grill::probe_3.set_type(type, kohm, temp, beta);
+    
+    type = config::settings_storage.getString("p4_type");
+    kohm = config::settings_storage.getInt("p4_ref_kohm");
+    temp = config::settings_storage.getInt("p4_ref_temp");
+    beta = config::settings_storage.getInt("p4_ref_beta");
+    grill::probe_4.set_type(type, kohm, temp, beta);
+    
+    type = config::settings_storage.getString("p5_type");
+    kohm = config::settings_storage.getInt("p5_ref_kohm");
+    temp = config::settings_storage.getInt("p5_ref_temp");
+    beta = config::settings_storage.getInt("p5_ref_beta");
+    grill::probe_5.set_type(type, kohm, temp, beta);
+    
+    type = config::settings_storage.getString("p6_type");
+    kohm = config::settings_storage.getInt("p6_ref_kohm");
+    temp = config::settings_storage.getInt("p6_ref_temp");
+    beta = config::settings_storage.getInt("p6_ref_beta");
+    grill::probe_6.set_type(type, kohm, temp, beta);
+    
+    type = config::settings_storage.getString("p7_type");
+    kohm = config::settings_storage.getInt("p7_ref_kohm");
+    temp = config::settings_storage.getInt("p7_ref_temp");
+    beta = config::settings_storage.getInt("p7_ref_beta");
+    grill::probe_7.set_type(type, kohm, temp, beta);
+    
+    type = config::settings_storage.getString("p8_type");
+    kohm = config::settings_storage.getInt("p8_ref_kohm");
+    temp = config::settings_storage.getInt("p8_ref_beta");
+    beta = config::settings_storage.getInt("p8_ref_temp"); 
+    grill::probe_8.set_type(type, kohm, temp, beta);
+
+    GrillConfig::print_probes();
+}
+
+void GrillConfig::save_probes(){
+    Serial.println("Initializing probes");
+
+    // We can take the base values from the object since we already supply this in the constructor
+    config::settings_storage.putString("p1_type", grill::probe_1.type);
+    config::settings_storage.putInt("p1_ref_kohm", grill::probe_1.reference_kohm);
+    config::settings_storage.putInt("p1_ref_beta", grill::probe_1.reference_beta);
+    config::settings_storage.putInt("p1_ref_temp", grill::probe_1.reference_celcius);
+    
+    config::settings_storage.putString("p2_type", grill::probe_2.type);
+    config::settings_storage.putInt("p2_ref_kohm", grill::probe_2.reference_kohm);
+    config::settings_storage.putInt("p2_ref_beta", grill::probe_2.reference_beta);
+    config::settings_storage.putInt("p2_ref_temp", grill::probe_2.reference_celcius);
+    
+    config::settings_storage.putString("p3_type", grill::probe_3.type);
+    config::settings_storage.putInt("p3_ref_kohm", grill::probe_3.reference_kohm);
+    config::settings_storage.putInt("p3_ref_beta", grill::probe_3.reference_beta);
+    config::settings_storage.putInt("p3_ref_temp", grill::probe_3.reference_celcius);
+    
+    config::settings_storage.putString("p4_type", grill::probe_4.type);
+    config::settings_storage.putInt("p4_ref_kohm", grill::probe_4.reference_kohm);
+    config::settings_storage.putInt("p4_ref_beta", grill::probe_4.reference_beta);
+    config::settings_storage.putInt("p4_ref_temp", grill::probe_4.reference_celcius);
+    
+    config::settings_storage.putString("p5_type", grill::probe_5.type);
+    config::settings_storage.putInt("p5_ref_kohm", grill::probe_5.reference_kohm);
+    config::settings_storage.putInt("p5_ref_beta", grill::probe_5.reference_beta);
+    config::settings_storage.putInt("p5_ref_temp", grill::probe_5.reference_celcius);
+    
+    config::settings_storage.putString("p6_type", grill::probe_6.type);
+    config::settings_storage.putInt("p6_ref_kohm", grill::probe_6.reference_kohm);
+    config::settings_storage.putInt("p6_ref_beta", grill::probe_6.reference_beta);
+    config::settings_storage.putInt("p6_ref_temp", grill::probe_6.reference_celcius);
+    
+    config::settings_storage.putString("p7_type", grill::probe_7.type);
+    config::settings_storage.putInt("p7_ref_kohm", grill::probe_7.reference_kohm);
+    config::settings_storage.putInt("p7_ref_beta", grill::probe_7.reference_beta);
+    config::settings_storage.putInt("p7_ref_temp", grill::probe_7.reference_celcius);
+    
+    config::settings_storage.putString("p8_type", grill::probe_8.type);
+    config::settings_storage.putInt("p8_ref_kohm", grill::probe_8.reference_kohm);
+    config::settings_storage.putInt("p8_ref_beta", grill::probe_8.reference_beta);
+    config::settings_storage.putInt("p8_ref_temp", grill::probe_8.reference_celcius);
+    
+    GrillConfig::print_probes();
+}
+
+void GrillConfig::initialize_probes(){
+    Serial.println("Initializing probes");
+
+    // We can take the base values from the object since we already supply this in the constructor
+    config::settings_storage.putString("p1_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p1_ref_kohm", grill::probe_1.reference_kohm);
+    config::settings_storage.putInt("p1_ref_beta", grill::probe_1.reference_beta);
+    config::settings_storage.putInt("p1_ref_temp", grill::probe_1.reference_celcius);
+    
+    config::settings_storage.putString("p2_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p2_ref_kohm", grill::probe_2.reference_kohm);
+    config::settings_storage.putInt("p2_ref_beta", grill::probe_2.reference_beta);
+    config::settings_storage.putInt("p2_ref_temp", grill::probe_2.reference_celcius);
+    
+    config::settings_storage.putString("p3_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p3_ref_kohm", grill::probe_3.reference_kohm);
+    config::settings_storage.putInt("p3_ref_beta", grill::probe_3.reference_beta);
+    config::settings_storage.putInt("p3_ref_temp", grill::probe_3.reference_celcius);
+    
+    config::settings_storage.putString("p4_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p4_ref_kohm", grill::probe_4.reference_kohm);
+    config::settings_storage.putInt("p4_ref_beta", grill::probe_4.reference_beta);
+    config::settings_storage.putInt("p4_ref_temp", grill::probe_4.reference_celcius);
+    
+    config::settings_storage.putString("p5_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p5_ref_kohm", grill::probe_5.reference_kohm);
+    config::settings_storage.putInt("p5_ref_beta", grill::probe_5.reference_beta);
+    config::settings_storage.putInt("p5_ref_temp", grill::probe_5.reference_celcius);
+    
+    config::settings_storage.putString("p6_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p6_ref_kohm", grill::probe_6.reference_kohm);
+    config::settings_storage.putInt("p6_ref_beta", grill::probe_6.reference_beta);
+    config::settings_storage.putInt("p6_ref_temp", grill::probe_6.reference_celcius);
+    
+    config::settings_storage.putString("p7_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p7_ref_kohm", grill::probe_7.reference_kohm);
+    config::settings_storage.putInt("p7_ref_beta", grill::probe_7.reference_beta);
+    config::settings_storage.putInt("p7_ref_temp", grill::probe_7.reference_celcius);
+    
+    config::settings_storage.putString("p8_type", "GRILLEYE_IRIS");
+    config::settings_storage.putInt("p8_ref_kohm", grill::probe_8.reference_kohm);
+    config::settings_storage.putInt("p8_ref_beta", grill::probe_8.reference_beta);
+    config::settings_storage.putInt("p8_ref_temp", grill::probe_8.reference_celcius);   
+}
+
+void GrillConfig::print_probes(){
+
+    String type = "";
+    int kohm = 0;
+    int beta = 0;
+    int temp = 0;
+
+    Serial.println("|++++++++++ PROBE Settings ++++++++++|");
+
+    type = config::settings_storage.getString("p1_type");
+    kohm = config::settings_storage.getInt("p1_ref_kohm");
+    temp = config::settings_storage.getInt("p1_ref_temp");
+    beta = config::settings_storage.getInt("p1_ref_beta");
+    Serial.printf("Probe 1 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+    
+    type = config::settings_storage.getString("p2_type");
+    kohm = config::settings_storage.getInt("p2_ref_kohm");
+    temp = config::settings_storage.getInt("p2_ref_temp");
+    beta = config::settings_storage.getInt("p2_ref_beta");
+    Serial.printf("Probe 2 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+    
+    type = config::settings_storage.getString("p3_type");
+    kohm = config::settings_storage.getInt("p3_ref_kohm");
+    temp = config::settings_storage.getInt("p3_ref_temp");
+    beta = config::settings_storage.getInt("p3_ref_beta");
+    Serial.printf("Probe 3 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+    
+    type = config::settings_storage.getString("p4_type");
+    kohm = config::settings_storage.getInt("p4_ref_kohm");
+    temp = config::settings_storage.getInt("p4_ref_temp");
+    beta = config::settings_storage.getInt("p4_ref_beta");
+    Serial.printf("Probe 4 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+    
+    type = config::settings_storage.getString("p5_type");
+    kohm = config::settings_storage.getInt("p5_ref_kohm");
+    temp = config::settings_storage.getInt("p5_ref_temp");
+    beta = config::settings_storage.getInt("p5_ref_beta");
+    Serial.printf("Probe 5 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+    
+    type = config::settings_storage.getString("p6_type");
+    kohm = config::settings_storage.getInt("p6_ref_kohm");
+    temp = config::settings_storage.getInt("p6_ref_temp");
+    beta = config::settings_storage.getInt("p6_ref_beta");
+    Serial.printf("Probe 6 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+    
+    type = config::settings_storage.getString("p7_type");
+    kohm = config::settings_storage.getInt("p7_ref_kohm");
+    temp = config::settings_storage.getInt("p7_ref_temp");
+    beta = config::settings_storage.getInt("p7_ref_beta");
+    Serial.printf("Probe 7 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+    
+    type = config::settings_storage.getString("p8_type");
+    kohm = config::settings_storage.getInt("p8_ref_kohm");
+    temp = config::settings_storage.getInt("p8_ref_temp"); 
+    beta = config::settings_storage.getInt("p8_ref_beta");
+    Serial.printf("Probe 8 :: %s %d %d %d", type, kohm, temp, beta);
+    Serial.println("");
+
+    Serial.println("|++++++++++ PROBE Settings ++++++++++|");
+    Serial.println("");
+}
+
+// ***********************************
+// * Utilities
+// ***********************************
+
+void GrillConfig::factory_reset() {
+    // https://github.com/espressif/esp-idf/issues/2777
+    config::settings_storage.putBool("initialized", false);
+    Serial.println("Erasing nvram");
+    nvs_flash_deinit();
+    nvs_flash_erase();
+    nvs_flash_init();
+    Serial.println("Nvram erased");
+    
+    Serial.println("Rebooting!");
+    ESP.restart();
 }
 
 bool GrillConfig::check_wifi_reload_needed(){

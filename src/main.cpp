@@ -35,7 +35,6 @@ void setup() {
     // ***********************************
     
     grill::buzzer.beep(2, 100);
-
         
     // grill::buzzer.set_volume(5);
     // grill::buzzer.play_all_notes();
@@ -52,6 +51,7 @@ void setup() {
     // ***********************************
     config::settings_storage.begin("free-grilly", false);
     config::config_helper.load_settings();
+    config::config_helper.load_probes();
 
     // ***********************************
     // * SPI for probes

@@ -10,34 +10,18 @@ public:
 
     Preferences preferences;
 
-    /**
-     * @brief Initializes all settings from the nvram.
-     *
-     */
-    
+    // Settings
     void initialize_settings();
-    /**
-     * @brief Loads all preferences from the nvram.
-     *
-     */
     void load_settings();
-
-    /**
-     * @brief Saves all preferences to the nvram. Re-initializes where needed.
-     *
-     */
     void save_settings();
+    void print_settings();
+    
+    // Probes
+    void initialize_probes();
+    void load_probes();
+    void save_probes();
+    void print_probes();
 
-    /**
-     * @brief Prints out the current stored config
-     * 
-     */
-    void print();
-
-    /**
-    * @brief Factory resets the nvram and clears all settings
-    *
-    */
     void factory_reset();
 
 private:
