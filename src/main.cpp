@@ -119,11 +119,11 @@ void setup() {
     // xTaskCreate(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask);
     // xTaskCreate(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask);
 
-    xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
-    xTaskCreatePinnedToCore(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask, 1);
     xTaskCreatePinnedToCore(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask, 1);
-    xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
     xTaskCreatePinnedToCore(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask, 1);
+    xTaskCreatePinnedToCore(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask, 1);
+    xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
+    xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
     // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 }
 
@@ -136,7 +136,7 @@ void setup() {
 // ***********************************
 
 void task_webserver(void* pvParameters) {
-    Serial.println("Launching task :: API");
+    Serial.println("Launching task :: WEBSERVER / API");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
     
     setup_api_routes();
@@ -148,6 +148,7 @@ void task_webserver(void* pvParameters) {
 
     while (true){
         web::webserver.handleClient();
+        delay(1);
     }
 
 }
