@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <math.h>
 
+#include "Config.h"
 #include "Probe.h"
 #include "Gpio.h"
 
@@ -13,7 +14,7 @@ Probe::Probe(int number, int reference_kohm, int reference_celcius, int referenc
     Probe::reference_beta = reference_beta;
     
     // Default type
-    Probe::set_type("GRILLEYE_IRIS");
+    Probe::set_type("grilleye_iris");
 }
 
 uint16_t Probe::read_adc_value() {
@@ -110,8 +111,19 @@ float Probe::calculate_temperature() {
     float temperature = (1 / (ref_kelvin + ref_beta * log_volt)) - 273.15;
 
     // Store temp in public property
-    Probe::celcius    = temperature;
-    Probe::fahrenheit = (temperature * 1.8) + 32;
+    Probe::celcius     = temperature;
+    Probe::fahrenheit  = (temperature * 1.8) + 32;
+
+    Probe::temperature = 0;
+
+    if(config::temperature_unit == "celcius"){
+        Probe::temperature = Probe::celcius;
+    }
+    
+    if(config::temperature_unit == "fahrenheit"){
+        Probe::temperature = Probe::fahrenheit;
+    }
+
     Probe::connected  = true;
 
     return temperature;
@@ -119,25 +131,25 @@ float Probe::calculate_temperature() {
 
 void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){
     
-    if(probe_type == "GRILLEYE_IRIS"){
+    if(probe_type == "grilleye_iris"){
         Probe::reference_beta    = 4250;
         Probe::reference_celcius = 25;
         Probe::reference_kohm    = 100;
-        Probe::type              = "GRILLEYE_IRIS";
+        Probe::type              = "grilleye_iris";
         return;
     }
 
-    if(probe_type == "IKEA_FANTAST"){
+    if(probe_type == "ikea_fantast"){
         Probe::reference_beta    = 4250;
         Probe::reference_celcius = 25;
         Probe::reference_kohm    = 230;
-        Probe::type              = "IKEA_FANTAST";
+        Probe::type              = "ikea_fantast";
         return;
     }
     
     Probe::reference_beta    = reference_beta;
     Probe::reference_celcius = reference_celcius;
     Probe::reference_kohm    = reference_kohm;
-    Probe::type              = "CUSTOM";
+    Probe::type              = "custom";
     return;
 }

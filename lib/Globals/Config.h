@@ -16,6 +16,8 @@ namespace config{
     extern String grill_uuid;
     extern String grill_firmware_version;
 
+    extern String temperature_unit;
+
     // Wifi
     extern String wifi_ip;
     extern String wifi_subnet;

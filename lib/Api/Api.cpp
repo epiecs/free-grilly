@@ -246,6 +246,8 @@ void get_api_settings()
     jsondoc["uuid"]              = config::grill_uuid;
     jsondoc["firmware_version"]  = config::grill_firmware_version;
     
+    jsondoc["temperature_unit"]  = config::temperature_unit;
+    
     jsondoc["wifi_ssid"]         = config::wifi_ssid;
     jsondoc["wifi_ip"]           = config::wifi_ip;
     jsondoc["wifi_subnet"]       = config::wifi_subnet;
@@ -257,13 +259,11 @@ void get_api_settings()
     jsondoc["local_ap_subnet"]   = config::local_ap_subnet;
     jsondoc["local_ap_gateway"]  = config::local_ap_gateway;
     
-    // TODO implement
-    // jsondoc["temperature_unit"]         = "celcius";  //TODO have fahrenheit here + also in the main api endpoint
-    // jsondoc["alarm_enabled"]            = true;
-    // jsondoc["alarm_volume"]             = 1;
-    // jsondoc["alarm_degrees_before"]     = 5;
-    // jsondoc["alarm_on_wifi_disconnect"] = true;
-    // jsondoc["auto_shutdown_time"]       = 180;
+    // jsondoc["beep_enabled"]            = true;
+    // jsondoc["beep_volume"]             = 3;
+    // jsondoc["beep_degrees_before"]     = 5;
+    // jsondoc["beep_on_ready"]           = true;
+    // jsondoc["beep_on_wifi_disconnect"] = true;
     // jsondoc["mqtt_broker"]              = 180; //TODO add mqtt broker to sqlite
 
     jsondoc.shrinkToFit();

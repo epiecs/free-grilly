@@ -82,13 +82,13 @@ components:
                   - "number"
                   - "null"
                 format: float
-                description: The temperature in Celcius
+                description: The temperature in Celcius/Fahrenheit
               target_temperature:
                 type: 
                   - "number"
                   - "null"
                 format: float
-                description: The target temperature in Celcius
+                description: The target temperature in Celcius/Fahrenheit
               connected:
                 type: boolean
                 description: Is the probe connected
@@ -147,7 +147,7 @@ components:
             - "null"
           format: float
           readOnly: true
-          description: The temperature in Celcius
+          description: The temperature in Celcius/Fahrenheit according to the settings.
           examples:
             - 25.101
             - 27.101
@@ -157,7 +157,7 @@ components:
             - "number"
             - "null"
           format: float
-          description: The target temperature in Celcius
+          description: The target temperature in Celcius/Fahrenheit according to the settings.
         connected:
           type: boolean
           description: Is the probe connected
@@ -168,12 +168,12 @@ components:
             The probe type connected to the grilleye. There are several built-in probe types. If 
             you have the spec sheet of your probe you can try and setup a custom probe and provide 
             the values. Not all probes will work so YMMV.
-          example: GRILLEYE_IRIS
-          default: GRILLEYE_IRIS    
+          example: grilleye_iris
+          default: grilleye_iris    
           enum:
-            - CUSTOM
-            - GRILLEYE_IRIS
-            - IKEA_FANTAST
+            - custom
+            - grilleye_iris
+            - ikea_fantast
         reference_kohm:
           type: 
             - "number"
@@ -221,6 +221,14 @@ components:
           example: 25.3.1
           description: The current firmware version in CalVer
           readOnly: true
+        temperature_unit:
+          type: string
+          description: The temperature_unit that is used
+          example: celcius
+          default: celcius    
+          enum:
+            - celcius
+            - fahrenheit
         wifi_ssid:
           type: string
           example: my-home-wifi

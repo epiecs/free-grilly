@@ -47,6 +47,8 @@ void GrillConfig::load_settings(){
     config::grill_name        = config::settings_storage.getString("grill_name", "Free-Grilly");
     config::grill_uuid        = config::settings_storage.getString("grill_uuid", "");
     
+    config::temperature_unit  = config::settings_storage.getString("temp_unit");
+
     // Wifi
     config::wifi_ssid         = config::settings_storage.getString("wifi_ssid", "");
     config::wifi_password     = config::settings_storage.getString("wifi_password", "");
@@ -72,10 +74,11 @@ void GrillConfig::save_settings(){
 
     config::settings_storage.putString("grill_name", config::grill_name);
 
+    Serial.println("check if reload is needed");
     bool reload_wifi     = check_wifi_reload_needed();
     bool reload_local_ap = check_local_ap_reload_needed();
 
-    Serial.println("check if reload is needed");
+    config::settings_storage.putString("temp_unit", config::temperature_unit);
 
     config::settings_storage.putString("wifi_ssid", config::wifi_ssid);
     config::settings_storage.putString("wifi_password", config::wifi_password);
@@ -127,6 +130,8 @@ void GrillConfig::initialize_settings(){
 
     config::settings_storage.putString("grill_name", "Free-Grilly");
     config::settings_storage.putString("grill_uuid", config::grill_uuid);
+    
+    config::settings_storage.putString("temp_unit", "celcius");
 
     config::settings_storage.putString("wifi_ssid", "");
     config::settings_storage.putString("wifi_password", "");
@@ -154,6 +159,10 @@ void GrillConfig::print_settings(){
     Serial.println(config::grill_name);
     Serial.print("-- grill_uuid: ");
     Serial.println(config::grill_uuid);
+    
+    Serial.print("-- temperature_unit: ");
+    Serial.println(config::temperature_unit);
+
     Serial.print("-- wifi_ssid: ");
     Serial.println(config::wifi_ssid);
     Serial.print("-- wifi_password: ");
@@ -294,42 +303,42 @@ void GrillConfig::initialize_probes(){
     Serial.println("Initializing probes");
 
     // We can take the base values from the object since we already supply this in the constructor
-    config::settings_storage.putString("p1_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p1_type", "grilleye_iris");
     config::settings_storage.putInt("p1_ref_kohm", grill::probe_1.reference_kohm);
     config::settings_storage.putInt("p1_ref_beta", grill::probe_1.reference_beta);
     config::settings_storage.putInt("p1_ref_temp", grill::probe_1.reference_celcius);
     
-    config::settings_storage.putString("p2_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p2_type", "grilleye_iris");
     config::settings_storage.putInt("p2_ref_kohm", grill::probe_2.reference_kohm);
     config::settings_storage.putInt("p2_ref_beta", grill::probe_2.reference_beta);
     config::settings_storage.putInt("p2_ref_temp", grill::probe_2.reference_celcius);
     
-    config::settings_storage.putString("p3_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p3_type", "grilleye_iris");
     config::settings_storage.putInt("p3_ref_kohm", grill::probe_3.reference_kohm);
     config::settings_storage.putInt("p3_ref_beta", grill::probe_3.reference_beta);
     config::settings_storage.putInt("p3_ref_temp", grill::probe_3.reference_celcius);
     
-    config::settings_storage.putString("p4_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p4_type", "grilleye_iris");
     config::settings_storage.putInt("p4_ref_kohm", grill::probe_4.reference_kohm);
     config::settings_storage.putInt("p4_ref_beta", grill::probe_4.reference_beta);
     config::settings_storage.putInt("p4_ref_temp", grill::probe_4.reference_celcius);
     
-    config::settings_storage.putString("p5_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p5_type", "grilleye_iris");
     config::settings_storage.putInt("p5_ref_kohm", grill::probe_5.reference_kohm);
     config::settings_storage.putInt("p5_ref_beta", grill::probe_5.reference_beta);
     config::settings_storage.putInt("p5_ref_temp", grill::probe_5.reference_celcius);
     
-    config::settings_storage.putString("p6_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p6_type", "grilleye_iris");
     config::settings_storage.putInt("p6_ref_kohm", grill::probe_6.reference_kohm);
     config::settings_storage.putInt("p6_ref_beta", grill::probe_6.reference_beta);
     config::settings_storage.putInt("p6_ref_temp", grill::probe_6.reference_celcius);
     
-    config::settings_storage.putString("p7_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p7_type", "grilleye_iris");
     config::settings_storage.putInt("p7_ref_kohm", grill::probe_7.reference_kohm);
     config::settings_storage.putInt("p7_ref_beta", grill::probe_7.reference_beta);
     config::settings_storage.putInt("p7_ref_temp", grill::probe_7.reference_celcius);
     
-    config::settings_storage.putString("p8_type", "GRILLEYE_IRIS");
+    config::settings_storage.putString("p8_type", "grilleye_iris");
     config::settings_storage.putInt("p8_ref_kohm", grill::probe_8.reference_kohm);
     config::settings_storage.putInt("p8_ref_beta", grill::probe_8.reference_beta);
     config::settings_storage.putInt("p8_ref_temp", grill::probe_8.reference_celcius);   

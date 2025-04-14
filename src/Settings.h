@@ -47,6 +47,8 @@ namespace config{
     String grill_uuid                   = "";
     String grill_firmware_version       = "25.04.06";
 
+    String temperature_unit             = "celcius";
+
     // ***********************************
     // * Timezone / NTP
     // ***********************************

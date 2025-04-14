@@ -29,8 +29,10 @@ public:
 	int reference_celcius;								// Reference temperature in C from the datasheet
 	int reference_beta;									// Beta value from the datasheet
 
-	String type = "GRILLEYE_IRIS";						// The probe type
+	String type = "grilleye_iris";						// The probe type
 
+	float temperature;								    // The last known temperature for the chosen temperature_unit
+														// in the grill settings
 	float celcius;										// The last known temperature in Celcius
 	float fahrenheit;							        // The last known temperature in Fahrenheit
 														// Gets stored on calculate_temperature
