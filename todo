@@ -1,37 +1,24 @@
-local wifi passphrase too short
+web page code
 
 hold button to boot? how to with interrupt?
 
+
+beep on wifi disconnect if in settings
+
 buzzer songs
 screen sometimes not booting
-
-in grillconfig ook init doen van probes met base settings
-  we hebbben de set_type functie voor probes, hoe afvuren zodat we altijd correcte waarden hebben?
-
-api post voor probes -> set_type aanroepen
 
 wifimulti gebruiken voor overschakeling van 1 ap naar het andere indien settings veranderd worden? -> gaat niet met local ap..
 
 python script to build html pages?
 
-local ap password moet > 8 karakters zijn -> api 400 status?
-local ap indien geen password of leeg moet de functie anders aangeroepen worden
 
 info op bbqgenootschap plaatsen?
 licentie bespreken met jeroen/christos?
 
 
-# TODO hoe probe types bijhouden
-# TODO custom settings
-# TODO preferences.h probe settings opslaan
-
 multicast dns setup
 
-validate json schema -> Schemas.h?
-  list loop
-
-settings page GET/POST
-  frontend -> on change wifi try to connect and if successfull return 200 and redirect option
 
 press side button
   tap, <1s    -> show current local ssid + pass + current ssid/ip info
