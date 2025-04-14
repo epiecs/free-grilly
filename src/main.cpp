@@ -35,10 +35,7 @@ void setup() {
     // ***********************************
     
     grill::buzzer.beep(2, 100);
-        
-    // grill::buzzer.set_volume(5);
-    // grill::buzzer.play_all_notes();
-
+    
     // ***********************************
     // * Serial
     // ***********************************
@@ -188,18 +185,22 @@ void task_powerbutton(void* pvParameters) {
 
             if(millis_pressed < short_press_time) {
                 Serial.println("Button pressed for less than 1 second");
+                grill::buzzer.beep(1, 100);
                 // TODO switch between wifi/probes screen
             }
             else if (millis_pressed < medium_press_time) {
                 Serial.println("Button pressed 1-5 seconds");
+                grill::buzzer.beep(2, 100);
                 // TODO show about + help -> pressing times
             }
             else if (millis_pressed < long_press_time) {
                 Serial.println("Button pressed 5-10 seconds");
+                grill::buzzer.beep(3, 100);
                 power.shutdown();
             }
             else if (millis_pressed > long_press_time) {
                 Serial.println("Button pressed for more than 10 seconds");
+                grill::buzzer.beep(3, 500);
                 config::config_helper.factory_reset();
             }            
         }
