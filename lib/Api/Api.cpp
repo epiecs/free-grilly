@@ -262,6 +262,7 @@ void get_api_settings()
     // jsondoc["beep_enabled"]            = true;
     // jsondoc["beep_volume"]             = 3;
     // jsondoc["beep_degrees_before"]     = 5;
+    // jsondoc["beep_outside_target"]     = true;
     // jsondoc["beep_on_ready"]           = true;
     // jsondoc["beep_on_wifi_disconnect"] = true;
     // jsondoc["mqtt_broker"]              = 180; //TODO add mqtt broker to sqlite
@@ -297,6 +298,11 @@ void post_api_settings()
     config::local_ap_ip            = post_data["local_ap_ip"].as<String>();
     config::local_ap_subnet        = post_data["local_ap_subnet"].as<String>();
     config::local_ap_gateway       = post_data["local_ap_gateway"].as<String>();
+
+    if(config::local_ap_password.length() > 0 && config::local_ap_password.length() < 8){
+        web::webserver.send(400, "application/json", "{\"error\": \"local_ap_password should be empty or at least 8 characters\"}"); 
+        return;
+    }
     
     config::config_helper.save_settings();
 

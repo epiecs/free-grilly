@@ -6,18 +6,6 @@
 #include "Config.h"
 #include "Grill.h"
 
-// TODO works, have to fix circular dependancy in grillconfig?
-// #include <Network.h>
-
-// #include <WebServer.h>
-// #include <Preferences.h>
-// #include <WiFi.h>
-
-// #include "GrillConfig.h"
-// #include "Probe.h"
-// #include "Config.h"
-// #include "Grill.h"
-
 constexpr int CONNECT_TIMEOUT_SECONDS = 15;
 
 void start_local_ap(String ssid, String password, String ip, String subnet, String gateway)
@@ -27,17 +15,16 @@ void start_local_ap(String ssid, String password, String ip, String subnet, Stri
     IPAddress local_gateway;    local_gateway.fromString(gateway);
 
     const char *local_password = NULL;
+    Serial.println("Starting local wifi ap");
+    WiFi.softAPConfig(local_ip, local_gateway, local_subnet);
 
-    if (password != "")
-    {
+    if (password != ""){
         local_password = password.c_str();
+        WiFi.softAP(ssid.c_str(), local_password);
+    } else {
+        WiFi.softAP(ssid.c_str(), emptyString);
     }
 
-    // Start local ap
-    Serial.println("Starting local wifi ap");
-
-    WiFi.softAPConfig(local_ip, local_gateway, local_subnet);
-    WiFi.softAP(ssid.c_str(), local_password);
     Serial.printf("Local SSID: %s \n", ssid.c_str());
     Serial.printf("Local IP: %s \n", WiFi.softAPIP().toString().c_str());
 }
@@ -57,14 +44,12 @@ bool connect_to_wifi(String ssid, String password, String ip, String subnet, Str
     WiFi.begin(ssid.c_str(), password.c_str());
 
     int expired_time = 0;
-    while (WiFi.status() != WL_CONNECTED)
-    {
+    while (WiFi.status() != WL_CONNECTED){
         Serial.print(".");
         delay(step);
         expired_time += step;
 
-        if (expired_time > timeout)
-        {
+        if (expired_time > timeout){
             Serial.println("");
             Serial.println("Failed to connect to WiFi");
             return false;
@@ -73,14 +58,10 @@ bool connect_to_wifi(String ssid, String password, String ip, String subnet, Str
 
     Serial.println("");
 
-    if (ip != "0.0.0.0")
-    {
-        if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns, wifi_dns2))
-        {
+    if (ip != "0.0.0.0"){
+        if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns, wifi_dns2)){
             Serial.println("Failed to configure Static IP");
-        }
-        else
-        {
+        } else {
             Serial.println("Static IP configured!");
         }
     }
