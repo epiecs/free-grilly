@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+#include "Config.h"
 #include "Gpio.h"
 
 Buzzer::Buzzer(){    
@@ -50,5 +51,7 @@ void Buzzer::set_volume(int volume){
         return;
     }
     
+    config::beep_volume = volume;
+
     Buzzer::volume = volume * 50;   
 }
