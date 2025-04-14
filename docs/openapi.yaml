@@ -67,6 +67,14 @@ components:
           type: string
           example: 192.168.0.10
           description: The wifi ip when connected to your network
+        temperature_unit:
+          type: string
+          description: The temperature_unit that is used
+          example: celcius
+          default: celcius    
+          enum:
+            - celcius
+            - fahrenheit
         probes:
           type: array
           minItems: 8
@@ -164,7 +172,7 @@ components:
           default: 0
           examples:
             - 25.50
-            - 120.00
+            - 120
         connected:
           type: boolean
           description: Is the probe connected

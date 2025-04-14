@@ -38,6 +38,7 @@ void get_api_grill()
     jsondoc["wifi_ssid"]          = config::wifi_ssid;
     jsondoc["wifi_ip"]            = config::wifi_ip;
     jsondoc["wifi_signal"]        = WiFi.RSSI();
+    jsondoc["temperature_unit"]   = config::temperature_unit;
     
     JsonArray probeData = jsondoc["probes"].to<JsonArray>();
     
