@@ -89,6 +89,9 @@ components:
                   - "null"
                 format: float
                 description: The target temperature in Celcius/Fahrenheit
+                examples:
+                  - 30.00
+                  - 25.5
               connected:
                 type: boolean
                 description: Is the probe connected
@@ -158,6 +161,10 @@ components:
             - "null"
           format: float
           description: The target temperature in Celcius/Fahrenheit according to the settings.
+          default: 0
+          examples:
+            - 25.50
+            - 120.00
         connected:
           type: boolean
           description: Is the probe connected

@@ -98,6 +98,8 @@ void get_api_probes()
 {
     jsondoc.clear();
 
+    Serial.println(grill::probe_1.target_temperature);
+
     JsonObject doc_0 = jsondoc.add<JsonObject>();
     doc_0["probe_id"] = 1;
     doc_0["temperature"] = grill::probe_1.celcius;
@@ -203,29 +205,39 @@ void post_api_probes()
         int    reference_celcius  = item["reference_celcius"];
         int    reference_beta     = item["reference_beta"];
 
+        Serial.println(target_temperature);
+
         switch (probe_id){
             case 1:
+                grill::probe_1.target_temperature = target_temperature;
                 grill::probe_1.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 2:
+                grill::probe_2.target_temperature = target_temperature;    
                 grill::probe_2.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 3:
+                grill::probe_3.target_temperature = target_temperature;    
                 grill::probe_3.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 4:
+                grill::probe_4.target_temperature = target_temperature;    
                 grill::probe_4.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 5:
+                grill::probe_5.target_temperature = target_temperature;    
                 grill::probe_5.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 6:
+                grill::probe_6.target_temperature = target_temperature;    
                 grill::probe_6.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 7:
+                grill::probe_7.target_temperature = target_temperature;    
                 grill::probe_7.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 8:
+                grill::probe_8.target_temperature = target_temperature;    
                 grill::probe_8.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             default:
