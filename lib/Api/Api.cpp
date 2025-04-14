@@ -12,7 +12,7 @@
 #include "Web.h"
 
 JsonDocument jsondoc;
-char buffer[1500];
+char buffer[2000];
 
 void setup_api_routes()
 {
@@ -106,8 +106,6 @@ void get_api_grill()
 void get_api_probes() 
 {
     jsondoc.clear();
-
-    Serial.println(grill::probe_1.target_temperature);
 
     JsonObject doc_0 = jsondoc.add<JsonObject>();
     doc_0["probe_id"] = 1;
