@@ -91,6 +91,15 @@ components:
                   - "null"
                 format: float
                 description: The temperature in Celcius/Fahrenheit
+              minimum_temperature:
+                type: 
+                  - "number"
+                  - "null"
+                format: float
+                description: The minimum temperature in Celcius/Fahrenheit according to the settings. Used for temperature ranges.
+                examples:
+                  - 30.00
+                  - 25.5
               target_temperature:
                 type: 
                   - "number"
@@ -106,34 +115,42 @@ components:
             example:
               - probe_id: 1
                 temperature: 23.71832
+                minimum_temperature: null
                 target_temperature: 23.71832
                 connected: true
               - probe_id: 2
                 temperature: null
+                minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 3
                 temperature: 110.12578
-                target_temperature: 110.12578
+                minimum_temperature: 90.00001
+                target_temperature: 120.00001
                 connected: true
               - probe_id: 4
                 temperature: 250.12578
-                target_temperature: 250.12578
+                minimum_temperature: null
+                target_temperature: 280.12578
                 connected: true
               - probe_id: 5
                 temperature: null
+                minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 6
                 temperature: null
+                minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 7
                 temperature: null
+                minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 8
                 temperature: null
+                minimum_temperature: null
                 target_temperature: null
                 connected: false
     
