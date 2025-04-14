@@ -104,6 +104,7 @@ void get_api_probes()
     JsonObject doc_0 = jsondoc.add<JsonObject>();
     doc_0["probe_id"] = 1;
     doc_0["temperature"] = grill::probe_1.celcius;
+    doc_0["minimum_temperature"] = grill::probe_1.minimum_temperature;
     doc_0["target_temperature"] = grill::probe_1.target_temperature;
     doc_0["connected"] = grill::probe_1.connected;
     doc_0["probe_type"] = grill::probe_1.type;
@@ -114,6 +115,7 @@ void get_api_probes()
     JsonObject doc_1 = jsondoc.add<JsonObject>();
     doc_1["probe_id"] = 2;
     doc_1["temperature"] = grill::probe_2.celcius;
+    doc_1["minimum_temperature"] = grill::probe_2.minimum_temperature;
     doc_1["target_temperature"] = grill::probe_2.target_temperature;
     doc_1["connected"] = grill::probe_2.connected;
     doc_1["probe_type"] = grill::probe_2.type;
@@ -124,6 +126,7 @@ void get_api_probes()
     JsonObject doc_2 = jsondoc.add<JsonObject>();
     doc_2["probe_id"] = 3;
     doc_2["temperature"] = grill::probe_3.celcius;
+    doc_2["minimum_temperature"] = grill::probe_3.minimum_temperature;
     doc_2["target_temperature"] = grill::probe_3.target_temperature;
     doc_2["connected"] = grill::probe_3.connected;
     doc_2["probe_type"] = grill::probe_3.type;
@@ -134,6 +137,7 @@ void get_api_probes()
     JsonObject doc_3 = jsondoc.add<JsonObject>();
     doc_3["probe_id"] = 4;
     doc_3["temperature"] = grill::probe_4.celcius;
+    doc_3["minimum_temperature"] = grill::probe_4.minimum_temperature;
     doc_3["target_temperature"] = grill::probe_4.target_temperature;
     doc_3["connected"] = grill::probe_4.connected;
     doc_3["probe_type"] = grill::probe_4.type;
@@ -144,6 +148,7 @@ void get_api_probes()
     JsonObject doc_4 = jsondoc.add<JsonObject>();
     doc_4["probe_id"] = 5;
     doc_4["temperature"] = grill::probe_5.celcius;
+    doc_4["minimum_temperature"] = grill::probe_5.minimum_temperature;
     doc_4["target_temperature"] = grill::probe_5.target_temperature;
     doc_4["connected"] = grill::probe_5.connected;
     doc_4["probe_type"] = grill::probe_5.type;
@@ -154,6 +159,7 @@ void get_api_probes()
     JsonObject doc_5 = jsondoc.add<JsonObject>();
     doc_5["probe_id"] = 6;
     doc_5["temperature"] = grill::probe_6.celcius;
+    doc_5["minimum_temperature"] = grill::probe_6.minimum_temperature;
     doc_5["target_temperature"] = grill::probe_6.target_temperature;
     doc_5["connected"] = grill::probe_6.connected;
     doc_5["probe_type"] = grill::probe_6.type;
@@ -164,6 +170,7 @@ void get_api_probes()
     JsonObject doc_6 = jsondoc.add<JsonObject>();
     doc_6["probe_id"] = 7;
     doc_6["temperature"] = grill::probe_7.celcius;
+    doc_6["minimum_temperature"] = grill::probe_7.minimum_temperature;
     doc_6["target_temperature"] = grill::probe_7.target_temperature;
     doc_6["connected"] = grill::probe_7.connected;
     doc_6["probe_type"] = grill::probe_7.type;
@@ -174,6 +181,7 @@ void get_api_probes()
     JsonObject doc_7 = jsondoc.add<JsonObject>();
     doc_7["probe_id"] = 8;
     doc_7["temperature"] = grill::probe_8.celcius;
+    doc_7["minimum_temperature"] = grill::probe_8.minimum_temperature;
     doc_7["target_temperature"] = grill::probe_8.target_temperature;
     doc_7["connected"] = grill::probe_8.connected;
     doc_7["probe_type"] = grill::probe_8.type;
@@ -199,45 +207,52 @@ void post_api_probes()
 
     for (JsonObject item : jsondoc.as<JsonArray>()) {
 
-        int    probe_id           = item["probe_id"];
-        float  target_temperature = item["target_temperature"];
-        String probe_type         = item["probe_type"].as<String>();
-        int    reference_kohm     = item["reference_kohm"];
-        int    reference_celcius  = item["reference_celcius"];
-        int    reference_beta     = item["reference_beta"];
-
-        Serial.println(target_temperature);
+        int    probe_id            = item["probe_id"];
+        float  minimum_temperature = item["minimum_temperature"];
+        float  target_temperature  = item["target_temperature"];
+        String probe_type          = item["probe_type"].as<String>();
+        int    reference_kohm      = item["reference_kohm"];
+        int    reference_celcius   = item["reference_celcius"];
+        int    reference_beta      = item["reference_beta"];
 
         switch (probe_id){
             case 1:
+                grill::probe_1.minimum_temperature = minimum_temperature;
                 grill::probe_1.target_temperature = target_temperature;
                 grill::probe_1.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 2:
+                grill::probe_2.minimum_temperature = minimum_temperature;    
                 grill::probe_2.target_temperature = target_temperature;    
                 grill::probe_2.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 3:
+                grill::probe_3.minimum_temperature = minimum_temperature;    
                 grill::probe_3.target_temperature = target_temperature;    
                 grill::probe_3.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 4:
+                grill::probe_4.minimum_temperature = minimum_temperature;    
                 grill::probe_4.target_temperature = target_temperature;    
                 grill::probe_4.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 5:
+                grill::probe_5.minimum_temperature = minimum_temperature;    
                 grill::probe_5.target_temperature = target_temperature;    
                 grill::probe_5.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 6:
+                grill::probe_6.minimum_temperature = minimum_temperature;    
                 grill::probe_6.target_temperature = target_temperature;    
                 grill::probe_6.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 7:
+                grill::probe_7.minimum_temperature = minimum_temperature;    
                 grill::probe_7.target_temperature = target_temperature;    
                 grill::probe_7.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 8:
+                grill::probe_8.minimum_temperature = minimum_temperature;    
                 grill::probe_8.target_temperature = target_temperature;    
                 grill::probe_8.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;

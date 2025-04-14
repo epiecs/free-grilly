@@ -163,6 +163,16 @@ components:
             - 25.101
             - 27.101
             - 150.33
+        minimum_temperature:
+          type: 
+            - "number"
+            - "null"
+          format: float
+          description: The minimum temperature in Celcius/Fahrenheit according to the settings. Used for temperature ranges.
+          default: 0
+          examples:
+            - 25.50
+            - 120
         target_temperature:
           type: 
             - "number"
