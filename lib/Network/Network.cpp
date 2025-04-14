@@ -6,42 +6,42 @@
 #include "Config.h"
 #include "Grill.h"
 
-constexpr int CONNECT_TIMEOUT_SECONDS = 15;
+constexpr int CONNECT_TIMEOUT_SECONDS = 10;
 
-void start_local_ap(String ssid, String password, String ip, String subnet, String gateway)
+void start_local_ap()
 {
-    IPAddress local_ip;         local_ip.fromString(ip);
-    IPAddress local_subnet;     local_subnet.fromString(subnet);
-    IPAddress local_gateway;    local_gateway.fromString(gateway);
+    IPAddress local_ip;         local_ip.fromString(config::local_ap_ip);
+    IPAddress local_subnet;     local_subnet.fromString(config::local_ap_subnet);
+    IPAddress local_gateway;    local_gateway.fromString(config::local_ap_gateway);
 
     const char *local_password = NULL;
     Serial.println("Starting local wifi ap");
     WiFi.softAPConfig(local_ip, local_gateway, local_subnet);
 
-    if (password != ""){
-        local_password = password.c_str();
-        WiFi.softAP(ssid.c_str(), local_password);
+    if (config::local_ap_password != ""){
+        local_password = config::local_ap_password.c_str();
+        WiFi.softAP(config::local_ap_ssid.c_str(), local_password);
     } else {
-        WiFi.softAP(ssid.c_str(), emptyString);
+        WiFi.softAP(config::local_ap_ssid.c_str(), emptyString);
     }
 
-    Serial.printf("Local SSID: %s \n", ssid.c_str());
+    Serial.printf("Local SSID: %s \n", config::local_ap_ssid.c_str());
     Serial.printf("Local IP: %s \n", WiFi.softAPIP().toString().c_str());
 }
 
-bool connect_to_wifi(String ssid, String password, String ip, String subnet, String gateway, String dns)
+bool connect_to_wifi()
 {
-    IPAddress wifi_ip;      wifi_ip.fromString(ip);
-    IPAddress wifi_subnet;  wifi_subnet.fromString(subnet);
-    IPAddress wifi_gateway; wifi_gateway.fromString(gateway);
-    IPAddress wifi_dns;     wifi_dns.fromString(dns);
-    IPAddress wifi_dns2(0,0,0,0);
+    IPAddress wifi_ip;      wifi_ip.fromString(config::wifi_ip);
+    IPAddress wifi_subnet;  wifi_subnet.fromString(config::wifi_subnet);
+    IPAddress wifi_gateway; wifi_gateway.fromString(config::wifi_gateway);
+    IPAddress wifi_dns;     wifi_dns.fromString(config::wifi_dns);
+    IPAddress wifi_dns2;    wifi_dns2.fromString("0.0.0.0");
 
     int timeout = CONNECT_TIMEOUT_SECONDS * 1000;
     int step = 500;
 
-    Serial.printf("Connecting to wifi SSID: %s \n", ssid.c_str());
-    WiFi.begin(ssid.c_str(), password.c_str());
+    Serial.printf("Connecting to wifi SSID: %s \n", config::wifi_ssid.c_str());
+    WiFi.begin(config::wifi_ssid.c_str(), config::wifi_password.c_str());
 
     int expired_time = 0;
     while (WiFi.status() != WL_CONNECTED){
@@ -58,7 +58,7 @@ bool connect_to_wifi(String ssid, String password, String ip, String subnet, Str
 
     Serial.println("");
 
-    if (ip != "0.0.0.0"){
+    if (config::wifi_ip != "0.0.0.0"){
         if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns, wifi_dns2)){
             Serial.println("Failed to configure Static IP");
         } else {
@@ -93,7 +93,7 @@ void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 
     Serial.print("Reason: ");
     Serial.println(get_wifi_error_status(info.wifi_sta_disconnected.reason).c_str());
-
+    
     Serial.println("Trying to reconnect");
     WiFi.reconnect();
 }

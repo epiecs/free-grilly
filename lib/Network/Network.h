@@ -1,21 +1,8 @@
 #include <WiFi.h>
 
-void start_local_ap(
-    String ssid,
-    String password = "",
-    String ip = "0.0.0.0",
-    String subnet = "0.0.0.0",
-    String gateway = "0.0.0.0"
-);
+void start_local_ap();
 
-bool connect_to_wifi(
-    String ssid,
-    String password = "",
-    String ip = "0.0.0.0",
-    String subnet = "0.0.0.0",
-    String gateway = "0.0.0.0",
-    String dns = "0.0.0.0"
-);
+bool connect_to_wifi();
 
 void print_wifi_connection();
 

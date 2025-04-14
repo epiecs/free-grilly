@@ -72,7 +72,7 @@ void GrillConfig::load_settings(){
 void GrillConfig::save_settings(){
     Serial.println("Saving settings");
 
-    config::settings_storage.putString("grill_name", config::grill_name);
+    config::settings_storage.putString("grill_name", config::grill_name); 
 
     Serial.println("check if reload is needed");
     bool reload_wifi     = check_wifi_reload_needed();
@@ -94,10 +94,10 @@ void GrillConfig::save_settings(){
     config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
 
     if(reload_wifi){
-        connect_to_wifi(config::wifi_ssid, config::wifi_password, config::wifi_ip, config::wifi_subnet, config::wifi_gateway, config::wifi_dns);
+        connect_to_wifi();
     }
     if(reload_local_ap){
-        start_local_ap(config::local_ap_ssid, config::local_ap_password,config::local_ap_ip,config::local_ap_subnet,config::local_ap_gateway);
+        start_local_ap();
     }
 
     GrillConfig::print_settings();

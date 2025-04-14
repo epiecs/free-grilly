@@ -84,25 +84,11 @@ void setup() {
     WiFi.setSleep(false);   // Disable wifi powersaving for a more
                             // stable connection and lower latency
 
-    start_local_ap(
-        config::local_ap_ssid, 
-        config::local_ap_password,
-        config::local_ap_ip,
-        config::local_ap_subnet,
-        config::local_ap_gateway
-    );
+    start_local_ap();
     delay(1000);
 
-    if(config::wifi_ssid != "")
-    {
-        connect_to_wifi(
-            config::wifi_ssid,
-            config::wifi_password,
-            config::wifi_ip,
-            config::wifi_subnet,
-            config::wifi_gateway,
-            config::wifi_dns
-        );
+    if(config::wifi_ssid != ""){
+        connect_to_wifi();
     }
     
     // ***********************************
