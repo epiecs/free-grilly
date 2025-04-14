@@ -18,9 +18,9 @@ namespace config{
 
     extern String temperature_unit;
     extern bool beep_enabled;
-    extern bool beep_volume;
     extern bool beep_outside_target;
     extern bool beep_on_ready;
+    extern int  beep_volume;
     extern int  beep_degrees_before;
     extern String mqtt_broker;
 

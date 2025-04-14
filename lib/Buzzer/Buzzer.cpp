@@ -11,12 +11,15 @@ Buzzer::Buzzer(){
 
 void Buzzer::beep(int beeps_amount, int duration){
     ledcAttachPin(gpio::buzzer, channel);
-    ledcWrite(Buzzer::channel, Buzzer::volume);
-
+    
+    Serial.println(Buzzer::volume);
+    
     for (int beep = 0; beep < beeps_amount; beep++){
         ledcWriteTone(Buzzer::channel, Buzzer::beep_frequency);
+        ledcWrite(Buzzer::channel, Buzzer::volume);
         delay(duration);  
         ledcWriteTone(Buzzer::channel, 0);
+        ledcWrite(Buzzer::channel, 0);
         delay(duration);  
     } 
 
@@ -41,6 +44,11 @@ void Buzzer::play_all_notes(){
 
 void Buzzer::set_volume(int volume){
 
+    if(config::beep_enabled == false){
+        config::beep_volume = 0;
+        volume = 0;
+    }
+
     if(volume < 0 ){
         Buzzer::volume = 0;
         return;
@@ -50,8 +58,7 @@ void Buzzer::set_volume(int volume){
         Buzzer::volume = 250;
         return;
     }
-    
-    config::beep_volume = volume;
 
+    config::beep_volume = volume;
     Buzzer::volume = volume * 50;   
 }

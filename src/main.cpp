@@ -29,12 +29,6 @@ void task_webserver(void* pvParameters);
 void task_stackmonitor(void* pvParameters);
 
 void setup() {
-
-    // ***********************************
-    // * Startup Buzzer
-    // ***********************************
-    
-    grill::buzzer.beep(2, 100);
     
     // ***********************************
     // * Serial
@@ -49,6 +43,12 @@ void setup() {
     config::settings_storage.begin("free-grilly", false);
     config::config_helper.load_settings();
     config::config_helper.load_probes();
+
+    // ***********************************
+    // * Startup Buzzer
+    // ***********************************
+    
+    grill::buzzer.beep(2, 100);
 
     // ***********************************
     // * SPI for probes

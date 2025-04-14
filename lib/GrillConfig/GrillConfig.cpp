@@ -7,6 +7,7 @@
 
 #include <nvs_flash.h>
 
+#include "Buzzer.h"
 #include "Network.h"
 
 #include "Config.h"
@@ -73,6 +74,8 @@ void GrillConfig::load_settings(){
     config::local_ap_subnet     = config::settings_storage.getString("l_ap_subnet", local_ap_subnet_default);
     config::local_ap_gateway    = config::settings_storage.getString("l_ap_gateway", local_ap_gateway_default);
 
+    grill::buzzer.set_volume(config::beep_volume);
+
     GrillConfig::print_settings();
 }
 
@@ -105,6 +108,8 @@ void GrillConfig::save_settings(){
     config::settings_storage.putString("l_ap_ip", config::local_ap_ip);
     config::settings_storage.putString("l_ap_subnet", config::local_ap_subnet);
     config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
+
+    grill::buzzer.set_volume(config::beep_volume);
 
     if(reload_wifi){
         connect_to_wifi();
@@ -164,6 +169,8 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putString("l_ap_ip", local_ap_ip_default);
     config::settings_storage.putString("l_ap_subnet", local_ap_subnet_default);
     config::settings_storage.putString("l_ap_gateway", local_ap_gateway_default);
+
+    grill::buzzer.set_volume(config::beep_volume);
 
     GrillConfig::print_settings();
 }

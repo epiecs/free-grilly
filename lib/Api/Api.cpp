@@ -311,13 +311,6 @@ void post_api_settings()
         return;
     }
     
-    grill::buzzer.set_volume(config::beep_volume);
-    
-    if(config::beep_enabled == false){
-        config::beep_volume = 0;
-        grill::buzzer.set_volume(0);
-    }
-
     config::config_helper.save_settings();
 
     // If all is ok just send the current settings
