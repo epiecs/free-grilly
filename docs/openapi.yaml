@@ -132,7 +132,15 @@ components:
         probe_id:
           type: integer
           description: The number of the probe
-          readOnly: true
+          examples:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
         temperature:
           type: 
             - "number"
@@ -140,6 +148,10 @@ components:
           format: float
           readOnly: true
           description: The temperature in Celcius
+          examples:
+            - 25.101
+            - 27.101
+            - 150.33
         target_temperature:
           type: 
             - "number"
