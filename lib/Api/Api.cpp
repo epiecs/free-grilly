@@ -197,7 +197,7 @@ void post_api_probes()
 
         int    probe_id           = item["probe_id"];
         float  target_temperature = item["target_temperature"];
-        String probe_type         = item["probe_type"];
+        String probe_type         = item["probe_type"].as<String>();
         int    reference_kohm     = item["reference_kohm"];
         int    reference_celcius  = item["reference_celcius"];
         int    reference_beta     = item["reference_beta"];
@@ -242,31 +242,29 @@ void get_api_settings()
 {
     jsondoc.clear();
 
-    jsondoc["name"]              = config::grill_name;
-    jsondoc["uuid"]              = config::grill_uuid;
-    jsondoc["firmware_version"]  = config::grill_firmware_version;
+    jsondoc["name"]                 = config::grill_name;
+    jsondoc["uuid"]                 = config::grill_uuid;
+    jsondoc["firmware_version"]     = config::grill_firmware_version;
     
-    jsondoc["temperature_unit"]  = config::temperature_unit;
+    jsondoc["temperature_unit"]     = config::temperature_unit;
+    jsondoc["beep_enabled"]         = config::beep_enabled;
+    jsondoc["beep_volume"]          = config::beep_volume;
+    jsondoc["beep_degrees_before"]  = config::beep_degrees_before;
+    jsondoc["beep_outside_target"]  = config::beep_outside_target;
+    jsondoc["beep_on_ready"]        = config::beep_on_ready;
+    jsondoc["mqtt_broker"]          = config::mqtt_broker;
     
-    jsondoc["wifi_ssid"]         = config::wifi_ssid;
-    jsondoc["wifi_ip"]           = config::wifi_ip;
-    jsondoc["wifi_subnet"]       = config::wifi_subnet;
-    jsondoc["wifi_gateway"]      = config::wifi_gateway;
-    jsondoc["wifi_dns"]          = config::wifi_dns;
+    jsondoc["wifi_ssid"]            = config::wifi_ssid;
+    jsondoc["wifi_ip"]              = config::wifi_ip;
+    jsondoc["wifi_subnet"]          = config::wifi_subnet;
+    jsondoc["wifi_gateway"]         = config::wifi_gateway;
+    jsondoc["wifi_dns"]             = config::wifi_dns;
     
-    jsondoc["local_ap_ssid"]     = config::local_ap_ssid;
-    jsondoc["local_ap_ip"]       = config::local_ap_ip;
-    jsondoc["local_ap_subnet"]   = config::local_ap_subnet;
-    jsondoc["local_ap_gateway"]  = config::local_ap_gateway;
+    jsondoc["local_ap_ssid"]        = config::local_ap_ssid;
+    jsondoc["local_ap_ip"]          = config::local_ap_ip;
+    jsondoc["local_ap_subnet"]      = config::local_ap_subnet;
+    jsondoc["local_ap_gateway"]     = config::local_ap_gateway;
     
-    // jsondoc["beep_enabled"]            = true;
-    // jsondoc["beep_volume"]             = 3;
-    // jsondoc["beep_degrees_before"]     = 5;
-    // jsondoc["beep_outside_target"]     = true;
-    // jsondoc["beep_on_ready"]           = true;
-    // jsondoc["beep_on_wifi_disconnect"] = true;
-    // jsondoc["mqtt_broker"]              = 180; //TODO add mqtt broker to sqlite
-
     jsondoc.shrinkToFit();
 
     serializeJson(jsondoc, buffer);
@@ -286,6 +284,14 @@ void post_api_settings()
     // Data ingress
     config::grill_name             = post_data["name"].as<String>();
     
+    config::temperature_unit       = post_data["temperature_unit"].as<String>();
+    config::beep_enabled           = post_data["beep_enabled"];
+    config::beep_volume            = post_data["beep_volume"];
+    config::beep_degrees_before    = post_data["beep_degrees_before"];
+    config::beep_outside_target    = post_data["beep_outside_target"];
+    config::beep_on_ready          = post_data["beep_on_ready"];
+    config::mqtt_broker            = post_data["mqtt_broker"].as<String>();
+
     config::wifi_ssid              = post_data["wifi_ssid"].as<String>();
     config::wifi_password          = post_data["wifi_password"].as<String>();
     config::wifi_ip                = post_data["wifi_ip"].as<String>();

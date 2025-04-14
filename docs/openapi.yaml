@@ -229,6 +229,29 @@ components:
           enum:
             - celcius
             - fahrenheit
+        beep_enabled:
+          type: boolean
+          example: true
+          description: Is the buzzer enabled
+        beep_on_ready:
+          type: boolean
+          example: true
+          description: Beep when the target_temperature is reached
+        beep_outside_target:
+          type: boolean
+          example: true
+          description: Beep when a probe is outside of a temperature range
+        beep_volume:
+          type: integer
+          example: 5
+          description: The beeper volume from 1-5
+        beep_degrees_before:
+          type: integer
+          example: 5
+          description: Beep when the probe reaches this amount of degrees before the target temperature
+        mqtt_broker:
+          type: string
+          example: "broker.test.com:1883"
         wifi_ssid:
           type: string
           example: my-home-wifi

@@ -48,6 +48,13 @@ namespace config{
     String grill_firmware_version       = "25.04.06";
 
     String temperature_unit             = "celcius";
+    bool beep_enabled                   = true;
+    bool beep_on_ready                  = true;
+    bool beep_outside_target            = true;
+    int  beep_volume                    = 5;
+    int  beep_degrees_before            = 5;
+
+    String mqtt_broker                  = "";
 
     // ***********************************
     // * Timezone / NTP
