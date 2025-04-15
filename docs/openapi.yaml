@@ -302,7 +302,6 @@ components:
           type: string
           example: "********"
           description: The wifi password.
-          writeOnly: true
         wifi_ip:
           type: string
           example: 192.168.0.10
@@ -327,7 +326,6 @@ components:
           type: string
           example: "********"
           description: The local wifi password
-          writeOnly: true
         local_ap_ip:
           type: string
           example: 192.168.200.10

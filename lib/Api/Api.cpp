@@ -300,11 +300,13 @@ void get_api_settings()
     jsondoc["wifi_subnet"]          = config::wifi_subnet;
     jsondoc["wifi_gateway"]         = config::wifi_gateway;
     jsondoc["wifi_dns"]             = config::wifi_dns;
+    jsondoc["wifi_password"]        = config::wifi_password;
     
     jsondoc["local_ap_ssid"]        = config::local_ap_ssid;
     jsondoc["local_ap_ip"]          = config::local_ap_ip;
     jsondoc["local_ap_subnet"]      = config::local_ap_subnet;
     jsondoc["local_ap_gateway"]     = config::local_ap_gateway;
+    jsondoc["local_ap_password"]    = config::local_ap_password;
     
     jsondoc.shrinkToFit();
 
