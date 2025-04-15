@@ -1,6 +1,10 @@
 web page code
 bootstrap css includen
 
+sometimes after bootup a dhcp ip is used instead of the static ip -> race condition?
+  maybe delay needed after settings fetch
+  
+
 indien bijna temp -> oranje, indien temp -> groen in html
 indien target groen voor er in, oranje voor +-10, rood voor meer als +- 10
 
