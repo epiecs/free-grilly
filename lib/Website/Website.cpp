@@ -23,15 +23,15 @@ void setup_web_routes() {
 void get_index() {
     web::webserver.send(200, "text/html", HTML_INDEX);
 }
-void get_probes() {
 
-    Serial.println("Handling probes");
+void get_probes() {
     web::webserver.send(200, "text/html", HTML_PROBES);
-    Serial.println("Delivered probes");
 }
+
 void get_settings() {
     web::webserver.send(200, "text/html", HTML_SETTINGS);
 }
+
 void get_about() {
     web::webserver.send(200, "text/html", HTML_ABOUT);
 }
