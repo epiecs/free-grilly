@@ -1,5 +1,13 @@
 web page code
 
+fahrenheit werkt nog niet goed
+
+indien bijna temp -> oranje, indien temp -> groen in html
+indien target groen voor er in, oranje voor +-10, rood voor meer als +- 10
+
+target temperatures
+  hoe beeps oplossen dat deze max 1x gebeuren
+
 hold button to boot? how to with interrupt?
 
 
