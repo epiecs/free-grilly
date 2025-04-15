@@ -1,6 +1,5 @@
 web page code
-
-fahrenheit werkt nog niet goed
+bootstrap css includen
 
 indien bijna temp -> oranje, indien temp -> groen in html
 indien target groen voor er in, oranje voor +-10, rood voor meer als +- 10
