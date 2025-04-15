@@ -20,9 +20,11 @@ void setup_api_routes()
 
     web::webserver.on("/api/probes", HTTP_GET, get_api_probes);
     web::webserver.on("/api/probes", HTTP_POST, post_api_probes);
+    web::webserver.on("/api/probes", HTTP_OPTIONS, cors_api_probes);
     
     web::webserver.on("/api/settings", HTTP_GET, get_api_settings);
     web::webserver.on("/api/settings", HTTP_POST, post_api_settings);
+    web::webserver.on("/api/settings", HTTP_OPTIONS, cors_api_settings);
 }
 
 void get_api_grill()
@@ -270,7 +272,11 @@ void post_api_probes()
     config::config_helper.save_probes();
     // If all is ok just send the current settings
     get_api_probes();
+}
 
+void cors_api_probes(){
+    web::webserver.send(200, "application/json", "");
+    return;
 }
 
 void get_api_settings() 
@@ -349,4 +355,9 @@ void post_api_settings()
 
     // If all is ok just send the current settings
     get_api_settings();
+}
+
+void cors_api_settings(){
+    web::webserver.send(200, "application/json", "");
+    return;
 }

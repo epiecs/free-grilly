@@ -433,66 +433,84 @@ void GrillConfig::initialize_probes(){
 void GrillConfig::print_probes(){
 
     String type = "";
-    int kohm = 0;
-    int beta = 0;
-    int temp = 0;
+    float target = 0;
+    float min    = 0;
+    int   kohm   = 0;
+    int   beta   = 0;
+    int   temp   = 0;
 
     Serial.println("|++++++++++ PROBE Settings ++++++++++|");
 
-    type = config::settings_storage.getString("p1_type");
-    kohm = config::settings_storage.getInt("p1_ref_kohm");
-    temp = config::settings_storage.getInt("p1_ref_temp");
-    beta = config::settings_storage.getInt("p1_ref_beta");
-    Serial.printf("Probe 1 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p1_target_temp");
+    min    = config::settings_storage.getFloat("p1_min_temp");
+    type   = config::settings_storage.getString("p1_type");
+    kohm   = config::settings_storage.getInt("p1_ref_kohm");
+    temp   = config::settings_storage.getInt("p1_ref_temp");
+    beta   = config::settings_storage.getInt("p1_ref_beta");
+    Serial.printf("Probe 1 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
     
-    type = config::settings_storage.getString("p2_type");
-    kohm = config::settings_storage.getInt("p2_ref_kohm");
-    temp = config::settings_storage.getInt("p2_ref_temp");
-    beta = config::settings_storage.getInt("p2_ref_beta");
-    Serial.printf("Probe 2 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p2_target_temp");
+    min    = config::settings_storage.getFloat("p2_min_temp");
+    type   = config::settings_storage.getString("p2_type");
+    kohm   = config::settings_storage.getInt("p2_ref_kohm");
+    temp   = config::settings_storage.getInt("p2_ref_temp");
+    beta   = config::settings_storage.getInt("p2_ref_beta");
+    Serial.printf("Probe 2 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
     
-    type = config::settings_storage.getString("p3_type");
-    kohm = config::settings_storage.getInt("p3_ref_kohm");
-    temp = config::settings_storage.getInt("p3_ref_temp");
-    beta = config::settings_storage.getInt("p3_ref_beta");
-    Serial.printf("Probe 3 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p3_target_temp");
+    min    = config::settings_storage.getFloat("p3_min_temp");
+    type   = config::settings_storage.getString("p3_type");
+    kohm   = config::settings_storage.getInt("p3_ref_kohm");
+    temp   = config::settings_storage.getInt("p3_ref_temp");
+    beta   = config::settings_storage.getInt("p3_ref_beta");
+    Serial.printf("Probe 3 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
     
-    type = config::settings_storage.getString("p4_type");
-    kohm = config::settings_storage.getInt("p4_ref_kohm");
-    temp = config::settings_storage.getInt("p4_ref_temp");
-    beta = config::settings_storage.getInt("p4_ref_beta");
-    Serial.printf("Probe 4 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p4_target_temp");
+    min    = config::settings_storage.getFloat("p4_min_temp");
+    type   = config::settings_storage.getString("p4_type");
+    kohm   = config::settings_storage.getInt("p4_ref_kohm");
+    temp   = config::settings_storage.getInt("p4_ref_temp");
+    beta   = config::settings_storage.getInt("p4_ref_beta");
+    Serial.printf("Probe 4 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
     
-    type = config::settings_storage.getString("p5_type");
-    kohm = config::settings_storage.getInt("p5_ref_kohm");
-    temp = config::settings_storage.getInt("p5_ref_temp");
-    beta = config::settings_storage.getInt("p5_ref_beta");
-    Serial.printf("Probe 5 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p5_target_temp");
+    min    = config::settings_storage.getFloat("p5_min_temp");
+    type   = config::settings_storage.getString("p5_type");
+    kohm   = config::settings_storage.getInt("p5_ref_kohm");
+    temp   = config::settings_storage.getInt("p5_ref_temp");
+    beta   = config::settings_storage.getInt("p5_ref_beta");
+    Serial.printf("Probe 5 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
     
-    type = config::settings_storage.getString("p6_type");
-    kohm = config::settings_storage.getInt("p6_ref_kohm");
-    temp = config::settings_storage.getInt("p6_ref_temp");
-    beta = config::settings_storage.getInt("p6_ref_beta");
-    Serial.printf("Probe 6 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p6_target_temp");
+    min    = config::settings_storage.getFloat("p6_min_temp");
+    type   = config::settings_storage.getString("p6_type");
+    kohm   = config::settings_storage.getInt("p6_ref_kohm");
+    temp   = config::settings_storage.getInt("p6_ref_temp");
+    beta   = config::settings_storage.getInt("p6_ref_beta");
+    Serial.printf("Probe 6 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
     
-    type = config::settings_storage.getString("p7_type");
-    kohm = config::settings_storage.getInt("p7_ref_kohm");
-    temp = config::settings_storage.getInt("p7_ref_temp");
-    beta = config::settings_storage.getInt("p7_ref_beta");
-    Serial.printf("Probe 7 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p7_target_temp");
+    min    = config::settings_storage.getFloat("p7_min_temp");
+    type   = config::settings_storage.getString("p7_type");
+    kohm   = config::settings_storage.getInt("p7_ref_kohm");
+    temp   = config::settings_storage.getInt("p7_ref_temp");
+    beta   = config::settings_storage.getInt("p7_ref_beta");
+    Serial.printf("Probe 7 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
     
-    type = config::settings_storage.getString("p8_type");
-    kohm = config::settings_storage.getInt("p8_ref_kohm");
-    temp = config::settings_storage.getInt("p8_ref_temp"); 
-    beta = config::settings_storage.getInt("p8_ref_beta");
-    Serial.printf("Probe 8 :: %s %d %d %d", type, kohm, temp, beta);
+    target = config::settings_storage.getFloat("p8_target_temp");
+    min    = config::settings_storage.getFloat("p8_min_temp");
+    type   = config::settings_storage.getString("p8_type");
+    kohm   = config::settings_storage.getInt("p8_ref_kohm");
+    temp   = config::settings_storage.getInt("p8_ref_temp");
+    beta   = config::settings_storage.getInt("p8_ref_beta");
+    Serial.printf("Probe 8 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
     Serial.println("");
 
     Serial.println("|++++++++++ PROBE Settings ++++++++++|");

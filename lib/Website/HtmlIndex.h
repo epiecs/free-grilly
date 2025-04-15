@@ -5,7 +5,7 @@ const char HTML_INDEX[] = R"=====(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Free-Grilly</title>
+    <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" href="data:,">
@@ -53,8 +53,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 1</div>
                             <div class="col-7 probe-temperature text-end" id="probe-1-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-1-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-1-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -65,8 +67,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 2</div>
                             <div class="col-7 probe-temperature text-end" id="probe-2-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-2-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-2-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -77,8 +81,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 3</div>
                             <div class="col-7 probe-temperature text-end" id="probe-3-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-3-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-3-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -89,8 +95,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 4</div>
                             <div class="col-7 probe-temperature text-end" id="probe-4-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-4-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-4-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -101,8 +109,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 5</div>
                             <div class="col-7 probe-temperature text-end" id="probe-5-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-5-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-5-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -113,8 +123,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 6</div>
                             <div class="col-7 probe-temperature text-end" id="probe-6-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-6-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-6-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -125,8 +137,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 7</div>
                             <div class="col-7 probe-temperature text-end" id="probe-7-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-7-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-7-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -137,8 +151,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-5">Probe 8</div>
                             <div class="col-7 probe-temperature text-end" id="probe-8-temperature">0 C</div>
-                            <div class="col-5"><small>Target</small></div>
+                            <div class="col-5"><small>Target temperature</small></div>
                             <div class="col-7 probe-temperature text-end"><small id="probe-8-target">0 C</small></div>
+                            <div class="col-5"><small>Minimum temperature</small></div>
+                            <div class="col-7 probe-temperature text-end"><small id="probe-8-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -157,38 +173,19 @@ const char HTML_INDEX[] = R"=====(
 
         const sleep = ms => new Promise(res => setTimeout(res, ms));
 
+        // Vars
+        var temp_unit = "C";
+        
         // Selectors
-
         const e_probes = new Array(8);
-        
-        e_probes[1] = {};
-        e_probes[2] = {};
-        e_probes[3] = {};
-        e_probes[4] = {};
-        e_probes[5] = {};
-        e_probes[6] = {};
-        e_probes[7] = {};
-        e_probes[8] = {};
+        for(let probe_nr = 1; probe_nr < 9; probe_nr++){
+            e_probes[probe_nr] = {};
 
+            e_probes[probe_nr]["temperature"] = document.getElementById("probe-" + probe_nr + "-temperature");
+            e_probes[probe_nr]["target_temperature"] = document.getElementById("probe-" + probe_nr + "-target");
+            e_probes[probe_nr]["minimum_temperature"] = document.getElementById("probe-" + probe_nr + "-minimum");
+        }
 
-        e_probes[1]["temperature"]        = document.getElementById("probe-1-temperature");
-        e_probes[2]["temperature"]        = document.getElementById("probe-2-temperature");
-        e_probes[3]["temperature"]        = document.getElementById("probe-3-temperature");
-        e_probes[4]["temperature"]        = document.getElementById("probe-4-temperature");
-        e_probes[5]["temperature"]        = document.getElementById("probe-5-temperature");
-        e_probes[6]["temperature"]        = document.getElementById("probe-6-temperature");
-        e_probes[7]["temperature"]        = document.getElementById("probe-7-temperature");
-        e_probes[8]["temperature"]        = document.getElementById("probe-8-temperature");
-
-        e_probes[1]["target_temperature"] = document.getElementById("probe-1-target");
-        e_probes[2]["target_temperature"] = document.getElementById("probe-2-target");
-        e_probes[3]["target_temperature"] = document.getElementById("probe-3-target");
-        e_probes[4]["target_temperature"] = document.getElementById("probe-4-target");
-        e_probes[5]["target_temperature"] = document.getElementById("probe-5-target");
-        e_probes[6]["target_temperature"] = document.getElementById("probe-6-target");
-        e_probes[7]["target_temperature"] = document.getElementById("probe-7-target");
-        e_probes[8]["target_temperature"] = document.getElementById("probe-8-target");
-        
         e_grill_name                      = document.getElementById("grill-name");
 
         e_grill_battery                   = document.getElementById("grill-battery");
@@ -205,11 +202,22 @@ const char HTML_INDEX[] = R"=====(
             try {
                 const response = await fetch(base_url + "/api/grill");
                 data = await response.json();
-
-                console.log(data);     
                 
                 // Grill name
                 e_grill_name.textContent = data.name;
+
+                switch(data.temperature_unit){
+                    case "celcius":
+                        temp_unit = "C";
+                        break;
+                    case "fahrenheit":
+                        temp_unit = "F";
+                        break;
+                    default:
+                        temp_unit = "?";
+                }
+
+                // Settings
                 
                 // Wifi
                 if(data['wifi_connected'] == true){
@@ -251,22 +259,20 @@ const char HTML_INDEX[] = R"=====(
                     e_grill_battery.classList.add("bg-danger");
                 }
 
-                //* grill-battery
-
-                for(let probe_nr = 0; probe_nr < 8; probe_nr++)
+                for(let probe_nr = 1; probe_nr < 9; probe_nr++)
                 {
-                    if(data['probes'][probe_nr]['connected'] == true){
-                        e_probes[probe_nr + 1]["temperature"].textContent = data['probes'][probe_nr]['temperature'].toFixed(2) + " C";
+                    if(data['probes'][probe_nr - 1]['connected'] == true){
+                        e_probes[probe_nr]["temperature"].textContent = data['probes'][probe_nr]['temperature'].toFixed(2) + " " + temp_unit;
                     }else{
-                        e_probes[probe_nr + 1]["temperature"].textContent = "-";
+                        e_probes[probe_nr]["temperature"].textContent = "-";
                     }
                     
-                    e_probes[probe_nr + 1]["target_temperature"].textContent = data['probes'][probe_nr]['target_temperature'].toFixed(2) + " C";;
+                    e_probes[probe_nr]["minimum_temperature"].textContent = data['probes'][probe_nr - 1]['minimum_temperature'].toFixed(2) + " " + temp_unit;
+                    e_probes[probe_nr]["target_temperature"].textContent  = data['probes'][probe_nr - 1]['target_temperature'].toFixed(2) + " " + temp_unit;
                 }
 
             } catch (error) {
                 console.error('Grill is unreachable:', error);
-                //TODO set reachable to disabled here once incorporated in webpage
             }
 
         }
