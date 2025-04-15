@@ -262,7 +262,7 @@ const char HTML_INDEX[] = R"=====(
                 for(let probe_nr = 1; probe_nr < 9; probe_nr++)
                 {
                     if(data['probes'][probe_nr - 1]['connected'] == true){
-                        e_probes[probe_nr]["temperature"].textContent = data['probes'][probe_nr]['temperature'].toFixed(2) + " " + temp_unit;
+                        e_probes[probe_nr]["temperature"].textContent = data['probes'][probe_nr - 1]['temperature'].toFixed(2) + " " + temp_unit;
                     }else{
                         e_probes[probe_nr]["temperature"].textContent = "-";
                     }
