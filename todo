@@ -1,9 +1,14 @@
 web page code
 bootstrap css includen
 
+openapi spec 400 responses toevoegen
+openapi spec wifiscan endpoint
+
 sometimes after bootup a dhcp ip is used instead of the static ip -> race condition?
   maybe delay needed after settings fetch
-  
+
+
+wifi scan endpoint -> voor webpage met settings?
 
 indien bijna temp -> oranje, indien temp -> groen in html
 indien target groen voor er in, oranje voor +-10, rood voor meer als +- 10

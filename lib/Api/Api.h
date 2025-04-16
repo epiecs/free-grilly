@@ -11,4 +11,6 @@ void get_api_settings();
 void post_api_settings();
 void cors_api_settings();
 
+void get_api_wifiscan();
+
 void setup_api_routes();

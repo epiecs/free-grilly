@@ -25,6 +25,8 @@ void setup_api_routes()
     web::webserver.on("/api/settings", HTTP_GET, get_api_settings);
     web::webserver.on("/api/settings", HTTP_POST, post_api_settings);
     web::webserver.on("/api/settings", HTTP_OPTIONS, cors_api_settings);
+    
+    web::webserver.on("/api/wifiscan", HTTP_GET, get_api_wifiscan);
 }
 
 void get_api_grill()
@@ -361,5 +363,48 @@ void post_api_settings()
 
 void cors_api_settings(){
     web::webserver.send(200, "application/json", "");
+    return;
+}
+
+void get_api_wifiscan(){
+
+    Serial.println("Starting WIFI scan");
+
+    int scanned_networks = WiFi.scanNetworks();
+
+    if (scanned_networks == 0) {
+        Serial.println("no networks found");
+    }
+
+    jsondoc.clear();
+
+    for (int network_nr = 0; network_nr < scanned_networks; ++network_nr) {
+
+        JsonObject scanned_network = jsondoc[String(network_nr)].add<JsonObject>();
+        
+        scanned_network["ssid"]            = WiFi.SSID(network_nr).c_str();
+        scanned_network["signal_strength"] = WiFi.RSSI(network_nr);
+
+        switch (WiFi.encryptionType(network_nr)) {
+            case WIFI_AUTH_OPEN:            scanned_network["auth_method"] = "OPEN";            break;
+            case WIFI_AUTH_WEP:             scanned_network["auth_method"] = "WEP";             break;
+            case WIFI_AUTH_WPA_PSK:         scanned_network["auth_method"] = "WPA_PSK";         break;
+            case WIFI_AUTH_WPA2_PSK:        scanned_network["auth_method"] = "WPA2_PSK";        break;
+            case WIFI_AUTH_WPA_WPA2_PSK:    scanned_network["auth_method"] = "WPA_WPA2_PSK";    break;
+            case WIFI_AUTH_WPA2_ENTERPRISE: scanned_network["auth_method"] = "WPA2_ENTERPRISE"; break;
+            case WIFI_AUTH_WPA3_PSK:        scanned_network["auth_method"] = "WPA3_PSK";        break;
+            case WIFI_AUTH_WPA2_WPA3_PSK:   scanned_network["auth_method"] = "WPA2_WPA3_PSK";   break;
+            case WIFI_AUTH_WAPI_PSK:        scanned_network["auth_method"] = "WPAPI_PSK";       break;
+            default:                        scanned_network["auth_method"] = "UNKNOWN";         break;
+        }
+    }
+
+    // Free memory
+    WiFi.scanDelete();
+
+    jsondoc.shrinkToFit();
+    serializeJson(jsondoc, buffer);
+    web::webserver.send(200, "application/json", buffer);
+
     return;
 }
