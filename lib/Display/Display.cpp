@@ -14,6 +14,7 @@ static const unsigned char wifi_signal2[]       U8X8_PROGMEM = {0x01,0x01,0x01,0
 static const unsigned char wifi_signal3[]       U8X8_PROGMEM = {0x01,0x01,0x01,0x01,0x01,0x01};
 static const unsigned char wifi_signal4[]       U8X8_PROGMEM = {0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01};
 static const unsigned char wifi_disconnected[]  U8X8_PROGMEM = {0x05,0x02,0x05};
+static const unsigned char probe_thermometer[]  U8X8_PROGMEM = {0x04,0x0a,0x0a,0x1b,0x0a,0x0a,0x0a,0x11,0x11,0x11,0x0e};
 
 bool is_critical_battery_flash = false;
 
@@ -81,7 +82,7 @@ bool disp::display_update(void) {
     screen.drawStr(2, 33, "2:");
     screen.drawStr(2, 46, "3:");
     screen.drawStr(2, 59, "4:");
-    screen.drawLine(63, 13, 63, 63);
+    screen.drawLine(63, 9, 63, 63);
     screen.drawStr(67, 20, "5:");
     screen.drawStr(67, 33, "6:");
     screen.drawStr(67, 46, "7:");
@@ -98,10 +99,34 @@ bool disp::display_update(void) {
     screen.setCursor(80, 47); screen.print(grill::probe_7.celcius);
     screen.setCursor(80, 60); screen.print(grill::probe_8.celcius);
 
+    // Thermometer
+    if(grill::probe_1.target_temperature > 0) { draw_thermometer(54,11, grill::probe_1.celcius,grill::probe_1.target_temperature); }
+    if(grill::probe_2.target_temperature > 0) { draw_thermometer(54,24, grill::probe_2.celcius,grill::probe_2.target_temperature); }
+    if(grill::probe_3.target_temperature > 0) { draw_thermometer(54,37, grill::probe_3.celcius,grill::probe_3.target_temperature); }
+    if(grill::probe_4.target_temperature > 0) { draw_thermometer(54,50, grill::probe_4.celcius,grill::probe_4.target_temperature); }
+    if(grill::probe_5.target_temperature > 0) { draw_thermometer(119,11,grill::probe_5.celcius,grill::probe_5.target_temperature); }
+    if(grill::probe_6.target_temperature > 0) { draw_thermometer(119,24,grill::probe_6.celcius,grill::probe_6.target_temperature); }
+    if(grill::probe_7.target_temperature > 0) { draw_thermometer(119,37,grill::probe_7.celcius,grill::probe_7.target_temperature); }
+    if(grill::probe_8.target_temperature > 0) { draw_thermometer(119,50,grill::probe_8.celcius,grill::probe_8.target_temperature); }
+
+
     screen.sendBuffer();
         
-    
 	return true; 
 }
+
+bool disp::draw_thermometer(int xLoc, int yLoc, int probe_temp, int probe_target) {
+    screen.drawXBMP(xLoc, yLoc, 5, 11, probe_thermometer);
+    if(probe_temp >= probe_target - 30) { screen.drawLine(xLoc+1, yLoc+9, xLoc+3, yLoc+9); }
+    if(probe_temp >= probe_target - 25) { screen.drawLine(xLoc+1, yLoc+8, xLoc+3, yLoc+8); }
+    if(probe_temp >= probe_target - 20) { screen.drawLine(xLoc+1, yLoc+7, xLoc+3, yLoc+7); }
+    if(probe_temp >= probe_target - 15) { screen.drawLine(xLoc+2, yLoc+6, xLoc+2, yLoc+6); }
+    if(probe_temp >= probe_target - 10) { screen.drawLine(xLoc+2, yLoc+5, xLoc+2, yLoc+5); }
+    if(probe_temp >= probe_target - 5 ) { screen.drawLine(xLoc+2, yLoc+4, xLoc+2, yLoc+4); }
+    if(probe_temp >= probe_target - 0 ) { screen.drawLine(xLoc+2, yLoc+3, xLoc+2, yLoc+3); }
+    if(probe_temp >= probe_target + 5 ) { screen.drawLine(xLoc+2, yLoc+2, xLoc+2, yLoc+2); }
+    if(probe_temp >= probe_target + 10) { screen.drawLine(xLoc+2, yLoc+1, xLoc+2, yLoc+1); }
+    return true;
+} 
 
 disp display;
