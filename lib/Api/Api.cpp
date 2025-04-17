@@ -386,16 +386,16 @@ void get_api_wifiscan(){
         scanned_network["signal_strength"] = WiFi.RSSI(network_nr);
 
         switch (WiFi.encryptionType(network_nr)) {
-            case WIFI_AUTH_OPEN:            scanned_network["auth_method"] = "OPEN";            break;
-            case WIFI_AUTH_WEP:             scanned_network["auth_method"] = "WEP";             break;
-            case WIFI_AUTH_WPA_PSK:         scanned_network["auth_method"] = "WPA_PSK";         break;
-            case WIFI_AUTH_WPA2_PSK:        scanned_network["auth_method"] = "WPA2_PSK";        break;
-            case WIFI_AUTH_WPA_WPA2_PSK:    scanned_network["auth_method"] = "WPA_WPA2_PSK";    break;
-            case WIFI_AUTH_WPA2_ENTERPRISE: scanned_network["auth_method"] = "WPA2_ENTERPRISE"; break;
-            case WIFI_AUTH_WPA3_PSK:        scanned_network["auth_method"] = "WPA3_PSK";        break;
-            case WIFI_AUTH_WPA2_WPA3_PSK:   scanned_network["auth_method"] = "WPA2_WPA3_PSK";   break;
-            case WIFI_AUTH_WAPI_PSK:        scanned_network["auth_method"] = "WPAPI_PSK";       break;
-            default:                        scanned_network["auth_method"] = "UNKNOWN";         break;
+            case WIFI_AUTH_OPEN:            scanned_network["auth_method"] = "open";            break;
+            case WIFI_AUTH_WEP:             scanned_network["auth_method"] = "wep";             break;
+            case WIFI_AUTH_WPA_PSK:         scanned_network["auth_method"] = "wpa_psk";         break;
+            case WIFI_AUTH_WPA2_PSK:        scanned_network["auth_method"] = "wpa2_psk";        break;
+            case WIFI_AUTH_WPA_WPA2_PSK:    scanned_network["auth_method"] = "wpa_wpa2_psk";    break;
+            case WIFI_AUTH_WPA2_ENTERPRISE: scanned_network["auth_method"] = "wpa2_enterprise"; break;
+            case WIFI_AUTH_WPA3_PSK:        scanned_network["auth_method"] = "wpa3_psk";        break;
+            case WIFI_AUTH_WPA2_WPA3_PSK:   scanned_network["auth_method"] = "wpa2_wpa3_psk";   break;
+            case WIFI_AUTH_WAPI_PSK:        scanned_network["auth_method"] = "wpapi_psk";       break;
+            default:                        scanned_network["auth_method"] = "unknown";         break;
         }
     }
 

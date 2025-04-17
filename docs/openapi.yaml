@@ -19,11 +19,27 @@ tags:
   - name: grill
     description: Grill overview with current status and temperatures
   - name: probes
-    description: Probes
+    description: Detailed probe data and settings
   - name: settings
-    description: Setting management
+    description: Settings management
+  - name: utility
+    description: Utility api calls
 
 components:
+  responses:
+    '400':
+      description: Malformatted body
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                default: "malformatted body"
+                enum:
+                  - malformatted body
+                  - empty body
   schemas:
     Grill:
       type: object
@@ -244,6 +260,34 @@ components:
           description: The reference beta coefficient value from the spec sheet - only used with type CUSTOM
         
     
+    Wifinetwork:
+      type: object
+      properties:
+        ssid:
+          type: string
+          example: MyHomeWifi
+          description: Wifi SSID
+        signal_strength:
+          type: integer
+          format: -dbm
+          example: -61
+          description: The wifi signal expressed in dbm. The closer to 0 the better.
+        auth_method:
+          type: string
+          description: The authentication method that is used by the wifi network
+          example: wpa2_psk   
+          enum:
+            - open
+            - wep
+            - wpa_psk
+            - wpa2_psk
+            - wpa_wpa2_psk
+            - wpa2_enterprise
+            - wpa3_psk
+            - wpa2_wpa3_psk
+            - wpapi_psk
+            - unknown
+    
     Settings:
       type: object
       properties:
@@ -402,6 +446,8 @@ paths:
                 maxItems: 8
                 items:
                   $ref: '#/components/schemas/Probe'
+        '400':
+          $ref: '#/components/responses/400'
   
   /settings:
     get:
@@ -437,4 +483,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Settings'
-                
+        '400':
+          $ref: '#/components/responses/400'
+    
+  /wifiscan:
+    get:
+      tags:
+        - utility
+      summary: Scan for wifi networks
+      description: >
+        Scans for nearby wifi networks, has a long latency of about 5-7 seconds
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                items:
+                  $ref: '#/components/schemas/Wifinetwork'
