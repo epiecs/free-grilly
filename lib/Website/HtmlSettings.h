@@ -1,5 +1,4 @@
 const char HTML_SETTINGS[] = R"=====(
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -35,7 +34,6 @@ const char HTML_SETTINGS[] = R"=====(
         </div>
     </nav>
     <div class="container">
-        <!-- <div class="row pt-1 row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-2"> -->
         <div class="row">
             <div class="my-2 col-sm-12">
                 <div id="alert" class="alert alert-dismissible fade show" style="display: none;" role="alert">
@@ -146,6 +144,20 @@ const char HTML_SETTINGS[] = R"=====(
         </div>
         
         <div class="row mt-2">
+            <label for="wifi_password" class="col-sm-2 col-form-label"></label>
+            <div class="col-8 col-sm-6">
+                <select id="wifi_scan_results" class="form-select" disabled>
+                    <option value="manual">Choose your network</option>
+                </select>
+            </div>
+            <div class="col-4 col-sm-4">
+                <div class="form-check form-switch float-end">
+                    <button id="wifi_scan" type="button" class="btn btn-primary" disabled>Scan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
             <label for="wifi_password" class="col-sm-2 col-form-label">Wifi password</label>
             <div class="col-sm-10">
                 <input type="password" class="form-control" id="wifi_password">
@@ -233,7 +245,7 @@ const char HTML_SETTINGS[] = R"=====(
         <div class="row mt-4">
             <div class="col">
                 <div class="form-check form-switch float-end">
-                    <button id="save-settings" type="button" class="btn btn-primary" disabled>Save settings</button>
+                    <button id="save_settings" type="button" class="btn btn-primary" disabled>Save settings</button>
                 </div>
             </div>
         </div>
@@ -255,6 +267,8 @@ const char HTML_SETTINGS[] = R"=====(
         e_beep_outside_target = document.getElementById("beep_outside_target");
         e_beep_on_ready       = document.getElementById("beep_on_ready");
         
+        e_wifi_scan_results   = document.getElementById("wifi_scan_results");
+        
         e_wifi_ssid           = document.getElementById("wifi_ssid");
         e_wifi_password       = document.getElementById("wifi_password");
         e_wifi_ip             = document.getElementById("wifi_ip");
@@ -268,10 +282,13 @@ const char HTML_SETTINGS[] = R"=====(
         e_local_ap_subnet     = document.getElementById("local_ap_subnet");
         e_local_ap_gateway    = document.getElementById("local_ap_gateway");
         
+        
         e_mqtt_broker         = document.getElementById("mqtt_broker");
         
         
-        e_save_settings       = document.getElementById("save-settings");
+        e_save_settings       = document.getElementById("save_settings");
+        e_wifi_scan           = document.getElementById("wifi_scan");
+
         e_alert               = document.getElementById("alert");
         e_alert_text          = document.getElementById("alert-text");
 
@@ -305,8 +322,39 @@ const char HTML_SETTINGS[] = R"=====(
                 
                 e_mqtt_broker.value           = data['mqtt_broker'];
 
-                // Allow saving once data is loaded
+                // Allow saving/scan once data is loaded
                 e_save_settings.disabled = false;
+                e_wifi_scan.disabled = false;
+
+
+            } catch (error) {
+                console.error('Grill is unreachable:', error);
+            }
+        }
+
+        async function scanNetworks() {
+            
+            e_wifi_scan.textContent = "Scanning...";
+            e_wifi_scan.disabled = true;
+            e_wifi_scan_results.disabled = true;
+
+            try {
+                const response = await fetch(base_url + "/api/wifiscan");
+                data = await response.json();
+
+                // remove all options except for the first default element
+                e_wifi_scan_results.options.length = 1;
+
+                data.forEach((scanned_network) => {
+                    var option = document.createElement('option');
+                    option.value = scanned_network['ssid'];
+                    option.innerHTML = scanned_network['ssid'] + " :: " + scanned_network['auth_method'] + " :: " + scanned_network['signal_strength'];
+                    e_wifi_scan_results.appendChild(option);
+                });
+                
+                e_wifi_scan.textContent = "Scan done!";
+                e_wifi_scan.disabled = false;
+                e_wifi_scan_results.disabled = false;
 
 
             } catch (error) {
@@ -342,8 +390,6 @@ const char HTML_SETTINGS[] = R"=====(
                 post_data["local_ap_gateway"]    = e_local_ap_gateway.value;
                 post_data["mqtt_broker"]         = e_mqtt_broker.value;
 
-                console.log(post_data)
-
                 const response = await fetch(base_url + "/api/settings", {
                     method: "POST",
                     body: JSON.stringify(post_data),
@@ -375,14 +421,25 @@ const char HTML_SETTINGS[] = R"=====(
         e_alert.style.display = 'none';
 
         e_save_settings.addEventListener('click', (event) => {
-            
             postSettings();
         })
 
+        e_wifi_scan.addEventListener('click', (event) => {
+            scanNetworks();
+        })
+
+        e_wifi_scan_results.addEventListener('change', (event) => {
+            result = e_wifi_scan_results.value
+            
+            if(result == "manual"){
+                e_wifi_ssid.disabled = false;
+            } else {
+                e_wifi_ssid.disabled = true;
+                e_wifi_ssid.value = result;
+            }
+        })
 
     </script>
   </body>
 </html>
-
-
 )=====";
