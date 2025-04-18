@@ -378,9 +378,11 @@ void get_api_wifiscan(){
 
     jsondoc.clear();
 
+    JsonArray networks = jsondoc.to<JsonArray>();
+
     for (int network_nr = 0; network_nr < scanned_networks; ++network_nr) {
 
-        JsonObject scanned_network = jsondoc[String(network_nr)].add<JsonObject>();
+        JsonObject scanned_network = networks.add<JsonObject>();
         
         scanned_network["ssid"]            = WiFi.SSID(network_nr).c_str();
         scanned_network["signal_strength"] = WiFi.RSSI(network_nr);
