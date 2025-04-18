@@ -57,7 +57,7 @@ const char HTML_ABOUT[] = R"=====(
 
         <div class="row">
             <div class="col">
-                Made with lots of love by <a href="https://github.com/epiecs">Epiecs</a> and <a href="">JEROEN LINK TODO</a>
+                Made with lots of love by <a href="https://github.com/epiecs">Epiecs</a> and <a href="">https://github.com/JR-Questum</a>
             </div>
         </div>
     </div>
