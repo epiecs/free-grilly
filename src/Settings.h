@@ -90,7 +90,15 @@ namespace config{
     // ***********************************
     // * Probes
     // ***********************************
-    int hspi_probes_clockspeed 	   =  16000000;
+    int hspi_probes_clockspeed 	        =  16000000;
+
+    // ***********************************
+    // * Buzzer
+    // ***********************************
+
+    bool alarm_mute                     = false;
+    int alarm_beep_amount               = 20;
+    int alarm_beep_duration_ms          = 800;
 }
 
 namespace grill{
@@ -138,6 +146,7 @@ namespace web{
 }
 
 namespace task{
+    TaskHandle_t alarmTask;
     TaskHandle_t batteryTask;
     TaskHandle_t powerbuttonTask;
     TaskHandle_t probesTask;
@@ -145,6 +154,7 @@ namespace task{
     TaskHandle_t webserverTask;
     TaskHandle_t stackmonitorTask;
     
+    int alarmStackSize        = 10000;
     int batteryStackSize      = 10000;
     int powerbuttonStackSize  = 10000;
     int probesStackSize       = 10000;

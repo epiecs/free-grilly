@@ -21,6 +21,7 @@
 #include "Settings.h"
 
 // Task functions
+void task_alarm(void* pvParameters);
 void task_battery(void* pvParameters);
 void task_powerbutton(void* pvParameters);
 void task_probes(void* pvParameters);
@@ -108,6 +109,7 @@ void setup() {
     xTaskCreatePinnedToCore(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask, 1);
     xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
     xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
+    xTaskCreatePinnedToCore(task_alarm, "Alarm", task::alarmStackSize, NULL, 1, &task::alarmTask, 1);
     // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 }
 
@@ -133,6 +135,55 @@ void task_webserver(void* pvParameters) {
     while (true){
         web::webserver.handleClient();
         delay(1);
+    }
+
+}
+
+// ***********************************
+// * Buzzer alarm
+// ***********************************
+
+void task_alarm(void* pvParameters) {
+    Serial.println("Launching task :: Alarm");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
+    
+    int alarm_beep_todo = 0;  // The amount of beeps remaining when sounding the alarm
+
+    while (true){
+        
+        int alarm = 0;  // Counter for easy checks to see if there is an alarm
+
+        //* Check for alarms
+        if(grill::probe_1.alarm){ alarm++; };
+        if(grill::probe_2.alarm){ alarm++; };
+        if(grill::probe_3.alarm){ alarm++; };
+        if(grill::probe_4.alarm){ alarm++; };
+        if(grill::probe_5.alarm){ alarm++; };
+        if(grill::probe_6.alarm){ alarm++; };
+        if(grill::probe_7.alarm){ alarm++; };
+        if(grill::probe_8.alarm){ alarm++; };
+
+        //* Trigger alarms if needed
+        if(alarm > 0 && alarm_beep_todo == 0){
+            alarm_beep_todo = config::alarm_beep_amount;
+        }
+        
+        //* Mute alarms if needed
+        if(config::alarm_mute == true){
+            // When we need to mute we remove all needed alarms and wait 
+            // for 2 seconds for the probes and other devices to catch up
+            delay(2000);
+            
+            alarm_beep_todo = 0;
+            config::alarm_mute = false;
+        }
+
+        if(alarm_beep_todo > 0){
+            alarm_beep_todo--;
+            grill::buzzer.beep(1, config::alarm_beep_duration_ms);
+        }
+
+        delay(100);
     }
 
 }
@@ -172,12 +223,17 @@ void task_powerbutton(void* pvParameters) {
 
             if(millis_pressed < short_press_time) {
                 Serial.println("Button pressed for less than 1 second");
+                
+                // Interrupts all running beeps
+                config::alarm_mute = true;
                 grill::buzzer.beep(1, 100);
+
                 // TODO switch between wifi/probes screen
             }
             else if (millis_pressed < medium_press_time) {
                 Serial.println("Button pressed 1-5 seconds");
                 grill::buzzer.beep(2, 100);
+
                 // TODO show about + help -> pressing times
             }
             else if (millis_pressed < long_press_time) {
@@ -209,14 +265,15 @@ void task_probes(void* pvParameters) {
     pinMode(gpio::mux_selector_c, OUTPUT);
 
     for (;;) {
-        grill::probe_1.calculate_temperature();
-        grill::probe_2.calculate_temperature();
-        grill::probe_3.calculate_temperature();
-        grill::probe_4.calculate_temperature();
-        grill::probe_5.calculate_temperature();
-        grill::probe_6.calculate_temperature();
-        grill::probe_7.calculate_temperature();
-        grill::probe_8.calculate_temperature();
+        // Read probes and also check if beeps/alarms/.. are needed
+        grill::probe_1.calculate_temperature(); grill::probe_1.check_temperature_status();
+        grill::probe_2.calculate_temperature(); grill::probe_2.check_temperature_status();
+        grill::probe_3.calculate_temperature(); grill::probe_3.check_temperature_status();
+        grill::probe_4.calculate_temperature(); grill::probe_4.check_temperature_status();
+        grill::probe_5.calculate_temperature(); grill::probe_5.check_temperature_status();
+        grill::probe_6.calculate_temperature(); grill::probe_6.check_temperature_status();
+        grill::probe_7.calculate_temperature(); grill::probe_7.check_temperature_status();
+        grill::probe_8.calculate_temperature(); grill::probe_8.check_temperature_status();
 
         delay(500);
     }

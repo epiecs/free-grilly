@@ -42,4 +42,8 @@ namespace config{
     extern String local_ap_subnet;
     extern String local_ap_gateway;
 
+    // Alarm beeps
+    extern bool alarm_mute;
+    extern int alarm_beep_amount;
+    extern int alarm_beep_duration_ms;
 }

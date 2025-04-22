@@ -15,6 +15,8 @@ private:
 	
 	const int 	ADC_READ_DELAY_MS			   =     1; // Delay needed for accurate readings. If we switch to fast we get overlaps.
 
+	const int   TEMP_HYSTERISIS_OFFSET		   =     2; // The amount of degrees a probe should be seperated from a temp to be eligible again to beep
+
 	/**
 	 * @brief Selects the wanted probe via the MUX pinouts
 	 * 
@@ -38,9 +40,14 @@ public:
 														// Gets stored on calculate_temperature
 
 	float minimum_temperature = 0;						// The minimum, used for temperature ranges
-	float target_temperature = 0;						// The target temperature
-	bool connected = false;								// If the probe is connected
+	float target_temperature  = 0;						// The target temperature
+	bool connected            = false;					// If the probe is connected
 	
+	bool has_beeped           = false;					// Has the probe beeped for the target temperature
+	bool has_beeped_before    = false;					// Has the probe beeped for the before temperature
+	bool has_beeped_outside   = false;					// Has the probe beeped for being outside of the temperature range
+	bool alarm                = false;					// Is the probe currently in an alarm state
+
 	/**
 	 * @brief Construct a new Probe object
 	 * 
@@ -66,6 +73,11 @@ public:
 	float read_adc_voltage();
 
 	/**
+	 * @brief Checks the status of the temperature and checks if beeps/alarms/... are needed
+	 */
+	void check_temperature_status();
+	
+	/**
 	 * @brief Read the current voltage and use the probe settings to calculate the temperature
 	 * 
 	 * @return float The temperature in Celcius
@@ -81,4 +93,12 @@ public:
 	 * @param reference_beta optional, only needed for custom type
 	 */
 	void set_type(String probe_type, int reference_kohm = 100, int reference_celcius = 25, int reference_beta = 4250);
+
+	/**
+	 * @brief Sets the temperature values of the probe. Also checks the probe alarms. If the minimum temperature is not set to 0 then we are in range mode.
+	 * 
+	 * @param target_temperature 	the wanted temperature
+	 * @param minimum_temperature 	the minimum temperature. used when setting a temperature range, in which case the target temperature is the max temperature.
+	 */
+	void set_temperature(float target_temperature, float minimum_temperature = 0.0);
 };

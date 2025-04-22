@@ -227,43 +227,35 @@ void post_api_probes()
 
         switch (probe_id){
             case 1:
-                grill::probe_1.minimum_temperature = minimum_temperature;
-                grill::probe_1.target_temperature = target_temperature;
+                grill::probe_1.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_1.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 2:
-                grill::probe_2.minimum_temperature = minimum_temperature;    
-                grill::probe_2.target_temperature = target_temperature;    
+                grill::probe_2.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_2.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 3:
-                grill::probe_3.minimum_temperature = minimum_temperature;    
-                grill::probe_3.target_temperature = target_temperature;    
+                grill::probe_3.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_3.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 4:
-                grill::probe_4.minimum_temperature = minimum_temperature;    
-                grill::probe_4.target_temperature = target_temperature;    
+                grill::probe_4.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_4.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 5:
-                grill::probe_5.minimum_temperature = minimum_temperature;    
-                grill::probe_5.target_temperature = target_temperature;    
+                grill::probe_5.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_5.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 6:
-                grill::probe_6.minimum_temperature = minimum_temperature;    
-                grill::probe_6.target_temperature = target_temperature;    
+                grill::probe_6.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_6.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 7:
-                grill::probe_7.minimum_temperature = minimum_temperature;    
-                grill::probe_7.target_temperature = target_temperature;    
+                grill::probe_7.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_7.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             case 8:
-                grill::probe_8.minimum_temperature = minimum_temperature;    
-                grill::probe_8.target_temperature = target_temperature;    
+                grill::probe_8.set_temperature(target_temperature, minimum_temperature);
                 grill::probe_8.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
                 break;
             default:
@@ -400,7 +392,6 @@ void get_api_wifiscan(){
             default:                        scanned_network["auth_method"] = "unknown";         break;
         }
     }
-
     // Free memory
     WiFi.scanDelete();
 

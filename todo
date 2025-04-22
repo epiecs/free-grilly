@@ -3,16 +3,13 @@ bootstrap css includen -> if new setup is dit nog niet in cache. wat te doen met
 sometimes after bootup a dhcp ip is used instead of the static ip -> race condition?
   maybe delay needed after settings fetch
 
+temp icoon op overzicht ook ander icoon voorzien voor range? evt ++ - __
 
 indien bijna temp -> oranje, indien temp -> groen in html
 indien target groen voor er in, oranje voor +-10, rood voor meer als +- 10
 
-target temperatures
-  hoe beeps oplossen dat deze max 1x gebeuren
 
 hold button to boot? how to with interrupt?
-
-calculaties doen voor kort bij target, in of uit range etc en beeps
 
 beep on wifi disconnect if in settings
 
@@ -29,7 +26,7 @@ multicast dns setup
 
 
 press side button
-  tap, <1s    -> show temps / show wifi settings / show local ap settings / show firmware/uuid
+  tap, <1s    -> show temps / show wifi settings / show local ap settings / show firmware/uuid -> only if alarm not muted?
   hold <10s   -> shutdown
   hold >10s   -> factory reset, clear preferences
   which beep signals?

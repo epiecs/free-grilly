@@ -3,8 +3,10 @@
 #include <math.h>
 
 #include "Config.h"
+#include "Buzzer.h"
 #include "Probe.h"
 #include "Gpio.h"
+#include "Grill.h"
 
 
 Probe::Probe(int number, int reference_kohm, int reference_celcius, int reference_beta) {
@@ -129,6 +131,59 @@ float Probe::calculate_temperature() {
     return temperature;
 }
 
+void Probe::check_temperature_status(){
+
+    Probe::alarm      = false;
+
+    if(Probe::connected){
+
+        //* Target temperature mode
+        if(Probe::minimum_temperature == 0.0){
+
+            //* Ready temperature beep + alarm
+            if(Probe::temperature >= Probe::target_temperature && Probe::has_beeped == false){
+                Probe::has_beeped = true;
+                Probe::alarm      = true;
+            }
+
+            //* Reset the alarm and beep if the temperature drops way too low
+            if(Probe::temperature < (Probe::target_temperature - Probe::TEMP_HYSTERISIS_OFFSET) && Probe::has_beeped == true){
+                Probe::has_beeped = false;
+            }
+
+            //* Only run if we need to beep before we reach the temperature
+            if(config::beep_degrees_before > 0){
+
+                //* Almost ready temperature beep
+                if(Probe::temperature >= (Probe::target_temperature - config::beep_degrees_before) && Probe::has_beeped_before == false){
+                    Probe::has_beeped_before = true;   
+                    
+                    grill::buzzer.beep(3, 400);
+                }
+
+                //* Reset the beep if the almost temperature drops way too low
+                if(Probe::temperature < (Probe::target_temperature - config::beep_degrees_before - Probe::TEMP_HYSTERISIS_OFFSET) && Probe::has_beeped_before == true){
+                    Probe::has_beeped_before = false;
+                }
+            }
+
+        } else {
+            //* Temperature range mode
+
+            //* Alarm and Beep if outside
+            if((Probe::temperature < Probe::minimum_temperature || Probe::temperature > Probe::target_temperature ) && Probe::has_beeped_outside == false){
+                Probe::has_beeped_outside = true;
+                Probe::alarm              = true;
+            }
+
+            //* Reset the beep and alarm if inside
+            if((Probe::temperature > (Probe::minimum_temperature + Probe::TEMP_HYSTERISIS_OFFSET) && Probe::temperature < (Probe::target_temperature - Probe::TEMP_HYSTERISIS_OFFSET) ) && Probe::has_beeped_outside == true){
+                Probe::has_beeped_outside = false;
+            }
+        }
+    }
+}
+
 void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){
     
     if(probe_type == "grilleye_iris"){
@@ -152,4 +207,18 @@ void Probe::set_type(String probe_type, int reference_kohm, int reference_celciu
     Probe::reference_kohm    = reference_kohm;
     Probe::type              = "custom";
     return;
+}
+
+void Probe::set_temperature(float target_temperature, float minimum_temperature){
+    
+    Probe::target_temperature = target_temperature;
+    Probe::minimum_temperature = minimum_temperature;
+
+    // If we switch mode from target to range we re-enable the beeps
+    if(minimum_temperature == 0.0){
+        Probe::has_beeped        = false;
+        Probe::has_beeped_before = false;
+    } else {
+        Probe::has_beeped_outside = false;
+    }
 }
