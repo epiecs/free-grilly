@@ -17,6 +17,10 @@ private:
 
 	const int   TEMP_HYSTERISIS_OFFSET		   =     2; // The amount of degrees a probe should be seperated from a temp to be eligible again to beep
 
+	bool has_beeped           				   = false; // Has the probe beeped for the target temperature
+	bool has_beeped_before    				   = false; // Has the probe beeped for the before temperature
+	bool has_beeped_outside   				   = false; // Has the probe beeped for being outside of the temperature range
+
 	/**
 	 * @brief Selects the wanted probe via the MUX pinouts
 	 * 
@@ -43,9 +47,6 @@ public:
 	float target_temperature  = 0;						// The target temperature
 	bool connected            = false;					// If the probe is connected
 	
-	bool has_beeped           = false;					// Has the probe beeped for the target temperature
-	bool has_beeped_before    = false;					// Has the probe beeped for the before temperature
-	bool has_beeped_outside   = false;					// Has the probe beeped for being outside of the temperature range
 	bool alarm                = false;					// Is the probe currently in an alarm state
 
 	/**
