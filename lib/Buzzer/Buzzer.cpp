@@ -12,8 +12,6 @@ Buzzer::Buzzer(){
 void Buzzer::beep(int beeps_amount, int duration){
     ledcAttachPin(gpio::buzzer, channel);
     
-    Serial.println(Buzzer::volume);
-    
     for (int beep = 0; beep < beeps_amount; beep++){
         ledcWriteTone(Buzzer::channel, Buzzer::beep_frequency);
         ledcWrite(Buzzer::channel, Buzzer::volume);
