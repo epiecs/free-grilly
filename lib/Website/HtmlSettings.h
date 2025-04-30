@@ -27,6 +27,9 @@ const char HTML_SETTINGS[] = R"=====(
                         <a class="nav-link active" href="/settings">Settings</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" href="/update">Update</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
                 </ul>

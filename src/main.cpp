@@ -3,6 +3,7 @@
 #include <SPI.h>
 #include <WebServer.h>
 #include <Wire.h>
+#include <ElegantOTA.h>
 #include <string>
 
 #include "Api.h"
@@ -132,8 +133,11 @@ void task_webserver(void* pvParameters) {
     web::webserver.onNotFound(not_found);
     web::webserver.begin();
 
+    ElegantOTA.begin(&web::webserver); // OTA webserver
+
     while (true){
         web::webserver.handleClient();
+        ElegantOTA.loop();
         delay(1);
     }
 

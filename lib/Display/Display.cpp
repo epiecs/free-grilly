@@ -22,7 +22,7 @@ disp::disp() {}
 
 bool disp::init(void){
     screen.begin();
-    screen.setContrast(20);
+    screen.setContrast(10);
     screen.setFontMode(1);
     screen.setBitmapMode(1);
     return true;
@@ -63,7 +63,10 @@ bool disp::display_update(void) {
     // * Wifi Elements
     // ***********************************
     if(grill::wifi_connected) {
-     
+        if(grill::wifi_signal < 50) {screen.drawXBMP(96, 0, 1, 8, wifi_signal4);}
+        if(grill::wifi_signal < 56) {screen.drawXBMP(94, 2, 1, 6, wifi_signal3);}
+        if(grill::wifi_signal < 66) {screen.drawXBMP(92, 4, 1, 4, wifi_signal2);}
+        if(grill::wifi_signal < 75) {screen.drawXBMP(90, 6, 1, 2, wifi_signal1);}
     }
     else {
         screen.drawXBMP(89, 1, 3, 3, wifi_disconnected);
