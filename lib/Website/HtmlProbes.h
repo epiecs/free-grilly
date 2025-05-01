@@ -27,10 +27,10 @@ const char HTML_PROBES[] = R"=====(
                         <a class="nav-link" href="/settings">Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/update">Update</a>
+                        <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/update">Update</a>
                     </li>
                 </ul>
             </div>

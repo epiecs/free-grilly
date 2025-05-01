@@ -43,11 +43,11 @@ public:
 	float fahrenheit;							        // The last known temperature in Fahrenheit
 														// Gets stored on calculate_temperature
 
-	float minimum_temperature = 0;						// The minimum, used for temperature ranges
-	float target_temperature  = 0;						// The target temperature
-	bool connected            = false;					// If the probe is connected
+	float minimum_temperature 				   = 0;		// The minimum, used for temperature ranges
+	float target_temperature  				   = 0;		// The target temperature
+	bool connected            				   = false;	// If the probe is connected
 	
-	bool alarm                = false;					// Is the probe currently in an alarm state
+	bool alarm                				   = false;	// Is the probe currently in an alarm state
 
 	/**
 	 * @brief Construct a new Probe object
