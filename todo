@@ -8,24 +8,22 @@
 - web interface
   - bootstrap css includen -> if new setup is dit nog niet in cache. wat te doen met filesize
   
-- issues
-  - sometimes after bootup a dhcp ip is used instead of the static ip -> race condition?
-    - maybe delay needed after settings fetch?
-  
 - features
   - temp icoon op overzicht ook ander icoon voorzien voor range? evt ++ - __
 
 - functionality
-  - hold button to boot? how to with interrupt? now tap starts but should be hold for 2-3 seconds at least
-    - how to check if woken from sleep? necessary?
-    - what if battery is completely dead?
+
   - beep on wifi disconnect if in settings?
   - buzzer songs
+  - screen layouts
+    - shutdown
+    - wifi ap settings
+    - wifi local ap settings
+    - button help
+    
   - press side button
     - tap, <1s    -> show temps / show wifi settings / show local ap settings / show firmware/uuid -> only if alarm not muted?
-    - hold <10s   -> shutdown
-    - hold >10s   -> factory reset, clear preferences
-    - which beep signals?
+    - hold <3s    -> show help
   - timezones
     - set timezone
       - via dropdown in webinterface
@@ -41,5 +39,5 @@
     - multicast dns https://johnwargo.com/posts/2023/arduino-esp32-web-server-on-a-processor-core/#:~:text=Multicast%20DNS
 
 - communication
-  - info op bbqgenootschap plaatsen?
+  - info op bbqgenootschap plaatsen? -> initial post done
   - licentie bespreken met jeroen/christos?
