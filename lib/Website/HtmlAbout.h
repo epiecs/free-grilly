@@ -43,16 +43,24 @@ const char HTML_ABOUT[] = R"=====(
             <h5>Grill</h5>
         </div>
         <div class="row">
+
             <div class="row mt-2">
-                <label class="col-sm-2 col-form-label">UUID</label>
-                <div class="col-sm-10 mt-2" id="grill_uuid">Loading</div>
+                <label class="col-sm-3">Connected to Wifi</label>
+                <div class="col-sm-9" id="grill_wifi_connected">Loading</div>
             </div>
             <div class="row mt-2">
-                <label class="col-sm-2 col-form-label">Firmware version</label>
-                <div class="col-sm-10 mt-2" id="grill_firmware_version">Loading</div>
+                <label class="col-sm-3">Wifi ip</label>
+                <div class="col-sm-9" id="grill_wifi_ip">Loading</div>
+            </div>
+            <div class="row mt-2">
+                <label class="col-sm-3">UUID</label>
+                <div class="col-sm-9" id="grill_uuid">Loading</div>
+            </div>
+            <div class="row mt-2">
+                <label class="col-sm-3">Firmware version</label>
+                <div class="col-sm-9" id="grill_firmware_version">Loading</div>
             </div>
         </div>
-
 
         <div class="row mt-2">
             <h5>Authors</h5>
@@ -60,7 +68,7 @@ const char HTML_ABOUT[] = R"=====(
 
         <div class="row">
             <div class="col">
-                Made with lots of love by <a href="https://github.com/epiecs">Epiecs</a> and <a href="">https://github.com/JR-Questum</a>
+                Made with lots of love by <a href="https://github.com/epiecs">Epiecs</a> and <a href="https://questum.be/">Questum</a>
             </div>
         </div>
     </div>
@@ -72,8 +80,10 @@ const char HTML_ABOUT[] = R"=====(
         //Only used during tests, the real implementation uses relative urls
         const base_url = "";
          
-        e_grill_uuid          = document.getElementById("grill_uuid");
-        e_firmware_version    = document.getElementById("grill_firmware_version");
+        e_grill_wifi_connected = document.getElementById("grill_wifi_connected");
+        e_grill_wifi_ip        = document.getElementById("grill_wifi_ip");
+        e_grill_uuid           = document.getElementById("grill_uuid");
+        e_firmware_version     = document.getElementById("grill_firmware_version");
 
 
         async function getSettings() {
@@ -82,8 +92,10 @@ const char HTML_ABOUT[] = R"=====(
                 data = await response.json();
 
                 console.log(data);
-                e_grill_uuid.textContent        = data['unique_id'];
-                e_firmware_version.textContent  = data['firmware_version'];
+                e_grill_wifi_connected.textContent = data['wifi_connected'];
+                e_grill_wifi_ip.textContent        = data['wifi_ip'];
+                e_grill_uuid.textContent           = data['unique_id'];
+                e_firmware_version.textContent     = data['firmware_version'];
 
 
             } catch (error) {
