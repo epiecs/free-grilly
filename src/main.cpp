@@ -39,7 +39,13 @@ void setup() {
     Serial.begin(115200); // Initialize serial communication at 115200 bits per second
     // delay(5000);          // Give serial monitor time to catch up
     
-    
+    // ***********************************
+    // * Load nvram settings and init
+    // ***********************************
+    config::settings_storage.begin("free-grilly", false);
+    config::config_helper.load_settings();
+    config::config_helper.load_probes();
+
     // ***********************************
     // * Power button bootup
     // ***********************************
@@ -50,7 +56,6 @@ void setup() {
     unsigned long millis_pressed        = 0;
     unsigned long millis_button_start   = 0;
 
-    // Time in ms that defines each button press breakpoint
     int bootup_press_time   = config::press_seconds_startup * 1000;
     
     if(digitalRead(gpio::power_button) == LOW){
@@ -59,18 +64,17 @@ void setup() {
 
     while(digitalRead(gpio::power_button) == LOW){
         millis_pressed = millis() - millis_button_start;
-    }
 
+        // beep if the button is held long enough
+        if(millis_pressed > bootup_press_time){
+            grill::buzzer.beep(1, 200);
+            break;
+        }
+    }
+    
     if(millis_pressed < bootup_press_time){
         power.shutdown();
     }
-
-    // ***********************************
-    // * Load nvram settings and init
-    // ***********************************
-    config::settings_storage.begin("free-grilly", false);
-    config::config_helper.load_settings();
-    config::config_helper.load_probes();
 
     // ***********************************
     // * Startup Buzzer
