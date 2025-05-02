@@ -2,14 +2,14 @@ const char HTML_ABOUT[] = R"=====(
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta id="viewport" content="width=device-width, initial-scale=1">
-    <title>Free Grilly</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="data:,">
-  </head>
+    <head>  
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Free Grilly</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="icon" href="data:,">
+    </head>
   <body>
     <nav class="navbar navbar-expand bg-body-tertiary">
         <div class="container-fluid">
@@ -38,28 +38,27 @@ const char HTML_ABOUT[] = R"=====(
         </div>
     </nav>
     <div class="container">
-        
-        <div class="row mt-2">
-            <h5>Grill</h5>
+        <div class="my-2 row">
+            <div class="col-5 col-lg-7">
+                <h5 id="grill-name">Free Grilly</h5>
+            </div>
         </div>
-        <div class="row">
 
-            <div class="row mt-2">
-                <label class="col-sm-3">Connected to Wifi</label>
-                <div class="col-sm-9" id="grill_wifi_connected">Loading</div>
-            </div>
-            <div class="row mt-2">
-                <label class="col-sm-3">Wifi ip</label>
-                <div class="col-sm-9" id="grill_wifi_ip">Loading</div>
-            </div>
-            <div class="row mt-2">
-                <label class="col-sm-3">UUID</label>
-                <div class="col-sm-9" id="grill_uuid">Loading</div>
-            </div>
-            <div class="row mt-2">
-                <label class="col-sm-3">Firmware version</label>
-                <div class="col-sm-9" id="grill_firmware_version">Loading</div>
-            </div>
+        <div class="row mt-2">
+            <label class="col-5">Connected to Wifi</label>
+            <div class="col-7" id="grill_wifi_connected">Loading</div>
+        </div>
+        <div class="row mt-2">
+            <label class="col-5">Wifi ip</label>
+            <div class="col-7" id="grill_wifi_ip">Loading</div>
+        </div>
+        <div class="row mt-2">
+            <label class="col-5">UUID</label>
+            <div class="col-7" id="grill_uuid">Loading</div>
+        </div>
+        <div class="row mt-2">
+            <label class="col-5">Firmware version</label>
+            <div class="col-7" id="grill_firmware_version">Loading</div>
         </div>
 
         <div class="row mt-2">

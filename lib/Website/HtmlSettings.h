@@ -1,14 +1,14 @@
 const char HTML_SETTINGS[] = R"=====(
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta id="viewport" content="width=device-width, initial-scale=1">
-    <title>Free Grilly</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" href="data:,">
-  </head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Free Grilly</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="icon" href="data:,">
+    </head>
   <body>
     <nav class="navbar navbar-expand bg-body-tertiary">
         <div class="container-fluid">
@@ -392,6 +392,8 @@ const char HTML_SETTINGS[] = R"=====(
                 post_data["local_ap_subnet"]     = e_local_ap_subnet.value;
                 post_data["local_ap_gateway"]    = e_local_ap_gateway.value;
                 post_data["mqtt_broker"]         = e_mqtt_broker.value;
+
+                console.log(post_data)
 
                 const response = await fetch(base_url + "/api/settings", {
                     method: "POST",
