@@ -56,10 +56,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 1&nbsp;&nbsp;<span id="probe-1-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-1-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-1-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-1-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-1-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-1-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -70,10 +70,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 2&nbsp;&nbsp;<span id="probe-2-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-2-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-2-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-2-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-2-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-2-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -84,10 +84,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 3&nbsp;&nbsp;<span id="probe-3-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-3-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-3-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-3-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-3-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-3-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -98,10 +98,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 4&nbsp;&nbsp;<span id="probe-4-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-4-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-4-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-4-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-4-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-4-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -112,10 +112,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 5&nbsp;&nbsp;<span id="probe-5-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-5-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-5-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-5-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-5-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-5-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -126,10 +126,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 6&nbsp;&nbsp;<span id="probe-6-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-6-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-6-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-6-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-6-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-6-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -140,10 +140,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 7&nbsp;&nbsp;<span id="probe-7-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-7-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-7-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-7-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-7-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-7-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -154,10 +154,10 @@ const char HTML_INDEX[] = R"=====(
                         <div class="row">
                             <div class="col-8">Probe 8&nbsp;&nbsp;<span id="probe-8-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-8-temperature">0 C</div>
-                            <div class="col-5"><small>Target temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-8-target">0 C</small></div>
-                            <div class="col-5"><small>Minimum temperature</small></div>
-                            <div class="col-7 probe-temperature text-end"><small id="probe-8-minimum">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Target temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-8-target">0 C</small></div>
+                            <div class="col-5 col-sm-7"><small>Minimum temperature</small></div>
+                            <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-8-minimum">0 C</small></div>
                         </div>
                     </div>
                 </div>
@@ -169,7 +169,7 @@ const char HTML_INDEX[] = R"=====(
     <script type="text/javascript">
 
         //Only used during tests, the real implementation uses relative urls
-        const base_url = "";
+        const base_url = "http://10.30.10.235";
         
         const api_polling_interval = 1000;
         const api_unreachable_intervals = 10;
@@ -358,6 +358,5 @@ const char HTML_INDEX[] = R"=====(
     </script>
   </body>
 </html>
-
 
 )=====";
