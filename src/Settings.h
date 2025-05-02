@@ -40,6 +40,14 @@ namespace config{
     GrillConfig config_helper = GrillConfig();
 
     // ***********************************
+    // * Button
+    // ***********************************
+
+    int press_seconds_startup       = 2;
+    int press_seconds_shutdown      = 2;
+    int press_seconds_factory_reset = 10;
+
+    // ***********************************
     // * Grill
     // ***********************************
 

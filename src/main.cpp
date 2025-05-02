@@ -39,6 +39,32 @@ void setup() {
     Serial.begin(115200); // Initialize serial communication at 115200 bits per second
     // delay(5000);          // Give serial monitor time to catch up
     
+    
+    // ***********************************
+    // * Power button bootup
+    // ***********************************
+    
+    //* Power button pin is set here so that we can use it to check for boot
+    pinMode(gpio::power_button, INPUT);
+    
+    unsigned long millis_pressed        = 0;
+    unsigned long millis_button_start   = 0;
+
+    // Time in ms that defines each button press breakpoint
+    int bootup_press_time   = config::press_seconds_startup * 1000;
+    
+    if(digitalRead(gpio::power_button) == LOW){
+        millis_button_start = millis();
+    }
+
+    while(digitalRead(gpio::power_button) == LOW){
+        millis_pressed = millis() - millis_button_start;
+    }
+
+    if(millis_pressed < bootup_press_time){
+        power.shutdown();
+    }
+
     // ***********************************
     // * Load nvram settings and init
     // ***********************************
@@ -71,6 +97,29 @@ void setup() {
     //     ntp_server_2.c_str(),
     //     ntp_server_3.c_str()
     // );
+    
+    // ***********************************
+    // * Launch tasks
+    // ***********************************
+
+    // xTaskCreate(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask);
+    // xTaskCreate(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask);
+    // xTaskCreate(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask);
+    // xTaskCreate(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask);
+    // xTaskCreate(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask);
+    // xTaskCreate(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask);
+
+    delay(100); //Needed to give the power rail time to adjust
+    xTaskCreatePinnedToCore(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask, 1);
+    delay(100); //Needed to give the power rail time to adjust
+    xTaskCreatePinnedToCore(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask, 1);
+    delay(1000); //Needed to give the power rail time to adjust
+    xTaskCreatePinnedToCore(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask, 1);
+    delay(100); //Needed to give the power rail time to adjust
+    xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
+    xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
+    xTaskCreatePinnedToCore(task_alarm, "Alarm", task::alarmStackSize, NULL, 1, &task::alarmTask, 1);
+    // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 
     // ***********************************
     // * WIFI
@@ -87,32 +136,11 @@ void setup() {
                             // stable connection and lower latency
 
     start_local_ap();
-    delay(1000);
+    delay(500); //Needed to give the power rail time to adjust
 
     if(config::wifi_ssid != ""){
         connect_to_wifi();
     }
-    
-    // ***********************************
-    // * Launch tasks
-    // ***********************************
-
-    // xTaskCreate(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask);
-    // xTaskCreate(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask);
-    // xTaskCreate(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask);
-    // xTaskCreate(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask);
-    // xTaskCreate(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask);
-    // xTaskCreate(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask);
-
-    xTaskCreatePinnedToCore(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask, 1);
-    delay(100); //Needed to give the power rail time to adjust
-    xTaskCreatePinnedToCore(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask, 1);
-    delay(1000); //Needed to give the power rail time to adjust
-    xTaskCreatePinnedToCore(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask, 1);
-    xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
-    xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
-    xTaskCreatePinnedToCore(task_alarm, "Alarm", task::alarmStackSize, NULL, 1, &task::alarmTask, 1);
-    // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 }
 
 // ***********************************
@@ -207,11 +235,10 @@ void task_powerbutton(void* pvParameters) {
 
     // Time in ms that defines each button press breakpoint
     int short_press_time   = 1000;
-    int medium_press_time  = 3000;
-    int long_press_time    = 10000;
+    int medium_press_time  = config::press_seconds_shutdown * 1000;
+    int long_press_time    = config::press_seconds_factory_reset * 1000;
 
     bool button_pressed    = false;
-    pinMode(gpio::power_button, INPUT);
     
     while(true){
         if(digitalRead(gpio::power_button) == LOW && not button_pressed) {
@@ -236,13 +263,13 @@ void task_powerbutton(void* pvParameters) {
                 // TODO switch between wifi/probes screen
             }
             else if (millis_pressed < medium_press_time) {
-                Serial.println("Button pressed 1-5 seconds");
+                Serial.println("Button pressed 1-3 seconds");
                 grill::buzzer.beep(2, 100);
 
                 // TODO show about + help -> pressing times
             }
             else if (millis_pressed < long_press_time) {
-                Serial.println("Button pressed 5-10 seconds");
+                Serial.println("Button pressed 3-10 seconds");
                 grill::buzzer.beep(3, 100);
                 power.shutdown();
             }
