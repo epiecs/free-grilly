@@ -78,7 +78,7 @@ This process will replace the original firmware on your Grilleye Max.
 3.  **Connect to AP:** Using your phone or computer, connect to this new WiFi network.
 4.  **Access Web Interface:** Open a web browser and navigate to `http://192.168.200.10`.
 5.  **Configure WiFi:** Find the "Settings" or "WiFi Configuration" page in the web interface. Select your home WiFi network (SSID), enter the password, and save.
-6.  **Reconnect:** The Grilleye Max should disconnect from AP mode and attempt to connect to your specified WiFi network. Its IP address will now be assigned by your router.
+6.  **Reconnect:** The Grilleye Max should now connect to your own WiFi network. Its IP address will now be assigned by your router  (The local ap will keep on working as well).
 
 ## Usage
 
@@ -100,7 +100,7 @@ Once Free-Grilly is installed, you can update to newer versions wirelessly:
         
 ## Contributing
 
-We welcome contributions to help improve Free-Grilly! Whether it's fixing bugs, adding features, improving documentation, or helping test, your input is valuable.
+We welcome contributions to help improve Free-Grilly! Whether it's fixing bugs, adding features, improving documentation, or testing, your input is valuable.
 
 Here's how you can contribute:
 

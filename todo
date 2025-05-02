@@ -1,5 +1,8 @@
 - Readme schrijven
 
+- about page
+  - show wifi ip
+
 - beeps -> check flags
   - beep when outside
   - beep before 
@@ -20,7 +23,7 @@
     - wifi ap settings
     - wifi local ap settings
     - button help
-    
+
   - press side button
     - tap, <1s    -> show temps / show wifi settings / show local ap settings / show firmware/uuid -> only if alarm not muted?
     - hold <3s    -> show help
