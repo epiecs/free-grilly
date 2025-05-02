@@ -207,7 +207,7 @@ void task_powerbutton(void* pvParameters) {
 
     // Time in ms that defines each button press breakpoint
     int short_press_time   = 1000;
-    int medium_press_time  = 5000;
+    int medium_press_time  = 3000;
     int long_press_time    = 10000;
 
     bool button_pressed    = false;
