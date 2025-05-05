@@ -4,8 +4,11 @@
 #include "Display.h"
 #include "Grill.h"
 #include "Probe.h"
+#include "Config.h"
 
 U8G2_ST7565_64128N_F_4W_SW_SPI screen(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /* cs=*/ 5, /* dc=*/ 17, /* reset=*/ 16); 
+bool is_critical_battery_flash = false;
+int current_screen_page = 0;
 
 static const unsigned char battery_icon[]       U8X8_PROGMEM = {0xfe,0x07,0x01,0x08,0x01,0x38,0x01,0x28,0x01,0x28,0x01,0x38,0x01,0x08,0xfe,0x07};
 static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x10,0x08,0x04,0x1e,0x0f,0x04,0x02,0x01};
@@ -16,7 +19,6 @@ static const unsigned char wifi_signal4[]       U8X8_PROGMEM = {0x01,0x01,0x01,0
 static const unsigned char wifi_disconnected[]  U8X8_PROGMEM = {0x05,0x02,0x05};
 static const unsigned char probe_thermometer[]  U8X8_PROGMEM = {0x04,0x0a,0x0a,0x1b,0x0a,0x0a,0x0a,0x11,0x11,0x11,0x0e};
 
-bool is_critical_battery_flash = false;
 
 disp::disp() {}
 
@@ -25,6 +27,13 @@ bool disp::init(void){
     screen.setContrast(10);
     screen.setFontMode(1);
     screen.setBitmapMode(1);
+    return true;
+}
+
+bool disp::switch_page(void){
+    current_screen_page++;
+    if (current_screen_page >= 2) {current_screen_page = 0;}
+    Serial.println(current_screen_page);
     return true;
 }
 
@@ -76,6 +85,23 @@ bool disp::display_update(void) {
         screen.drawXBMP(96, 0, 1, 8, wifi_signal4);
     }
 
+    switch (current_screen_page) {
+    case 0:
+        draw_screen_temp();
+        break;
+    case 1:
+        draw_screen_info();
+        break;
+    default:
+        draw_screen_temp();
+        break;
+    }    
+
+    screen.sendBuffer();
+	return true; 
+}
+
+bool disp::draw_screen_temp(void){
     // ***********************************
     // * Probe elements
     // ***********************************
@@ -112,10 +138,32 @@ bool disp::display_update(void) {
     if(grill::probe_7.target_temperature > 0) { draw_thermometer(119,37,grill::probe_7.celcius,grill::probe_7.target_temperature); }
     if(grill::probe_8.target_temperature > 0) { draw_thermometer(119,50,grill::probe_8.celcius,grill::probe_8.target_temperature); }
 
+    return true;
+}
 
-    screen.sendBuffer();
-        
-	return true; 
+bool disp::draw_screen_info(void){
+    screen.setFont(u8g2_font_5x8_tr);
+    screen.drawStr(2, 8, "Info");
+    screen.drawLine(2, 9, 124, 9);
+
+    screen.setFont(u8g2_font_4x6_tr);
+    // Grill info
+    screen.drawStr(10, 18, "NAME:");
+    screen.setCursor(33, 18); screen.print(config::grill_name);
+    screen.drawStr(18, 26, "FW: ");
+    screen.setCursor(33, 26); screen.print(config::grill_firmware_version);
+    // AP info
+    screen.drawStr(10, 36, "SSID:");
+    screen.setCursor(33, 36); screen.print(config::wifi_ssid);
+    screen.drawStr(18, 44, "IP: ");
+    screen.setCursor(33, 44); screen.print(config::wifi_ip);
+    // local AP info
+    screen.drawStr(2, 54, "L-SSID:");
+    screen.setCursor(33, 54); screen.print(config::local_ap_ssid);
+    screen.drawStr(10, 62, "L-IP: ");
+    screen.setCursor(33, 62); screen.print(config::local_ap_ip);
+
+    return true;
 }
 
 bool disp::draw_thermometer(int xLoc, int yLoc, int probe_temp, int probe_target) {
