@@ -1,5 +1,7 @@
 #pragma once
 #include <Arduino.h>
+#include <vector>
+#include <utility>
 
 
 // ***********************************
@@ -38,6 +40,12 @@ private:
     *	@brief Subroutine to create the temp screen
     *	@return true 
     */
+   std::pair<int, std::vector<int>> get_connected_probes(void);
+   /**
+   *	@brief Checks how many probes are connected
+   *	@return number of probes connected 
+   *    @return vector of connected probes
+   */
    bool draw_screen_temp(void);
     /**
     *	@brief Subroutine to create the wifi screen

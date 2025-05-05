@@ -264,7 +264,7 @@ void task_powerbutton(void* pvParameters) {
                 config::alarm_mute = true;
                 grill::buzzer.beep(1, 100);
 
-                display.switch_page();  // TODO switch between wifi/probes screen     
+                display.switch_page();
             }
             else if (millis_pressed < medium_press_time) {
                 Serial.println("Button pressed 1-3 seconds");
