@@ -4,9 +4,6 @@
 
 - webserial flasher
 
-- web interface
-  - bootstrap css includen -> if new setup is dit nog niet in cache. wat te doen met filesize
-
 - source code
   - clean up of existing code and classes
 
