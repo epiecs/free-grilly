@@ -5,8 +5,7 @@ const char HTML_PROBES[] = R"=====(
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Free Grilly</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="custom-boostrap.min.css">
     <link rel="icon" href="data:,">
   </head>
   <body>
@@ -79,7 +78,7 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="custom">Custom</option>
-                                  </select>
+                                </select>
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
@@ -465,7 +464,7 @@ const char HTML_PROBES[] = R"=====(
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="bootstrap.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
         //Only used during tests, the real implementation uses relative urls
