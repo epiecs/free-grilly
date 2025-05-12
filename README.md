@@ -51,6 +51,8 @@ Before you begin, ensure you have the following:
 
 This process will replace the original firmware on your Grilleye Max.
 
+> **Watch out!:** For the first flash you will need to use the `merged` variant of the firmware. This contains extra data which is not included in the normal updates (bootloader, partitions,...).
+
 1.  **Connect the Device:** Connect your Grilleye Max to your computer using the USB cable.
 2.  **Find Your Serial Port:**
     * **Windows:** Open Device Manager (search `devmgmt.msc`). Look under "Ports (COM & LPT)". You should see an entry like "Silicon Labs CP210x USB to UART Bridge (COMx)". Note the `COMx` number (e.g., `COM3`).
@@ -64,12 +66,12 @@ This process will replace the original firmware on your Grilleye Max.
         ```bash
         esptool.py --port <YOUR_SERIAL_PORT> write_flash 0x0 free-grilly.bin
         ```
-        *Example for Linux:* `esptool.py --port /dev/ttyUSB0 write_flash 0x0 free-grilly.bin`
-        *Example for Windows:* `esptool.py --port COM3 write_flash 0x0 free-grilly.bin`
-        *Example for macOS:* `esptool.py --port /dev/cu.SLAB_USBtoUART write_flash 0x0 free-grilly.bin`
+        *Example for Linux:* `esptool.py --port /dev/ttyUSB0 write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
+        *Example for Windows:* `esptool.py --port COM3 write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
+        *Example for macOS:* `esptool.py --port /dev/cu.SLAB_USBtoUART write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
 
 5.  **Wait:** The flashing process will take a minute or two. Do not disconnect the device. `esptool.py` will indicate when it's complete.
-6.  **Reboot:** Once flashing is successful, disconnect and reconnect the USB cable, or power cycle the device.
+6.  **Reboot:** Once flashing is successful, disconnect and reconnect the USB cable, or power cycle the device. To start the device hold the power button until the Grilleye beeps.
 
 ## First Use & WiFi Setup
 
@@ -92,12 +94,12 @@ This process will replace the original firmware on your Grilleye Max.
 
 Once Free-Grilly is installed, you can update to newer versions wirelessly:
 
-  1. Download the latest `free-grilly.bin` from Releases.
+  1. Download the latest `free-grilly-yyyy-mm-dd.bin` from Releases.
   2. Access the web interface.
   3. Go to the 'Update' page.
   4. Upload the downloaded `.bin` file.
   5. Wait for the device to update and reboot.
-        
+
 ## Contributing
 
 We welcome contributions to help improve Free-Grilly! Whether it's fixing bugs, adding features, improving documentation, or testing, your input is valuable.
