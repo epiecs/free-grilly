@@ -88,13 +88,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celciusius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -138,13 +138,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celcius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -188,13 +188,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celcius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -238,13 +238,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celcius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -288,13 +288,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celcius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -338,13 +338,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celcius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -388,13 +388,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celcius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -438,13 +438,13 @@ const char HTML_PROBES[] = R"=====(
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Celcius</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-celcius" type="text">
                             </div>
                         </div>
                         <div class="row my-1 advanced-settings">
-                            <div class="col-6"><small>Reference kOhm</small></div>
+                            <div class="col-6"><small>Reference Beta</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-reference-beta" type="text">
                             </div>
@@ -579,6 +579,4 @@ const char HTML_PROBES[] = R"=====(
     </script>
   </body>
 </html>
-
-
 )=====";
