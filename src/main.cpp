@@ -247,11 +247,9 @@ void task_powerbutton(void* pvParameters) {
     bool buzzed_medium     = false;
     bool buzzed_long       = false;
     
-    
     if(digitalRead(gpio::power_button) == LOW){
         millis_button_start = millis();
     }
-
 
     while(true){
         if(digitalRead(gpio::power_button) == LOW && not button_pressed) {
@@ -306,7 +304,7 @@ void task_powerbutton(void* pvParameters) {
             }
             else if (millis_pressed > long_press_time) {
                 Serial.println("Button pressed for more than 10 seconds");
-                //config::config_helper.factory_reset();
+                config::config_helper.factory_reset();
             }            
         }
 
