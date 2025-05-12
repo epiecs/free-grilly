@@ -243,15 +243,45 @@ void task_powerbutton(void* pvParameters) {
     int long_press_time    = config::press_seconds_factory_reset * 1000;
 
     bool button_pressed    = false;
+    bool buzzed_short      = false;
+    bool buzzed_medium     = false;
+    bool buzzed_long       = false;
     
+    
+    if(digitalRead(gpio::power_button) == LOW){
+        millis_button_start = millis();
+    }
+
+
     while(true){
         if(digitalRead(gpio::power_button) == LOW && not button_pressed) {
+            // Initialize millis counter
             button_pressed = true;
             millis_button_start = millis();
+        } else if(digitalRead(gpio::power_button) == LOW){
+            millis_pressed = millis() - millis_button_start;
+
+            // beep if the button is held long enough to indicate the action
+            if(millis_pressed > short_press_time && buzzed_short == false){
+                buzzed_short = true;
+                grill::buzzer.beep(2, 100);
+            }
+            if(millis_pressed > medium_press_time && buzzed_medium == false){
+                buzzed_medium = true;
+                grill::buzzer.beep(3, 100);
+            }
+            if(millis_pressed > long_press_time && buzzed_long == false){
+                buzzed_long = true;
+                grill::buzzer.beep(3, 500);
+            }
         }
         else if (digitalRead(gpio::power_button) == HIGH && button_pressed)
         {
             button_pressed = false;
+            buzzed_short      = false;
+            buzzed_medium     = false;
+            buzzed_long       = false;
+            
             millis_pressed = millis() - millis_button_start;
 
             Serial.print("Button pressed for: ");
@@ -268,19 +298,15 @@ void task_powerbutton(void* pvParameters) {
             }
             else if (millis_pressed < medium_press_time) {
                 Serial.println("Button pressed 1-3 seconds");
-                grill::buzzer.beep(2, 100);
-
                 // TODO show about + help -> pressing times
             }
             else if (millis_pressed < long_press_time) {
                 Serial.println("Button pressed 3-10 seconds");
-                grill::buzzer.beep(3, 100);
                 power.shutdown();
             }
             else if (millis_pressed > long_press_time) {
                 Serial.println("Button pressed for more than 10 seconds");
-                grill::buzzer.beep(3, 500);
-                config::config_helper.factory_reset();
+                //config::config_helper.factory_reset();
             }            
         }
 

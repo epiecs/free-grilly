@@ -13,11 +13,6 @@
 - checks and fixes
   - check that all power lines are down when shutting down
 
-- beeps
-  - beep when hold down
-    - shutdown
-    - factory reset
-
 - bugs
   - dhcp issue with fixed ip
 
