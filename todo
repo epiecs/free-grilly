@@ -1,45 +1,34 @@
 - Readme schrijven
+  - add button functions to readme
+  - add web layout info to readme
 
-- about page
-  - show wifi ip and maybe other settings
-
-- beeps -> check flags
-  - beep when outside
-  - beep before 
-  - beep when ready
+- webserial flasher
 
 - web interface
   - bootstrap css includen -> if new setup is dit nog niet in cache. wat te doen met filesize
-  
+
+- source code
+  - clean up of existing code and classes
+
 - features
   - temp icoon op overzicht ook ander icoon voorzien voor range? evt ++ - __
 
-- functionality
+- checks and fixes
+  - check that all power lines are down when shutting down
 
-  - beep on wifi disconnect if in settings?
-  - buzzer songs
+- beeps
+  - beep when hold down
+    - shutdown
+    - factory reset
+
+- bugs
+  - dhcp issue with fixed ip
+
+- functionality
+  - mqtt port
+
   - screen layouts
     - shutdown
-    - wifi ap settings
-    - wifi local ap settings
-    - button help
-
-  - press side button
-    - tap, <1s    -> show temps / show wifi settings / show local ap settings / show firmware/uuid -> only if alarm not muted? (DONE)
-    - hold <3s    -> show help
-  - timezones
-    - set timezone
-      - via dropdown in webinterface
-      - via api and do a check with the enum code
-      - show current time on the webinterface + in the grill api call
-    - local time zone definition (Berlin)
-    - #define TIMEZONE "CET-1CEST,M3.5.0,M10.5.0/3"
-    - configTzTime(TIMEZONE, "pool.ntp.org");
-
-- enhancements
-  - wifimulti gebruiken voor overschakeling van 1 ap naar het andere indien settings veranderd worden? -> gaat niet met local ap..
-  - multicast dns setup -> domain name on local network
-    - multicast dns https://johnwargo.com/posts/2023/arduino-esp32-web-server-on-a-processor-core/#:~:text=Multicast%20DNS
 
 - communication
   - info op bbqgenootschap plaatsen? -> initial post done
