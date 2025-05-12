@@ -43,6 +43,7 @@ Before you begin, ensure you have the following:
     * A computer running Windows, macOS, or Linux.
     * [Python](https://www.python.org/downloads/) installed.
     * [esptool.py](https://github.com/espressif/esptool): Install it via pip: `pip install esptool`
+        * You can also download premade binaries for Windows/Linux/Mac: https://github.com/espressif/esptool/releases (for intel macs use https://github.com/espressif/esptool/releases/tag/v4.5.1)
     * [CP210x USB to UART Bridge Drivers](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) installed. Download and install the drivers appropriate for your operating system.
 * **Firmware File:**
     * Download the latest `free-grilly.bin` file from the [Releases page](https://github.com/epiecs/free-grilly/releases) of this repository.
