@@ -34,8 +34,12 @@ bool disp::init(void){
 
 bool disp::switch_page(void){
     current_screen_page++;
-    if (current_screen_page >= 2) {current_screen_page = 0;}
-    Serial.println(current_screen_page);
+    if (current_screen_page >= 1) {current_screen_page = 0;}
+    return true;
+}
+
+bool disp::show_settings_page(void){
+    current_screen_page = 10;
     return true;
 }
 
@@ -92,6 +96,9 @@ bool disp::display_update(void) {
         draw_screen_temp();
         break;
     case 1:
+        draw_screen_temp();
+        break;
+    case 10:
         draw_screen_info();
         break;
     default:

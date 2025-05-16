@@ -296,7 +296,7 @@ void task_powerbutton(void* pvParameters) {
             }
             else if (millis_pressed < medium_press_time) {
                 Serial.println("Button pressed 1-3 seconds");
-                // TODO show about + help -> pressing times
+                display.show_settings_page();
             }
             else if (millis_pressed < long_press_time) {
                 Serial.println("Button pressed 3-10 seconds");

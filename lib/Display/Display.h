@@ -26,6 +26,12 @@ public:
     *	@return true if screen page was switched
     */
    bool switch_page(void);
+    /**
+    *	@brief Show settings page
+    *	@return true if screen page was switched
+    */
+   bool show_settings_page(void);
+
 
 
 private:
