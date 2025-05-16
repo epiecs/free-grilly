@@ -1,6 +1,8 @@
 # Free-Grilly: Community Firmware for Grilleye Max
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) **Reviving your Grilleye Max thermometer with this community-driven firmware!**
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+
+**Reviving your Grilleye Max thermometer with this community-driven firmware!**
 
 This project provides alternative firmware for the Grilleye Max thermometer. After the original manufacturer discontinued software support, this firmware was developed through reverse engineering to keep these capable devices functional.
 
