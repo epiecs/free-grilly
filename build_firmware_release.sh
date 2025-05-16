@@ -1,6 +1,10 @@
 #! /usr/bin/env bash
 
-sudo esptool.py --chip esp32 merge_bin -o .pio/build/esp32dev/free-grilly-merged.bin \
+~/.platformio/penv/bin/platformio run
+
+cp .pio/build/esp32dev/firmware.bin dist/free-grilly-$(date +%Y-%m-%d)-ota.bin
+
+esptool.py --chip esp32 merge_bin -o dist/free-grilly-$(date +%Y-%m-%d)-full.bin \
   --flash_mode dio --flash_size 4MB \
   0x1000 .pio/build/esp32dev/bootloader.bin \
   0x8000 .pio/build/esp32dev/partitions.bin \
