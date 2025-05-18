@@ -1,17 +1,14 @@
 - Readme schrijven
   - add button functions to readme
   - add web layout info to readme
-
-- webserial flasher
+  - add table with probe types
+  - add web flasher info
 
 - source code
   - clean up of existing code and classes
 
 - features
   - temp icoon op overzicht ook ander icoon voorzien voor range? evt ++ - __
-
-- checks and fixes
-  - check that all power lines are down when shutting down
 
 - bugs
   - dhcp issue with fixed ip
