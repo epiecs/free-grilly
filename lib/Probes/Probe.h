@@ -1,9 +1,9 @@
 #pragma once
 #include <Arduino.h>
 
-#ifndef PROBE_H
-	#define PROBE_H
-#endif
+// #ifndef PROBE_H
+// 	#define PROBE_H
+// #endif
 
 class Probe
 {

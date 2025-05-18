@@ -204,6 +204,14 @@ void Probe::set_type(String probe_type, int reference_kohm, int reference_celciu
         return;
     }
     
+    if(probe_type == "maverick_et733"){
+        Probe::reference_beta    = 4250;
+        Probe::reference_celcius = 25;
+        Probe::reference_kohm    = 200;
+        Probe::type              = "maverick_et733";
+        return;
+    }
+    
     Probe::reference_beta    = reference_beta;
     Probe::reference_celcius = reference_celcius;
     Probe::reference_kohm    = reference_kohm;

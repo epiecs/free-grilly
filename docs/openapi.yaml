@@ -232,6 +232,7 @@ components:
             - custom
             - grilleye_iris
             - ikea_fantast
+            - maverick_et733
         reference_kohm:
           type: 
             - "number"
