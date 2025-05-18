@@ -288,6 +288,7 @@ void get_api_settings()
     jsondoc["beep_outside_target"]  = config::beep_outside_target;
     jsondoc["beep_on_ready"]        = config::beep_on_ready;
     jsondoc["mqtt_broker"]          = config::mqtt_broker;
+    jsondoc["mqtt_port"]            = config::mqtt_port;
     
     jsondoc["wifi_ssid"]            = config::wifi_ssid;
     jsondoc["wifi_ip"]              = config::wifi_ip;
@@ -328,6 +329,7 @@ void post_api_settings()
     config::beep_outside_target    = post_data["beep_outside_target"];
     config::beep_on_ready          = post_data["beep_on_ready"];
     config::mqtt_broker            = post_data["mqtt_broker"].as<String>();
+    config::mqtt_port              = post_data["mqtt_port"];
 
     config::wifi_ssid              = post_data["wifi_ssid"].as<String>();
     config::wifi_password          = post_data["wifi_password"].as<String>();

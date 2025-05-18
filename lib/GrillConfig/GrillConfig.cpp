@@ -56,6 +56,7 @@ void GrillConfig::load_settings(){
     config::beep_degrees_before = config::settings_storage.getInt("beep_before");
 
     config::mqtt_broker         = config::settings_storage.getString("mqtt_broker");
+    config::mqtt_port           = config::settings_storage.getInt("mqtt_port", 1883);
 
     // Wifi
     config::wifi_ssid           = config::settings_storage.getString("wifi_ssid", "");
@@ -95,6 +96,7 @@ void GrillConfig::save_settings(){
     config::settings_storage.putInt("beep_volume", config::beep_volume);
     config::settings_storage.putInt("beep_before", config::beep_degrees_before);
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
+    config::settings_storage.putInt("mqtt_port", config::mqtt_port);
 
     config::settings_storage.putString("wifi_ssid", config::wifi_ssid);
     config::settings_storage.putString("wifi_password", config::wifi_password);
@@ -156,6 +158,7 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putInt("beep_volume", config::beep_volume);
     config::settings_storage.putInt("beep_before", config::beep_degrees_before);
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
+    config::settings_storage.putInt("mqtt_port", config::mqtt_port);
 
     config::settings_storage.putString("wifi_ssid", "");
     config::settings_storage.putString("wifi_password", "");
@@ -200,6 +203,8 @@ void GrillConfig::print_settings(){
     Serial.println(config::beep_degrees_before);
     Serial.print("-- mqtt_broker: ");
     Serial.println(config::mqtt_broker);
+    Serial.print("-- mqtt_port: ");
+    Serial.println(config::mqtt_port);
 
     Serial.print("-- wifi_ssid: ");
     Serial.println(config::wifi_ssid);

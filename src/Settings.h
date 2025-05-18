@@ -53,7 +53,7 @@ namespace config{
 
     String grill_name                   = "";
     String grill_uuid                   = "";
-    String grill_firmware_version       = "25.05.16";
+    String grill_firmware_version       = "25.05.18";
 
     String temperature_unit             = "celcius";
     bool beep_enabled                   = true;
@@ -63,6 +63,7 @@ namespace config{
     int  beep_degrees_before            = 5;
 
     String mqtt_broker                  = "";
+    int    mqtt_port                    = 1883;
 
     // ***********************************
     // * Timezone / NTP

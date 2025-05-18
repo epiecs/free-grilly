@@ -17,12 +17,13 @@ namespace config{
     extern String grill_firmware_version;
 
     extern String temperature_unit;
-    extern bool beep_enabled;
-    extern bool beep_outside_target;
-    extern bool beep_on_ready;
-    extern int  beep_volume;
-    extern int  beep_degrees_before;
+    extern bool   beep_enabled;
+    extern bool   beep_outside_target;
+    extern bool   beep_on_ready;
+    extern int    beep_volume;
+    extern int    beep_degrees_before;
     extern String mqtt_broker;
+    extern int    mqtt_port;
 
     // Wifi
     extern String wifi_ip;

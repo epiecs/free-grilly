@@ -338,7 +338,10 @@ components:
           description: Beep when the probe reaches this amount of degrees before the target temperature
         mqtt_broker:
           type: string
-          example: "broker.test.com:1883"
+          example: "broker.test.com"
+        mqtt_port:
+          type: integer
+          example: 1883
         wifi_ssid:
           type: string
           example: my-home-wifi
