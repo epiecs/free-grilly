@@ -17,6 +17,16 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 
 ---
 
+- [Free-Grilly: Community Firmware for Grilleye Max](#free-grilly-community-firmware-for-grilleye-max)
+    - [Features](#features)
+    - [Todo](#todo)
+    - [Installation](#installation)
+    - [First Use \& WiFi Setup](#first-use--wifi-setup)
+    - [Usage](#usage)
+    - [Updating Firmware (OTA)](#updating-firmware-ota)
+    - [Supported probes](#supported-probes)
+    - [Contributing](#contributing)
+
 ## Features
 
 * **On-Device Temperature Display:** Shows current probe temperatures directly on the Grilleye Max screen.
@@ -34,64 +44,41 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 * **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
 
-## Prerequisites
+## Todo
 
-Before you begin, ensure you have the following:
+- Fully work out guide and readme
+  - add screenshots
+- source code
+  - clean up of existing code and classes
+- features
+  - Have a temperature and range icon on the display to differentiate
+- bugs
+  - dhcp issue with fixed ip
+- screen layouts
+  - show shutdown graphic
+- ability to send data to a mqtt broker
 
-* **Hardware:**
-    * A Grilleye Max device.
-    * A USB cable to connect the Grilleye Max to your computer.
-* **Software:**
-    * A computer running Windows, macOS, or Linux.
-    * [Python](https://www.python.org/downloads/) installed.
-    * [esptool.py](https://github.com/espressif/esptool): Install it via pip: `pip install esptool`
-        * You can also download premade binaries for Windows/Linux/Mac: https://github.com/espressif/esptool/releases (for intel macs use https://github.com/espressif/esptool/releases/tag/v4.5.1)
-    * [CP210x USB to UART Bridge Drivers](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) installed. Download and install the drivers appropriate for your operating system.
-* **Firmware File:**
-    * Download the latest `free-grilly.bin` file from the [Releases page](https://github.com/epiecs/free-grilly/releases) of this repository.
+## Installation
 
-## Installation (Initial Flashing via USB)
-
-This process will replace the original firmware on your Grilleye Max.
-
-> **Watch out!:** For the first flash you will need to use the `merged` variant of the firmware. This contains extra data which is not included in the normal updates (bootloader, partitions,...).
-
-1.  **Connect the Device:** Connect your Grilleye Max to your computer using the USB cable.
-2.  **Find Your Serial Port:**
-    * **Windows:** Open Device Manager (search `devmgmt.msc`). Look under "Ports (COM & LPT)". You should see an entry like "Silicon Labs CP210x USB to UART Bridge (COMx)". Note the `COMx` number (e.g., `COM3`).
-    * **macOS:** Open Terminal and run `ls /dev/cu.*`. Look for something like `/dev/cu.usbserial-XXXX` or `/dev/cu.SLAB_USBtoUART`.
-    * **Linux:** Open Terminal and run `ls /dev/ttyUSB*`. Look for something like `/dev/ttyUSB0`.
-3.  **Flash the Firmware:**
-    * Open your Terminal or Command Prompt.
-    * Navigate to the directory where you downloaded the `free-grilly.bin` file.
-    * Run the `esptool.py` command, replacing `<YOUR_SERIAL_PORT>` with the port name you found in step 2:
-
-        ```bash
-        esptool.py --port <YOUR_SERIAL_PORT> write_flash 0x0 free-grilly.bin
-        ```
-        *Example for Linux:* `esptool.py --port /dev/ttyUSB0 write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
-        *Example for Windows:* `esptool.py --port COM3 write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
-        *Example for macOS:* `esptool.py --port /dev/cu.SLAB_USBtoUART write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
-
-5.  **Wait:** The flashing process will take a minute or two. Do not disconnect the device. `esptool.py` will indicate when it's complete.
-6.  **Reboot:** Once flashing is successful, disconnect and reconnect the USB cable, or power cycle the device. To start the device hold the power button until the Grilleye beeps.
+For installation please refer to the [Flashing guide](docs/how_to_flash.md)
 
 ## First Use & WiFi Setup
 
-1.  **Power On:** Turn on your Grilleye Max by pressing the side button.
+1.  **Power On:** Turn on your Grilleye Max by pressing the side button. Once you hear the beeps you can release the button.
 2.  **AP Mode:** The device will initially boot into Access Point (AP) mode. It will create its own WiFi network. *(FreeGrilly_xxxxxx)*
-3.  **Connect to AP:** Using your phone or computer, connect to this new WiFi network.
-4.  **Access Web Interface:** Open a web browser and navigate to `http://192.168.200.10`.
-5.  **Configure WiFi:** Find the "Settings" or "WiFi Configuration" page in the web interface. Select your home WiFi network (SSID), enter the password, and save.
-6.  **Reconnect:** The Grilleye Max should now connect to your own WiFi network. Its IP address will now be assigned by your router  (The local ap will keep on working as well).
+3.  If you can not see this network you can hold the side button for 2 seconds until you hear 2 beeps and then release the button. The screen will now show you the name of the wifi ap on your free-grilly
+4.  **Connect to AP:** Using your phone or computer, connect to this new WiFi network.
+5.  **Access Web Interface:** Open a web browser and navigate to `http://192.168.200.10`.
+6.  **Configure WiFi:** Find the "Settings" or "WiFi Configuration" page in the web interface. Select your home WiFi network (SSID), enter the password, and save.
+7.  **Reconnect:** The Grilleye Max should now connect to your own WiFi network. Its IP address will now be assigned by your router  (The local ap will keep on working as well).
 
 ## Usage
 
-* **Temperatures:** Temperature readings from connected probes are displayed on the device's screen and updated in the web interface.
-* **Web Interface:** Access the web interface using the IP address assigned by your router to view temperatures, change settings, etc.
-* **Probe Settings:** Within the web interface settings, you can:
-    * Set minimum and target temperature alerts for each probe.
-    * Configure the type of probe connected (e.g., adjust settings to work with Ikea Fantast probes).
+- **Temperatures:** Temperature readings from connected probes are displayed on the device's screen and updated in the web interface.
+- **Web Interface:** Access the web interface using the IP address assigned by your router to view temperatures, change settings, etc.
+- **Probe Settings:** Within the web interface settings, you can:
+    - Set minimum and target temperature alerts for each probe.
+    - Configure the type of probe connected (e.g., adjust settings to work with Ikea Fantast probes).
 
 ## Updating Firmware (OTA)
 
@@ -102,6 +89,23 @@ Once Free-Grilly is installed, you can update to newer versions wirelessly:
   3. Go to the 'Update' page.
   4. Upload the downloaded `.bin` file.
   5. Wait for the device to update and reboot.
+
+## Supported probes
+
+Free-Grilly supports more probes that the included Grilleye Iris probes. Support for the following probes is built-in:
+
+| Probe type     | ref C | ref kOhm | ref beta | notes                                          |
+|----------------|-------|----------|----------|------------------------------------------------|
+| Grilleye Iris  | 25    | 100      | 4250     | The best probe you can use. Fast and accurate  |
+| Ikea fantast   | 25    | 230      | 4250     | Slow. Do not use for quick measurements        |
+| Maverick ET733 | 25    | 200      | 4250     |                                                |
+
+Apart from that you can also add your own `custom` **NTC** probes if you know the 3 most important values
+-   Reference temperature in Celcius
+-   Reference beta value
+-   Reference resistance in kOhm
+
+If you want you can use our [handy calculator spreadsheet](docs/probe_calculator.xlsx) if you want to calculate the values for your own probes. 
 
 ## Contributing
 
