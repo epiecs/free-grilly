@@ -24,6 +24,7 @@
 // Task functions
 void task_alarm(void* pvParameters);
 void task_battery(void* pvParameters);
+void task_mqtt(void* pvParameters);
 void task_powerbutton(void* pvParameters);
 void task_probes(void* pvParameters);
 void task_screen(void* pvParameters);
@@ -101,17 +102,10 @@ void setup() {
     //     ntp_server_2.c_str(),
     //     ntp_server_3.c_str()
     // );
-    
-    // ***********************************
-    // * Launch tasks
-    // ***********************************
 
-    // xTaskCreate(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask);
-    // xTaskCreate(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask);
-    // xTaskCreate(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask);
-    // xTaskCreate(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask);
-    // xTaskCreate(task_screen, "Screen", task::screenStackSize, NULL, 1, &task::screenTask);
-    // xTaskCreate(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask);
+    // ***********************************
+    // * Launch DEVICE tasks
+    // ***********************************
 
     delay(100); //Needed to give the power rail time to adjust
     xTaskCreatePinnedToCore(task_battery, "Battery", task::batteryStackSize, NULL, 1, &task::batteryTask, 1);
@@ -121,9 +115,7 @@ void setup() {
     xTaskCreatePinnedToCore(task_powerbutton, "PowerButton", task::powerbuttonStackSize, NULL, 1, &task::powerbuttonTask, 1);
     delay(100); //Needed to give the power rail time to adjust
     xTaskCreatePinnedToCore(task_probes, "Probes", task::probesStackSize, NULL, 1, &task::probesTask, 1);
-    xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
     xTaskCreatePinnedToCore(task_alarm, "Alarm", task::alarmStackSize, NULL, 1, &task::alarmTask, 1);
-    // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 
     // ***********************************
     // * WIFI
@@ -145,6 +137,13 @@ void setup() {
     if(config::wifi_ssid != ""){
         connect_to_wifi();
     }
+
+    // ***********************************
+    // * Launch NETWORK tasks
+    // ***********************************
+    xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
+    xTaskCreatePinnedToCore(task_mqtt, "Mqtt", task::mqttStackSize, NULL, 1, &task::mqttTask, 1);
+    // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 }
 
 // ***********************************
@@ -172,6 +171,21 @@ void task_webserver(void* pvParameters) {
         web::webserver.handleClient();
         ElegantOTA.loop();
         delay(1);
+    }
+
+}
+
+// ***********************************
+// * MQTT
+// ***********************************
+
+void task_mqtt(void* pvParameters) {
+    Serial.println("Launching task :: MQTT");
+    delay(5);   //Give FreeRtos a chance to properly schedule the task
+
+    while (true){
+
+        delay(5000);
     }
 
 }
@@ -395,26 +409,27 @@ void task_stackmonitor(void* pvParameters) {
 
         Serial.println("|++++++++++++++ STACK +++++++++++++++|");
         
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::webserverTask);
-        stack_used = task::webserverStackSize - stack_free;
-        Serial.print("WEBSERVER stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::webserverStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::probesTask);
-        stack_used = task::probesStackSize - stack_free;
-        Serial.print("PROBES stack used: ");
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::alarmTask);
+        stack_used = task::alarmStackSize - stack_free;
+        Serial.print("ALARM stack used: ");
         Serial.print(stack_used);
         Serial.print("/");
-        Serial.println(task::probesStackSize);
+        Serial.println(task::alarmStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::screenTask);
-        stack_used = task::screenStackSize - stack_free;
-        Serial.print("SCREEN stack used: ");
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::batteryTask);
+        stack_used = task::batteryStackSize - stack_free;
+        Serial.print("BATTERY stack used: ");
         Serial.print(stack_used);
         Serial.print("/");
-        Serial.println(task::screenStackSize);
+        Serial.println(task::batteryStackSize);
+
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::mqttTask);
+        stack_used = task::mqttStackSize - stack_free;
+        Serial.print("MQTT stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::mqttStackSize);
 
         stack_free = (float)uxTaskGetStackHighWaterMark(task::powerbuttonTask);
         stack_used = task::powerbuttonStackSize - stack_free;
@@ -423,13 +438,34 @@ void task_stackmonitor(void* pvParameters) {
         Serial.print("/");
         Serial.println(task::powerbuttonStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::batteryTask);
-        stack_used = task::batteryStackSize - stack_free;
-        Serial.print("BATTERY stack used: ");
+        
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::probesTask);
+        stack_used = task::probesStackSize - stack_free;
+        Serial.print("PROBES stack used: ");
         Serial.print(stack_used);
         Serial.print("/");
-        Serial.println(task::batteryStackSize);
+        Serial.println(task::probesStackSize);
         
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::screenTask);
+        stack_used = task::screenStackSize - stack_free;
+        Serial.print("SCREEN stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::screenStackSize);
+
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::webserverTask);
+        stack_used = task::webserverStackSize - stack_free;
+        Serial.print("WEBSERVER stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::webserverStackSize);
+
+        stack_free = (float)uxTaskGetStackHighWaterMark(task::stackmonitorTask);
+        stack_used = task::stackmonitorStackSize - stack_free;
+        Serial.print("STACKMONITOR stack used: ");
+        Serial.print(stack_used);
+        Serial.print("/");
+        Serial.println(task::stackmonitorStackSize);
 
         delay(5000);
     }

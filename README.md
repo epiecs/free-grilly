@@ -18,15 +18,15 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 ---
 
 - [Free-Grilly: Community Firmware for Grilleye Max](#free-grilly-community-firmware-for-grilleye-max)
-    - [Features](#features)
-    - [API documentation](#api-documentation)
-    - [Todo](#todo)
-    - [Installation](#installation)
-    - [First Use \& WiFi Setup](#first-use--wifi-setup)
-    - [Usage](#usage)
-    - [Updating Firmware (OTA)](#updating-firmware-ota)
-    - [Supported probes](#supported-probes)
-    - [Contributing](#contributing)
+  - [Features](#features)
+  - [API documentation](#api-documentation)
+  - [Todo](#todo)
+  - [Installation](#installation)
+  - [First Use \& WiFi Setup](#first-use--wifi-setup)
+  - [Usage](#usage)
+  - [Updating Firmware (OTA)](#updating-firmware-ota)
+  - [Supported probes](#supported-probes)
+  - [Contributing](#contributing)
 
 ## Features
 
@@ -58,8 +58,6 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
   - clean up of existing code and classes
 - features
   - Have a temperature and range icon on the display to differentiate
-- bugs
-  - dhcp issue with fixed ip
 - screen layouts
   - show shutdown graphic
 - ability to send data to a mqtt broker

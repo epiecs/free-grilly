@@ -157,17 +157,19 @@ namespace web{
 namespace task{
     TaskHandle_t alarmTask;
     TaskHandle_t batteryTask;
+    TaskHandle_t mqttTask;
     TaskHandle_t powerbuttonTask;
     TaskHandle_t probesTask;
     TaskHandle_t screenTask;
     TaskHandle_t webserverTask;
     TaskHandle_t stackmonitorTask;
     
-    int alarmStackSize        = 10000;
-    int batteryStackSize      = 10000;
-    int powerbuttonStackSize  = 10000;
-    int probesStackSize       = 10000;
-    int screenStackSize       = 10000;
-    int webserverStackSize    = 10000;
-    int stackmonitorStackSize = 10000;
+    int alarmStackSize        = 1000;
+    int batteryStackSize      = 2000;
+    int mqttStackSize         = 2000;
+    int powerbuttonStackSize  = 1000;
+    int probesStackSize       = 1000;
+    int screenStackSize       = 2000;
+    int webserverStackSize    = 3000;
+    int stackmonitorStackSize = 5000;
 }
