@@ -1,9 +1,11 @@
 #pragma once
 
 // Forward declarations
-class WebServer;
-class Preferences;
 class GrillConfig;
+class Mqtt;
+class Preferences;
+class WebServer;
+class WifiClient;
 
 namespace config{
 
@@ -22,8 +24,11 @@ namespace config{
     extern bool   beep_on_ready;
     extern int    beep_volume;
     extern int    beep_degrees_before;
+    
+    // Mqtt
     extern String mqtt_broker;
     extern int    mqtt_port;
+    extern String mqtt_topic;
 
     // Wifi
     extern String wifi_ip;

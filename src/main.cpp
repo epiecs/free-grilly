@@ -9,6 +9,7 @@
 #include "Api.h"
 #include "Buzzer.h"
 #include "GrillConfig.h"
+#include "Mqtt.h"
 #include "Network.h"
 #include "Power.h"
 #include "Preferences.h"
@@ -30,6 +31,10 @@ void task_probes(void* pvParameters);
 void task_screen(void* pvParameters);
 void task_webserver(void* pvParameters);
 void task_stackmonitor(void* pvParameters);
+
+// TODO - move to settings.h
+WiFiClient WifiClient;
+Mqtt mqttClient(WifiClient);
 
 void setup() {
     
@@ -74,7 +79,8 @@ void setup() {
     }
     
     if(millis_pressed < bootup_press_time){
-        power.shutdown();
+        // TODO - remove
+        // power.shutdown();
     }
 
     // ***********************************
@@ -172,7 +178,6 @@ void task_webserver(void* pvParameters) {
         ElegantOTA.loop();
         delay(1);
     }
-
 }
 
 // ***********************************
@@ -183,9 +188,34 @@ void task_mqtt(void* pvParameters) {
     Serial.println("Launching task :: MQTT");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
 
-    while (true){
+    String mqtt_broker = "";
+    int mqtt_port = 1883;
 
-        delay(5000);
+    while (true){
+        
+        if(mqtt_broker != config::mqtt_broker || mqtt_port != config::mqtt_port){
+            Serial.println("(Re)loaded MQTT Settings");
+            // Settings have changed. We have to update our vars and set a new client
+            // This can also be used for launching since we initialize empty vars - also i'm lazy
+            mqtt_broker = config::mqtt_broker;
+            mqtt_port = config::mqtt_port;
+            
+            mqttClient.setup(mqtt_broker, mqtt_port);
+        }
+
+        // Only loop/reconnect if we have a broker filled in
+        if(mqtt_broker != ""){
+            mqttClient.reconnect();
+            mqttClient.loop();
+        }
+
+
+        // TODO - enable what is needed
+        // mqttClient.publish_temperatures();
+        // mqttClient.publish_status();
+        //mqttClient.publish_settings();
+
+        delay(1000);
     }
 
 }

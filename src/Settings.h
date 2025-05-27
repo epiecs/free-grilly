@@ -64,6 +64,7 @@ namespace config{
 
     String mqtt_broker                  = "";
     int    mqtt_port                    = 1883;
+    String mqtt_topic                   = "opengrill";
 
     // ***********************************
     // * Timezone / NTP
@@ -166,10 +167,10 @@ namespace task{
     
     int alarmStackSize        = 1000;
     int batteryStackSize      = 2000;
-    int mqttStackSize         = 2000;
+    int mqttStackSize         = 4000;
     int powerbuttonStackSize  = 1000;
     int probesStackSize       = 1000;
     int screenStackSize       = 2000;
-    int webserverStackSize    = 3000;
+    int webserverStackSize    = 4000;
     int stackmonitorStackSize = 5000;
 }
