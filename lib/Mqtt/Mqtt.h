@@ -5,9 +5,6 @@
 class Mqtt : public PubSubClient{
 
 private:
-
-    const String MAIN_TOPIC     = "opengrill";
-    
     String client_name          = "";
 
     String topic_temperatures   = "";
