@@ -33,11 +33,6 @@ void Mqtt::setup(String mqtt_broker, int mqtt_port){
 // TODO use send buffer
 
 // TODO
-void Mqtt::publish_temperatures(){
-    Mqtt::publish(Mqtt::topic_temperatures.c_str(), "temperatures payload");
-}
-
-// TODO
 void Mqtt::publish_status(){
     Mqtt::publish(Mqtt::topic_status.c_str(), "status payload");
 }

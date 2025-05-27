@@ -209,7 +209,6 @@ void task_mqtt(void* pvParameters) {
             mqttClient.loop();
         }
 
-        mqttClient.publish_temperatures();
         mqttClient.publish_status();
 
         delay(1000);

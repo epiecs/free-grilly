@@ -22,7 +22,6 @@ public:
     
     void setup(String mqtt_broker, int mqtt_port = 1883);
     
-    void publish_temperatures();
     void publish_status();
     void publish_settings();
     
