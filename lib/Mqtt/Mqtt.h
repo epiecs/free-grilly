@@ -27,8 +27,6 @@ public:
     
     bool reconnect();
 
-    void callback(char* topic, byte* payload, unsigned int length);
-
 protected:
     void receive_callback(char* topic, byte* payload, unsigned int length);
 
