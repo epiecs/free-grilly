@@ -209,11 +209,8 @@ void task_mqtt(void* pvParameters) {
             mqttClient.loop();
         }
 
-
-        // TODO - enable what is needed
-        // mqttClient.publish_temperatures();
-        // mqttClient.publish_status();
-        //mqttClient.publish_settings();
+        mqttClient.publish_temperatures();
+        mqttClient.publish_status();
 
         delay(1000);
     }
@@ -468,7 +465,6 @@ void task_stackmonitor(void* pvParameters) {
         Serial.print("/");
         Serial.println(task::powerbuttonStackSize);
 
-        
         stack_free = (float)uxTaskGetStackHighWaterMark(task::probesTask);
         stack_used = task::probesStackSize - stack_free;
         Serial.print("PROBES stack used: ");

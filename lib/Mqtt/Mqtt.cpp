@@ -102,3 +102,6 @@ bool Mqtt::reconnect(){
 // hoe callback doen enkel indien settings changen? -> mqttClient extern maken
 // json omzetting voorzien
 // subscription code uitwerken
+// json code in aparte class zodat api dit ook kan hergebruiken
+// buffer + jsondoc niet dubbel gebruiken
+    // deze staat nu in deze file + in api.cpp
