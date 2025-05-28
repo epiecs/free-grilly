@@ -7,10 +7,15 @@ class Mqtt : public PubSubClient{
 private:
     String client_name          = "";
 
-    String topic_temperatures   = "";
-    String topic_settings       = "";
-    String topic_probes         = "";
-    String topic_status         = "";
+    // topics to publish to
+    String pub_topic_temperatures   = "";
+    String pub_topic_settings       = "";
+    String pub_topic_probes         = "";
+    String pub_topic_status         = "";
+    
+    // topics to subscribe to
+    String sub_topic_settings       = "";
+    String sub_topic_probes         = "";
 
 public:
     
@@ -19,6 +24,7 @@ public:
     
     void setup(String mqtt_broker, int mqtt_port = 1883);
     
+    void publish_probes();
     void publish_status();
     void publish_settings();
     

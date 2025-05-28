@@ -9,6 +9,7 @@
 #include "Api.h"
 #include "Buzzer.h"
 #include "GrillConfig.h"
+#include "JsonUtilities.h"
 #include "Mqtt.h"
 #include "Network.h"
 #include "Power.h"
@@ -31,10 +32,6 @@ void task_probes(void* pvParameters);
 void task_screen(void* pvParameters);
 void task_webserver(void* pvParameters);
 void task_stackmonitor(void* pvParameters);
-
-// TODO - move to settings.h
-WiFiClient WifiClient;
-Mqtt mqttClient(WifiClient);
 
 void setup() {
     
@@ -200,16 +197,16 @@ void task_mqtt(void* pvParameters) {
             mqtt_broker = config::mqtt_broker;
             mqtt_port = config::mqtt_port;
             
-            mqttClient.setup(mqtt_broker, mqtt_port);
+            config::mqtt_client.setup(mqtt_broker, mqtt_port);
         }
 
         // Only loop/reconnect if we have a broker filled in
         if(mqtt_broker != ""){
-            mqttClient.reconnect();
-            mqttClient.loop();
+            config::mqtt_client.reconnect();
+            config::mqtt_client.loop();
         }
 
-        mqttClient.publish_status();
+        config::mqtt_client.publish_status();
 
         delay(1000);
     }

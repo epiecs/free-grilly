@@ -2,7 +2,6 @@
 
 #include <Preferences.h>
 
-
 class GrillConfig
 {
 

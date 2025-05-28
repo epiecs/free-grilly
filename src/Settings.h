@@ -5,6 +5,7 @@
 
 #include "Probe.h"
 #include "Buzzer.h"
+#include "Mqtt.h"
 #include "GrillConfig.h"
 
 namespace gpio{
@@ -62,9 +63,29 @@ namespace config{
     int  beep_volume                    = 5;
     int  beep_degrees_before            = 5;
 
+    // ***********************************
+    // * Buffers
+    // ***********************************
+
+    int json_buffer_size                = 2000;
+    int mqtt_buffer_size                = 2000;
+
+    // ***********************************
+    // * Mqtt
+    // ***********************************
+    
+    WiFiClient WifiClient;
+    Mqtt mqtt_client                    = Mqtt(WifiClient);
+
     String mqtt_broker                  = "";
     int    mqtt_port                    = 1883;
-    String mqtt_topic                   = "opengrill";
+    String pub_mqtt_topic               = "free-grilly";
+    String sub_mqtt_topic               = "opengrill";
+    
+    // ***********************************
+    // * Json Utilities
+    // ***********************************
+    JsonUtilities json_handler;
 
     // ***********************************
     // * Timezone / NTP
@@ -167,7 +188,7 @@ namespace task{
     
     int alarmStackSize        = 1000;
     int batteryStackSize      = 2000;
-    int mqttStackSize         = 4000;
+    int mqttStackSize         = 8000;
     int powerbuttonStackSize  = 1000;
     int probesStackSize       = 1000;
     int screenStackSize       = 2000;

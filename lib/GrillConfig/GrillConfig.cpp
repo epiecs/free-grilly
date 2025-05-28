@@ -1,7 +1,7 @@
 #include "GrillConfig.h"
 
 #include <esp_random.h>
-#include <Preferences.h>
+// #include <Preferences.h>
 #include <WebServer.h>
 #include <UUID.h>
 
@@ -12,6 +12,7 @@
 
 #include "Config.h"
 #include "Grill.h"
+// #include "Mqtt.h" 
 #include "Probe.h"
 #include "Util.h"
 
@@ -120,6 +121,7 @@ void GrillConfig::save_settings(){
         start_local_ap();
     }
 
+    // config::mqtt_client.publish_settings();
     GrillConfig::print_settings();
 }
 

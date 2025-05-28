@@ -4,6 +4,7 @@
 class GrillConfig;
 class Mqtt;
 class Preferences;
+class JsonUtilities;
 class WebServer;
 class WifiClient;
 
@@ -12,6 +13,7 @@ namespace config{
     // Settings storage
     extern Preferences settings_storage;
     extern GrillConfig config_helper;
+    extern Mqtt        mqtt_client;
 
     // Grill settings
     extern String grill_name;
@@ -25,10 +27,18 @@ namespace config{
     extern int    beep_volume;
     extern int    beep_degrees_before;
     
+    // Buffers
+    extern int json_buffer_size;
+    extern int mqtt_buffer_size;
+
     // Mqtt
     extern String mqtt_broker;
     extern int    mqtt_port;
-    extern String mqtt_topic;
+    extern String pub_mqtt_topic;
+    extern String sub_mqtt_topic;
+
+    // Json Utilities
+    extern JsonUtilities json_handler;
 
     // Wifi
     extern String wifi_ip;

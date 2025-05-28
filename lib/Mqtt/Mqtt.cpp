@@ -1,4 +1,3 @@
-#include "Mqtt.h"
 
 #include <functional>
 
@@ -8,64 +7,68 @@
 #include <WiFi.h>
 
 #include "Config.h"
+#include "JsonUtilities.h"
+#include "Mqtt.h"
 
-JsonDocument jsondoc2;
-char msgbuffer[2000];
+// Set this to config::json_buffer_size, cant do this dynamically
+char mqtt_json_buffer[2000];
 
 void Mqtt::setup(String mqtt_broker, int mqtt_port){
 
-    Mqtt::client_name        = "free-grilly-" + config::grill_uuid;
-    String topic_prefix      = config::mqtt_topic + "/" + config::grill_uuid;
+    Mqtt::client_name            = "free-grilly-" + config::grill_uuid;
+    String pub_topic_prefix      = config::pub_mqtt_topic + "/" + config::grill_uuid;
+    String sub_topic_prefix      = config::sub_mqtt_topic + "/" + config::grill_uuid;
 
-    Mqtt::topic_temperatures = topic_prefix + "/temperatures";
-    Mqtt::topic_settings     = topic_prefix + "/settings";
-    Mqtt::topic_probes       = topic_prefix + "/probes";
-    Mqtt::topic_status       = topic_prefix + "/status";
+    Mqtt::pub_topic_temperatures = pub_topic_prefix + "/temperatures";
+    Mqtt::pub_topic_settings     = pub_topic_prefix + "/settings";
+    Mqtt::pub_topic_probes       = pub_topic_prefix + "/probes";
+    Mqtt::pub_topic_status       = pub_topic_prefix + "/status";
+
+    Mqtt::sub_topic_settings     = sub_topic_prefix + "/settings";
+    Mqtt::sub_topic_probes       = sub_topic_prefix + "/probes";
 
     Mqtt::setServer(mqtt_broker.c_str(), mqtt_port);
-    
+    Mqtt::setBufferSize(config::mqtt_buffer_size);
+
     // Needed because otherwise we'd have to use static members
     // https://blog.mbedded.ninja/programming/languages/c-plus-plus/callbacks/#stdfunction-with-stdbind
     Mqtt::setCallback(std::bind(&Mqtt::receive_callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     Mqtt::reconnect();
 }
 
-// TODO use send buffer
-
-// TODO
 void Mqtt::publish_status(){
-    Mqtt::publish(Mqtt::topic_status.c_str(), "status payload");
+    config::json_handler.load_json_status(mqtt_json_buffer);
+    Mqtt::publish(Mqtt::pub_topic_status.c_str(), mqtt_json_buffer);
 }
 
-// TODO
+void Mqtt::publish_probes(){
+    config::json_handler.load_json_probes(mqtt_json_buffer);
+    Mqtt::publish(Mqtt::pub_topic_probes.c_str(), mqtt_json_buffer);
+}
+
 void Mqtt::publish_settings(){
-    Mqtt::publish(Mqtt::topic_settings.c_str(), "settings payload");
-
+    config::json_handler.load_json_settings(mqtt_json_buffer);
+    Mqtt::publish(Mqtt::pub_topic_settings.c_str(), mqtt_json_buffer);
 }
 
-void Mqtt::receive_callback(char* topic, byte* payload, unsigned int length) {
-
-    String payloadBuffer;
-
+void Mqtt::receive_callback(char* topic, byte* payload, unsigned int length){
+    
     Serial.printf("Message arrived on [%s] ", topic);
 
-    for (unsigned int i = 0; i < length; i++) {
-        Serial.print((char)payload[i]);
-        payloadBuffer += (char)payload[i]; 
+    for (unsigned int i = 0; i < length; i++){
+        // Serial.print((char)payload[i]);
+        mqtt_json_buffer[i] = (char)payload[i]; 
     }
     Serial.println();
   
-    // TODO - Optimize payloadbuffer to be statically allocated for heap optimisation
-    if ((char)payload[0] == '1') {
+    if (String(topic) == Mqtt::pub_topic_probes){
+        jsonResult result = config::json_handler.save_json_probes(mqtt_json_buffer);
     }
-
-    if (String(topic) == Mqtt::topic_probes){
-        Serial.println("Received probe settings");
+ 
+    if (String(topic) == Mqtt::pub_topic_settings){
+        jsonResult result = config::json_handler.save_json_settings(mqtt_json_buffer);
     }
-    if (String(topic) == Mqtt::topic_settings){
-        Serial.println("Received updated settings");
-    }
-  }
+}
 
 bool Mqtt::reconnect(){
     while (!Mqtt::connected()) {
@@ -82,21 +85,23 @@ bool Mqtt::reconnect(){
         Serial.print("Connected to MQTT server with client ");
         Serial.println(Mqtt::client_name);
         
-        Mqtt::subscribe(Mqtt::topic_settings.c_str());
-        Mqtt::subscribe(Mqtt::topic_probes.c_str());
-        
-        // TODO fetch message with retention or which logic?
-        // Mqtt::publish_settings();
         Mqtt::publish_status();
+        Mqtt::publish_settings();
+
+        Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
+        Mqtt::subscribe(Mqtt::sub_topic_probes.c_str());
+        
+        //TODO On reconnect check if a retained message exists with settings + probes
     }
 
     return true;
 }
 
 // TODO
-// hoe callback doen enkel indien settings changen? -> mqttClient extern maken
-// json omzetting voorzien
+// On settings change publish via mqtt
+// On probes change publish via mqtt
 // subscription code uitwerken
-// json code in aparte class zodat api dit ook kan hergebruiken
-// buffer + jsondoc niet dubbel gebruiken
-    // deze staat nu in deze file + in api.cpp
+// mqtt send and receive main topic? how to split so we dont get echos?
+    // subscribe to opengrill -> change via settings + update html templates etc
+    // publish to free-grilly -> change via settings
+// mqtt message retention
