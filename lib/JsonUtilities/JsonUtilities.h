@@ -1,5 +1,6 @@
 #pragma once
 
+class Preferences;
 
 struct jsonResult
 {

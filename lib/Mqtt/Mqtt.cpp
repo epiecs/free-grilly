@@ -98,8 +98,6 @@ bool Mqtt::reconnect(){
 }
 
 // TODO
-// On settings change publish via mqtt
-// On probes change publish via mqtt
 // subscription code uitwerken
 // mqtt send and receive main topic? how to split so we dont get echos?
     // subscribe to opengrill -> change via settings + update html templates etc

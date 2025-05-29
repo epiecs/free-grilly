@@ -1,4 +1,5 @@
 #include <ArduinoJson.h>
+#include <Preferences.h>
 #include <WiFi.h>
 
 #include "Config.h"

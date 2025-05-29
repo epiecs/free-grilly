@@ -1,7 +1,7 @@
 #include "GrillConfig.h"
 
 #include <esp_random.h>
-// #include <Preferences.h>
+#include <Preferences.h>
 #include <WebServer.h>
 #include <UUID.h>
 
@@ -12,7 +12,7 @@
 
 #include "Config.h"
 #include "Grill.h"
-// #include "Mqtt.h" 
+#include "Mqtt.h"
 #include "Probe.h"
 #include "Util.h"
 
@@ -121,7 +121,7 @@ void GrillConfig::save_settings(){
         start_local_ap();
     }
 
-    // config::mqtt_client.publish_settings();
+    config::mqtt_client.publish_settings();
     GrillConfig::print_settings();
 }
 
@@ -373,6 +373,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p8_target_temp", grill::probe_8.target_temperature);
     config::settings_storage.putFloat("p8_min_temp", grill::probe_8.minimum_temperature);
     
+    config::mqtt_client.publish_probes();
     GrillConfig::print_probes();
 }
 

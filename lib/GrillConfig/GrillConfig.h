@@ -2,6 +2,9 @@
 
 #include <Preferences.h>
 
+class Mqtt;
+class Preferences;
+
 class GrillConfig
 {
 
