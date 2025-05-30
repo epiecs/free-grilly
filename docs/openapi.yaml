@@ -430,7 +430,7 @@ paths:
         - probes
       summary: Probes
       description: >
-        Edit probes
+        Edit probes, you are not required to send all probes. Just send a list of probes that you have modified.
       requestBody:
         required: true
         description: Settings to set
@@ -438,7 +438,7 @@ paths:
             application/json:
               schema:
                 type: array
-                minItems: 8
+                minItems: 1
                 maxItems: 8
                 items:
                   $ref: '#/components/schemas/Probe'

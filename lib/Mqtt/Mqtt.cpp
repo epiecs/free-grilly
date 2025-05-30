@@ -41,30 +41,41 @@ void Mqtt::publish_grill(){
 
 void Mqtt::publish_probes(){
     config::json_handler.load_json_probes(mqtt_json_buffer);
-    Mqtt::publish(Mqtt::pub_topic_probes.c_str(), mqtt_json_buffer);
+    Mqtt::publish(Mqtt::pub_topic_probes.c_str(), mqtt_json_buffer, true);
 }
 
 void Mqtt::publish_settings(){
     config::json_handler.load_json_settings(mqtt_json_buffer);
-    Mqtt::publish(Mqtt::pub_topic_settings.c_str(), mqtt_json_buffer);
+    Mqtt::publish(Mqtt::pub_topic_settings.c_str(), mqtt_json_buffer, true);
 }
 
 void Mqtt::receive_callback(char* topic, byte* payload, unsigned int length){
     
-    Serial.printf("Message arrived on [%s] ", topic);
+    Serial.printf("MQTT Message arrived on [%s] ", topic);
 
     for (unsigned int i = 0; i < length; i++){
+        // For debugging
         // Serial.print((char)payload[i]);
         mqtt_json_buffer[i] = (char)payload[i]; 
     }
     Serial.println();
   
-    if (String(topic) == Mqtt::pub_topic_probes){
+    if (String(topic) == Mqtt::sub_topic_probes){
         jsonResult result = config::json_handler.save_json_probes(mqtt_json_buffer);
+
+        //Wipe the retained message, unsub and sub again to not trigger an echo loop
+        Mqtt::unsubscribe(Mqtt::sub_topic_probes.c_str());
+        Mqtt::publish(Mqtt::sub_topic_probes.c_str(), nullptr, 0, true);
+        Mqtt::subscribe(Mqtt::sub_topic_probes.c_str());
     }
  
-    if (String(topic) == Mqtt::pub_topic_settings){
+    if (String(topic) == Mqtt::sub_topic_settings){
         jsonResult result = config::json_handler.save_json_settings(mqtt_json_buffer);
+        
+        //Wipe the retained message, unsub and sub again to not trigger an echo loop
+        Mqtt::unsubscribe(Mqtt::sub_topic_settings.c_str());
+        Mqtt::publish(Mqtt::sub_topic_settings.c_str(), nullptr, 0, true);
+        Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
     }
 }
 
@@ -73,14 +84,14 @@ bool Mqtt::reconnect(){
         Serial.println("Trying to reconnect to MQTT server");
         
         if(!Mqtt::connect(Mqtt::client_name.c_str())){
-            Serial.print("Connection failed, rc=");
+            Serial.print("MQTT Connection failed, rc=");
             Serial.print(Mqtt::state());
             Serial.println("Waiting 5 seconds to retry");
             delay(5000);
             continue;
         }
 
-        Serial.print("Connected to MQTT server with client ");
+        Serial.print("MQTT Connected to server with client ");
         Serial.println(Mqtt::client_name);
         
         Mqtt::publish_grill();
@@ -89,15 +100,7 @@ bool Mqtt::reconnect(){
 
         Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
         Mqtt::subscribe(Mqtt::sub_topic_probes.c_str());
-        
-        //TODO On reconnect check if a retained message exists with settings + probes
     }
-
+    
     return true;
 }
-
-// TODO
-// subscription code uitwerken
-
-// mqtt message retention -> from opengrill to free-grilly
-// test publish to mqtt probes and settings and see if they get updated

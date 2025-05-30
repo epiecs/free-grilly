@@ -24,3 +24,6 @@ A full example looks like `free-grilly/43c62ed2-4dc0-41a5-8f71-16db60155739/stat
 
 The `grill` topic is sent every second. The `probes` and `settings` topic is only used if you change your probe or your grill settings on free-grilly.
 
+When publishing to the `probes` and `settings` topic the messages will have their **retain** flag set to true. That way the latest known settings are always available for whoever subscribes.
+
+For the topics that Free-Grilly is subscribed to (`/config/probes` and `/config/settings`), Free-Grilly takes into account that there might be a message with the retain flag set. So after reading the message Free-Grilly will also publish a new message with retain set to true and a 0 byte payload to clear the existing message.

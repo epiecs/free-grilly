@@ -24,9 +24,11 @@
     - send the grill status (wifi/temps) every second `<prefix>/<uuid>/grill`
     - sends a message when probes have been changed `<prefix>/<uuid>/probes`
     - sends a message when settings have been changed `<prefix>/<uuid>/settings`
+    - On bootup a message with the retain flag will be published to `probes` and `settings`
 - Configurable via mqtt
     - probes configuration can be changed via `<prefix>/<uuid>/config/probes`
     - settings configuration can be changed via `<prefix>/<uuid>/config/settings`
+    - Probes and settings will check for a retained mqtt message and apply this if found. Afterwards the retained message will be cleared.
 - Mqtt data is sent in json and follows the `openapi` spec
 - Web ui has been updated to allow configuring the mqtt broker via the web ui
 - API has been updated to allow configuring the mqtt broker via api

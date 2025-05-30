@@ -76,8 +76,7 @@ void setup() {
     }
     
     if(millis_pressed < bootup_press_time){
-        // TODO - remove
-        // power.shutdown();
+        power.shutdown();
     }
 
     // ***********************************
@@ -210,7 +209,6 @@ void task_mqtt(void* pvParameters) {
         
         delay(1000);
     }
-
 }
 
 // ***********************************
@@ -319,8 +317,8 @@ void task_powerbutton(void* pvParameters) {
             
             millis_pressed = millis() - millis_button_start;
 
-            Serial.print("Button pressed for: ");
-            Serial.println(millis_pressed);
+            // Serial.print("Button pressed for: ");
+            // Serial.println(millis_pressed);
 
             if(millis_pressed < short_press_time) {
                 Serial.println("Button pressed for less than 1 second");
