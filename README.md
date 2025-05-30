@@ -102,7 +102,8 @@ Once Free-Grilly is installed, you can update to newer versions wirelessly:
   2. Access the web interface.
   3. Go to the 'Update' page.
   4. Upload the downloaded `.bin` file.
-  5. Wait for the device to update and reboot.
+  5. Wait for the device to update.
+  6. Once the update is done you will have to boot the device by holding the button.
 
 ## Supported probes
 
