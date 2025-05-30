@@ -1,6 +1,6 @@
 # Changelog (firmware only)
 
-## 2025-05-14
+## 2025-05-16
 
 - firmware version bump to 2025-05-16
 - current info screen (wifi/version/..) is now shown after pressing and holding the button for 1 second
