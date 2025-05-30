@@ -41,7 +41,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
     * **Pre-configured Probes:** Includes ready-to-use settings for popular probes like the Ikea Fantast.
 * **Over-the-Air (OTA) Updates:** Easily update the firmware wirelessly through the web interface once the initial flashing is done.
 * **Local REST API:** Provides a RESTful API endpoint on the device for integration with custom scripts, home automation systems, or other applications.
-* * **MQTT support:** All data (status+temperatures/probes/settings) are sent to a mqtt topic. You can also configure probe and grill settings via mqtt.
+* * **MQTT support:** All data (grill status/probes/settings) are sent to a mqtt topic. You can also configure probes and settings via mqtt.
 * **Battery Management:** Includes functional battery monitoring and management based on the device's hardware.
 * **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
