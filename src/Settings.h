@@ -79,8 +79,7 @@ namespace config{
 
     String mqtt_broker                  = "";
     int    mqtt_port                    = 1883;
-    String pub_mqtt_topic               = "free-grilly";
-    String sub_mqtt_topic               = "opengrill";
+    String mqtt_topic                   = "free-grilly";
     
     // ***********************************
     // * Json Utilities

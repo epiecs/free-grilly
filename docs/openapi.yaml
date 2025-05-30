@@ -342,6 +342,9 @@ components:
         mqtt_port:
           type: integer
           example: 1883
+        mqtt_topic:
+          type: string
+          example: "free-grilly"
         wifi_ssid:
           type: string
           example: my-home-wifi

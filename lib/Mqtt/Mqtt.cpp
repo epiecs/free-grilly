@@ -16,16 +16,15 @@ char mqtt_json_buffer[2000];
 void Mqtt::setup(String mqtt_broker, int mqtt_port){
 
     Mqtt::client_name            = "free-grilly-" + config::grill_uuid;
-    String pub_topic_prefix      = config::pub_mqtt_topic + "/" + config::grill_uuid;
-    String sub_topic_prefix      = config::sub_mqtt_topic + "/" + config::grill_uuid;
+    String topic_prefix          = config::mqtt_topic + "/" + config::grill_uuid;
 
-    Mqtt::pub_topic_temperatures = pub_topic_prefix + "/temperatures";
-    Mqtt::pub_topic_settings     = pub_topic_prefix + "/settings";
-    Mqtt::pub_topic_probes       = pub_topic_prefix + "/probes";
-    Mqtt::pub_topic_status       = pub_topic_prefix + "/status";
+    Mqtt::pub_topic_temperatures = topic_prefix + "/temperatures";
+    Mqtt::pub_topic_settings     = topic_prefix + "/settings";
+    Mqtt::pub_topic_probes       = topic_prefix + "/probes";
+    Mqtt::pub_topic_status       = topic_prefix + "/status";
 
-    Mqtt::sub_topic_settings     = sub_topic_prefix + "/settings";
-    Mqtt::sub_topic_probes       = sub_topic_prefix + "/probes";
+    Mqtt::sub_topic_settings     = topic_prefix + "/config/settings";
+    Mqtt::sub_topic_probes       = topic_prefix + "/config/probes";
 
     Mqtt::setServer(mqtt_broker.c_str(), mqtt_port);
     Mqtt::setBufferSize(config::mqtt_buffer_size);
@@ -102,4 +101,5 @@ bool Mqtt::reconnect(){
 // mqtt send and receive main topic? how to split so we dont get echos?
     // subscribe to opengrill -> change via settings + update html templates etc
     // publish to free-grilly -> change via settings
-// mqtt message retention
+// mqtt message retention -> from opengrill to free-grilly
+// test publish to mqtt probes and settings and see if they get updated

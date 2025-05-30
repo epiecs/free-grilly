@@ -102,6 +102,7 @@ void JsonUtilities::load_json_settings(char* buffer){
     jsondoc["beep_on_ready"]        = config::beep_on_ready;
     jsondoc["mqtt_broker"]          = config::mqtt_broker;
     jsondoc["mqtt_port"]            = config::mqtt_port;
+    jsondoc["mqtt_topic"]           = config::mqtt_topic;
     
     jsondoc["wifi_ssid"]            = config::wifi_ssid;
     jsondoc["wifi_ip"]              = config::wifi_ip;
@@ -143,6 +144,7 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
     config::beep_on_ready          = json_data["beep_on_ready"];
     config::mqtt_broker            = json_data["mqtt_broker"].as<String>();
     config::mqtt_port              = json_data["mqtt_port"];
+    config::mqtt_topic             = json_data["mqtt_topic"].as<String>();
 
     config::wifi_ssid              = json_data["wifi_ssid"].as<String>();
     config::wifi_password          = json_data["wifi_password"].as<String>();

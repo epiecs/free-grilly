@@ -248,6 +248,12 @@ const char HTML_SETTINGS[] = R"=====(
                 <input type="text" class="form-control" id="mqtt_port">
             </div>
         </div>
+        <div class="row mt-2">
+            <label for="local_ap_gateway" class="col-sm-2 col-form-label">Mqtt topic</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="mqtt_topic">
+            </div>
+        </div>
 
         <div class="row mt-4">
             <div class="col">
@@ -292,6 +298,7 @@ const char HTML_SETTINGS[] = R"=====(
         
         e_mqtt_broker         = document.getElementById("mqtt_broker");
         e_mqtt_port           = document.getElementById("mqtt_port");
+        e_mqtt_topic          = document.getElementById("mqtt_topic");
         
         e_save_settings       = document.getElementById("save_settings");
         e_wifi_scan           = document.getElementById("wifi_scan");
@@ -329,6 +336,7 @@ const char HTML_SETTINGS[] = R"=====(
                 
                 e_mqtt_broker.value           = data['mqtt_broker'];
                 e_mqtt_port.value             = data['mqtt_port'];
+                e_mqtt_topic.value            = data['mqtt_topic'];
 
                 // Allow saving/scan once data is loaded
                 e_save_settings.disabled = false;
@@ -398,6 +406,7 @@ const char HTML_SETTINGS[] = R"=====(
                 post_data["local_ap_gateway"]    = e_local_ap_gateway.value;
                 post_data["mqtt_broker"]         = e_mqtt_broker.value;
                 post_data["mqtt_port"]           = e_mqtt_port.value;
+                post_data["mqtt_topic"]          = e_mqtt_topic.value;
 
                 console.log(post_data)
 
