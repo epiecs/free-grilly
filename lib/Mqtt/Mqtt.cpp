@@ -7,6 +7,7 @@
 #include <WiFi.h>
 
 #include "Config.h"
+#include "Grill.h"
 #include "JsonUtilities.h"
 #include "Mqtt.h"
 
@@ -83,8 +84,15 @@ bool Mqtt::reconnect(){
     while (!Mqtt::connected()) {
         Serial.println("Trying to reconnect to MQTT server");
         
+        if(!grill::wifi_connected){
+            delay(5000);
+            continue;
+        }
+
+        Mqtt::setServer(config::mqtt_broker.c_str(), config::mqtt_port);
+
         if(!Mqtt::connect(Mqtt::client_name.c_str())){
-            Serial.print("MQTT Connection failed, rc=");
+            Serial.print("MQTT Connection failed, rc= ");
             Serial.print(Mqtt::state());
             Serial.println("Waiting 5 seconds to retry");
             delay(5000);
