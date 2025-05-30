@@ -24,6 +24,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
   - [Installation](#installation)
   - [First Use \& WiFi Setup](#first-use--wifi-setup)
   - [Usage](#usage)
+    - [Button](#button)
   - [Updating Firmware (OTA)](#updating-firmware-ota)
   - [Supported probes](#supported-probes)
   - [Contributing](#contributing)
@@ -84,6 +85,14 @@ For installation please refer to the [Flashing guide](docs/how_to_flash.md)
 - **Probe Settings:** Within the web interface settings, you can:
     - Set minimum and target temperature alerts for each probe.
     - Configure the type of probe connected (e.g., adjust settings to work with Ikea Fantast probes).
+
+### Button
+
+- Hold the button for 2 seconds to boot the device. You will hear 2 beeps
+- If the device is booted hold the button for 2 seconds until you hear 2 beeps and then release the button to view a status screen with wifi details etc
+- Tap the button to return to the temperature view
+- Hold the button for 3 seconds until you hear 3 beeps to turn the device off
+- Hold the button for 10 seconds until you hear 3 long beeps to factory reset
 
 ## Updating Firmware (OTA)
 
