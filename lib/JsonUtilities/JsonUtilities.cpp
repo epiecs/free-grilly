@@ -159,6 +159,11 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
     config::local_ap_subnet        = json_data["local_ap_subnet"].as<String>();
     config::local_ap_gateway       = json_data["local_ap_gateway"].as<String>();
 
+    // Set default value for empty topics
+    if(config::mqtt_topic.length() == 0){
+        config::mqtt_topic = 'free-grilly';
+    }
+
     config::config_helper.save_settings();
     return {true, "Ok"}; 
 }

@@ -18,10 +18,9 @@ void Mqtt::setup(String mqtt_broker, int mqtt_port){
     Mqtt::client_name            = "free-grilly-" + config::grill_uuid;
     String topic_prefix          = config::mqtt_topic + "/" + config::grill_uuid;
 
-    Mqtt::pub_topic_temperatures = topic_prefix + "/temperatures";
+    Mqtt::pub_topic_grill        = topic_prefix + "/grill" ;
     Mqtt::pub_topic_settings     = topic_prefix + "/settings";
     Mqtt::pub_topic_probes       = topic_prefix + "/probes";
-    Mqtt::pub_topic_status       = topic_prefix + "/status";
 
     Mqtt::sub_topic_settings     = topic_prefix + "/config/settings";
     Mqtt::sub_topic_probes       = topic_prefix + "/config/probes";
@@ -35,9 +34,9 @@ void Mqtt::setup(String mqtt_broker, int mqtt_port){
     Mqtt::reconnect();
 }
 
-void Mqtt::publish_status(){
+void Mqtt::publish_grill(){
     config::json_handler.load_json_status(mqtt_json_buffer);
-    Mqtt::publish(Mqtt::pub_topic_status.c_str(), mqtt_json_buffer);
+    Mqtt::publish(Mqtt::pub_topic_grill.c_str(), mqtt_json_buffer);
 }
 
 void Mqtt::publish_probes(){
@@ -84,7 +83,8 @@ bool Mqtt::reconnect(){
         Serial.print("Connected to MQTT server with client ");
         Serial.println(Mqtt::client_name);
         
-        Mqtt::publish_status();
+        Mqtt::publish_grill();
+        Mqtt::publish_probes();
         Mqtt::publish_settings();
 
         Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
@@ -98,8 +98,6 @@ bool Mqtt::reconnect(){
 
 // TODO
 // subscription code uitwerken
-// mqtt send and receive main topic? how to split so we dont get echos?
-    // subscribe to opengrill -> change via settings + update html templates etc
-    // publish to free-grilly -> change via settings
+
 // mqtt message retention -> from opengrill to free-grilly
 // test publish to mqtt probes and settings and see if they get updated

@@ -206,8 +206,8 @@ void task_mqtt(void* pvParameters) {
             config::mqtt_client.loop();
         }
 
-        config::mqtt_client.publish_status();
-
+        config::mqtt_client.publish_grill();
+        
         delay(1000);
     }
 

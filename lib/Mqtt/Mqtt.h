@@ -8,10 +8,9 @@ private:
     String client_name          = "";
 
     // topics to publish to
-    String pub_topic_temperatures   = "";
+    String pub_topic_grill          = "";
     String pub_topic_settings       = "";
     String pub_topic_probes         = "";
-    String pub_topic_status         = "";
     
     // topics to subscribe to
     String sub_topic_settings       = "";
@@ -24,8 +23,8 @@ public:
     
     void setup(String mqtt_broker, int mqtt_port = 1883);
     
+    void publish_grill();
     void publish_probes();
-    void publish_status();
     void publish_settings();
     
     bool reconnect();
