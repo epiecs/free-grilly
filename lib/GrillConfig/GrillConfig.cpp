@@ -536,11 +536,12 @@ void GrillConfig::print_probes(){
 
 void GrillConfig::factory_reset() {
     // https://github.com/espressif/esp-idf/issues/2777
-    config::settings_storage.putBool("initialized", false);
     Serial.println("Erasing nvram");
     nvs_flash_deinit();
     nvs_flash_erase();
     nvs_flash_init();
+    
+    config::settings_storage.putBool("initialized", false);
     Serial.println("Nvram erased");
     
     Serial.println("Rebooting!");
