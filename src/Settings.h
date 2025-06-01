@@ -139,6 +139,7 @@ namespace grill{
 
     bool wifi_connected                 = false;
     int wifi_signal                     = -99;
+    bool internet_connectivity          = false;
 
     // ***********************************
     // * Battery

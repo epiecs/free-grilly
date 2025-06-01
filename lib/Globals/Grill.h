@@ -15,6 +15,7 @@ namespace grill {
     // Wifi
     extern bool wifi_connected;
     extern int wifi_signal;
+    extern bool internet_connectivity;
 
     extern Probe probe_1;
     extern Probe probe_2;

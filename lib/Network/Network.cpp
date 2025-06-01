@@ -8,6 +8,10 @@
 
 constexpr int CONNECT_TIMEOUT_SECONDS = 10;
 
+// used for internet connectivity checks
+const char *domainName = "www.google.com";
+IPAddress resolved_ip;
+
 void start_local_ap()
 {
     IPAddress local_ip;         local_ip.fromString(config::local_ap_ip);
@@ -72,7 +76,7 @@ bool connect_to_wifi()
 void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     grill::wifi_connected = true;
-    
+
     Serial.println("Connected to wifi");
     print_wifi_connection();
 }
@@ -81,13 +85,23 @@ void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     config::wifi_ip = WiFi.localIP().toString();
     
+    // Check for internet connectivity
+    if (WiFi.hostByName(domainName, resolved_ip)){
+        Serial.println("Internet");
+        grill::internet_connectivity = true;
+    }else{
+        Serial.println("No Internet");
+        grill::internet_connectivity = false;
+    }
+
     Serial.println("Received IP");
     print_wifi_connection();
 }
 
 void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    grill::wifi_connected = false;
+    grill::wifi_connected        = false;
+    grill::internet_connectivity = false;
 
     Serial.println("Wifi disconnected");
 
