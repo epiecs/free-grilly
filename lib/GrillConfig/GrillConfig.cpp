@@ -99,7 +99,10 @@ void GrillConfig::save_settings(){
     config::settings_storage.putBool("beep_on_ready", config::beep_on_ready);
     config::settings_storage.putBool("beep_out_targ", config::beep_outside_target);
     config::settings_storage.putInt("beep_volume", config::beep_volume);
-    config::settings_storage.putInt("beep_before", config::beep_degrees_before);
+    config::settings_storage.putInt("beep_before", config::beep_degrees_before);    
+    config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
+    config::settings_storage.putInt("backl_to_mins", config::backlight_timeout_minutes);
+
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
     config::settings_storage.putInt("mqtt_port", config::mqtt_port);
     config::settings_storage.putString("mqtt_topic", config::mqtt_topic);
@@ -164,6 +167,9 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putBool("beep_out_targ", config::beep_outside_target);
     config::settings_storage.putInt("beep_volume", config::beep_volume);
     config::settings_storage.putInt("beep_before", config::beep_degrees_before);
+    config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
+    config::settings_storage.putInt("backl_to_mins", config::backlight_timeout_minutes);
+
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
     config::settings_storage.putInt("mqtt_port", config::mqtt_port);
     config::settings_storage.putString("mqtt_topic", config::mqtt_topic);
@@ -209,6 +215,11 @@ void GrillConfig::print_settings(){
     Serial.println(config::beep_volume);
     Serial.print("-- beep_degrees_before: ");
     Serial.println(config::beep_degrees_before);
+    Serial.print("-- screen_timeout_minutes: ");
+    Serial.println(config::screen_timeout_minutes);
+    Serial.print("-- backlight_timeout_minutes: ");
+    Serial.println(config::backlight_timeout_minutes);
+
     Serial.print("-- mqtt_broker: ");
     Serial.println(config::mqtt_broker);
     Serial.print("-- mqtt_port: ");

@@ -90,32 +90,35 @@ void JsonUtilities::load_json_settings(char* buffer){
 
     jsondoc.clear();
 
-    jsondoc["name"]                 = config::grill_name;
-    jsondoc["uuid"]                 = config::grill_uuid;
-    jsondoc["firmware_version"]     = config::grill_firmware_version;
+    jsondoc["name"]                      = config::grill_name;
+    jsondoc["uuid"]                      = config::grill_uuid;
+    jsondoc["firmware_version"]          = config::grill_firmware_version;
     
-    jsondoc["temperature_unit"]     = config::temperature_unit;
-    jsondoc["beep_enabled"]         = config::beep_enabled;
-    jsondoc["beep_volume"]          = config::beep_volume;
-    jsondoc["beep_degrees_before"]  = config::beep_degrees_before;
-    jsondoc["beep_outside_target"]  = config::beep_outside_target;
-    jsondoc["beep_on_ready"]        = config::beep_on_ready;
-    jsondoc["mqtt_broker"]          = config::mqtt_broker;
-    jsondoc["mqtt_port"]            = config::mqtt_port;
-    jsondoc["mqtt_topic"]           = config::mqtt_topic;
+    jsondoc["temperature_unit"]          = config::temperature_unit;
+    jsondoc["beep_enabled"]              = config::beep_enabled;
+    jsondoc["beep_volume"]               = config::beep_volume;
+    jsondoc["beep_degrees_before"]       = config::beep_degrees_before;
+    jsondoc["beep_outside_target"]       = config::beep_outside_target;
+    jsondoc["beep_on_ready"]             = config::beep_on_ready;
+    jsondoc["screen_timeout_minutes"]    = config::screen_timeout_minutes;
+    jsondoc["backlight_timeout_minutes"] = config::backlight_timeout_minutes;
     
-    jsondoc["wifi_ssid"]            = config::wifi_ssid;
-    jsondoc["wifi_ip"]              = config::wifi_ip;
-    jsondoc["wifi_subnet"]          = config::wifi_subnet;
-    jsondoc["wifi_gateway"]         = config::wifi_gateway;
-    jsondoc["wifi_dns"]             = config::wifi_dns;
-    jsondoc["wifi_password"]        = config::wifi_password;
+    jsondoc["mqtt_broker"]               = config::mqtt_broker;
+    jsondoc["mqtt_port"]                 = config::mqtt_port;
+    jsondoc["mqtt_topic"]                = config::mqtt_topic;
     
-    jsondoc["local_ap_ssid"]        = config::local_ap_ssid;
-    jsondoc["local_ap_ip"]          = config::local_ap_ip;
-    jsondoc["local_ap_subnet"]      = config::local_ap_subnet;
-    jsondoc["local_ap_gateway"]     = config::local_ap_gateway;
-    jsondoc["local_ap_password"]    = config::local_ap_password;
+    jsondoc["wifi_ssid"]                 = config::wifi_ssid;
+    jsondoc["wifi_ip"]                   = config::wifi_ip;
+    jsondoc["wifi_subnet"]               = config::wifi_subnet;
+    jsondoc["wifi_gateway"]              = config::wifi_gateway;
+    jsondoc["wifi_dns"]                  = config::wifi_dns;
+    jsondoc["wifi_password"]             = config::wifi_password;
+    
+    jsondoc["local_ap_ssid"]             = config::local_ap_ssid;
+    jsondoc["local_ap_ip"]               = config::local_ap_ip;
+    jsondoc["local_ap_subnet"]           = config::local_ap_subnet;
+    jsondoc["local_ap_gateway"]          = config::local_ap_gateway;
+    jsondoc["local_ap_password"]         = config::local_ap_password;
     
     jsondoc.shrinkToFit();
 
@@ -133,31 +136,42 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
         return {false, "local_ap_password should be empty or at least 8 characters"};
     }
 
+    if(json_data["screen_timeout_minutes"] < 0){
+        return {false, "screen_timeout_minutes should be > 0"};
+    }
+
+    if(json_data["backlight_timeout_minutes"] < 0){
+        return {false, "backlight_timeout_minutes should be > 0"};
+    }
+
     // Data ingress
-    config::grill_name             = json_data["name"].as<String>();
+    config::grill_name                = json_data["name"].as<String>();
 
-    config::temperature_unit       = json_data["temperature_unit"].as<String>();
-    config::beep_enabled           = json_data["beep_enabled"];
-    config::beep_volume            = json_data["beep_volume"];
-    config::beep_degrees_before    = json_data["beep_degrees_before"];
-    config::beep_outside_target    = json_data["beep_outside_target"];
-    config::beep_on_ready          = json_data["beep_on_ready"];
-    config::mqtt_broker            = json_data["mqtt_broker"].as<String>();
-    config::mqtt_port              = json_data["mqtt_port"];
-    config::mqtt_topic             = json_data["mqtt_topic"].as<String>();
+    config::temperature_unit          = json_data["temperature_unit"].as<String>();
+    config::beep_enabled              = json_data["beep_enabled"];
+    config::beep_volume               = json_data["beep_volume"];
+    config::beep_degrees_before       = json_data["beep_degrees_before"];
+    config::beep_outside_target       = json_data["beep_outside_target"];
+    config::beep_on_ready             = json_data["beep_on_ready"];
+    config::screen_timeout_minutes    = json_data["screen_timeout_minutes"];
+    config::backlight_timeout_minutes = json_data["backlight_timeout_minutes"];
 
-    config::wifi_ssid              = json_data["wifi_ssid"].as<String>();
-    config::wifi_password          = json_data["wifi_password"].as<String>();
-    config::wifi_ip                = json_data["wifi_ip"].as<String>();
-    config::wifi_subnet            = json_data["wifi_subnet"].as<String>();
-    config::wifi_gateway           = json_data["wifi_gateway"].as<String>();
-    config::wifi_dns               = json_data["wifi_dns"].as<String>();
+    config::mqtt_broker               = json_data["mqtt_broker"].as<String>();
+    config::mqtt_port                 = json_data["mqtt_port"];
+    config::mqtt_topic                = json_data["mqtt_topic"].as<String>();
+
+    config::wifi_ssid                 = json_data["wifi_ssid"].as<String>();
+    config::wifi_password             = json_data["wifi_password"].as<String>();
+    config::wifi_ip                   = json_data["wifi_ip"].as<String>();
+    config::wifi_subnet               = json_data["wifi_subnet"].as<String>();
+    config::wifi_gateway              = json_data["wifi_gateway"].as<String>();
+    config::wifi_dns                  = json_data["wifi_dns"].as<String>();
     
-    config::local_ap_ssid          = json_data["local_ap_ssid"].as<String>();
-    config::local_ap_password      = json_data["local_ap_password"].as<String>();
-    config::local_ap_ip            = json_data["local_ap_ip"].as<String>();
-    config::local_ap_subnet        = json_data["local_ap_subnet"].as<String>();
-    config::local_ap_gateway       = json_data["local_ap_gateway"].as<String>();
+    config::local_ap_ssid             = json_data["local_ap_ssid"].as<String>();
+    config::local_ap_password         = json_data["local_ap_password"].as<String>();
+    config::local_ap_ip               = json_data["local_ap_ip"].as<String>();
+    config::local_ap_subnet           = json_data["local_ap_subnet"].as<String>();
+    config::local_ap_gateway          = json_data["local_ap_gateway"].as<String>();
 
     // Set default value for empty topics
     if(config::mqtt_topic.length() == 0){

@@ -135,7 +135,37 @@ const char HTML_SETTINGS[] = R"=====(
                 </div>
             </div>
         </div>
+        
+        <div class="row mt-4">
+            <h5>Screen</h5>
+        </div>
+        <div class="row mt-2">
 
+            <div class="row mt-2">
+                <label for="screen_timeout_minutes" class="col-sm-2 col-form-label">Screen timeout (minutes)</label>
+                <div class="col-sm-10">
+                    <select id="screen_timeout_minutes" class="form-select">
+                        <option value="0">Disabled</option>
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <label for="backlight_timeout_minutes" class="col-sm-2 col-form-label">Backlight timeout (minutes)</label>
+                <div class="col-sm-10">
+                    <select id="backlight_timeout_minutes" class="form-select">
+                        <option value="0">Disabled</option>
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
         
         <div class="row mt-4">
             <h5>Wifi</h5>
@@ -270,73 +300,78 @@ const char HTML_SETTINGS[] = R"=====(
         //Only used during tests, the real implementation uses relative urls
         const base_url = "";
          
-        e_grill_name          = document.getElementById("grill_name");
+        e_grill_name                = document.getElementById("grill_name");
         
-        e_temperature_unit    = document.getElementById("temperature_unit");
+        e_temperature_unit          = document.getElementById("temperature_unit");
         
-        e_beep_enabled        = document.getElementById("beep_enabled");
-        e_beep_volume         = document.getElementById("beep_volume");
-        e_beep_degrees_before = document.getElementById("beep_degrees_before");
-        e_beep_outside_target = document.getElementById("beep_outside_target");
-        e_beep_on_ready       = document.getElementById("beep_on_ready");
+        e_beep_enabled              = document.getElementById("beep_enabled");
+        e_beep_volume               = document.getElementById("beep_volume");
+        e_beep_degrees_before       = document.getElementById("beep_degrees_before");
+        e_beep_outside_target       = document.getElementById("beep_outside_target");
+        e_beep_on_ready             = document.getElementById("beep_on_ready");
+        e_screen_timeout_minutes    = document.getElementById("screen_timeout_minutes");
+        e_backlight_timeout_minutes = document.getElementById("backlight_timeout_minutes");
         
-        e_wifi_scan_results   = document.getElementById("wifi_scan_results");
+        e_wifi_scan_results         = document.getElementById("wifi_scan_results");
         
-        e_wifi_ssid           = document.getElementById("wifi_ssid");
-        e_wifi_password       = document.getElementById("wifi_password");
-        e_wifi_ip             = document.getElementById("wifi_ip");
-        e_wifi_subnet         = document.getElementById("wifi_subnet");
-        e_wifi_gateway        = document.getElementById("wifi_gateway");
-        e_wifi_dns            = document.getElementById("wifi_dns");
+        e_wifi_ssid                 = document.getElementById("wifi_ssid");
+        e_wifi_password             = document.getElementById("wifi_password");
+        e_wifi_ip                   = document.getElementById("wifi_ip");
+        e_wifi_subnet               = document.getElementById("wifi_subnet");
+        e_wifi_gateway              = document.getElementById("wifi_gateway");
+        e_wifi_dns                  = document.getElementById("wifi_dns");
         
-        e_local_ap_ssid       = document.getElementById("local_ap_ssid");
-        e_local_ap_password   = document.getElementById("local_ap_password");
-        e_local_ap_ip         = document.getElementById("local_ap_ip");
-        e_local_ap_subnet     = document.getElementById("local_ap_subnet");
-        e_local_ap_gateway    = document.getElementById("local_ap_gateway");
+        e_local_ap_ssid             = document.getElementById("local_ap_ssid");
+        e_local_ap_password         = document.getElementById("local_ap_password");
+        e_local_ap_ip               = document.getElementById("local_ap_ip");
+        e_local_ap_subnet           = document.getElementById("local_ap_subnet");
+        e_local_ap_gateway          = document.getElementById("local_ap_gateway");
         
         
-        e_mqtt_broker         = document.getElementById("mqtt_broker");
-        e_mqtt_port           = document.getElementById("mqtt_port");
-        e_mqtt_topic          = document.getElementById("mqtt_topic");
+        e_mqtt_broker               = document.getElementById("mqtt_broker");
+        e_mqtt_port                 = document.getElementById("mqtt_port");
+        e_mqtt_topic                = document.getElementById("mqtt_topic");
         
-        e_save_settings       = document.getElementById("save_settings");
-        e_wifi_scan           = document.getElementById("wifi_scan");
+        e_save_settings             = document.getElementById("save_settings");
+        e_wifi_scan                 = document.getElementById("wifi_scan");
 
-        e_alert               = document.getElementById("alert");
-        e_alert_text          = document.getElementById("alert-text");
+        e_alert                     = document.getElementById("alert");
+        e_alert_text                = document.getElementById("alert-text");
 
         async function getSettings() {
             try {
                 const response = await fetch(base_url + "/api/settings");
                 data = await response.json();
 
-                e_grill_name.value            = data['name'];
+                e_grill_name.value                = data['name'];
 
-                e_temperature_unit.value      = data['temperature_unit'];
+                e_temperature_unit.value          = data['temperature_unit'];
                 
-                e_beep_enabled.checked        = data['beep_enabled'];
-                e_beep_volume.value           = data['beep_volume'];
-                e_beep_degrees_before.value   = data['beep_degrees_before'];
-                e_beep_outside_target.checked = data['beep_outside_target'];
-                e_beep_on_ready.checked       = data['beep_on_ready'];
+                e_beep_enabled.checked            = data['beep_enabled'];
+                e_beep_volume.value               = data['beep_volume'];
+                e_beep_degrees_before.value       = data['beep_degrees_before'];
+                e_beep_outside_target.checked     = data['beep_outside_target'];
+                e_beep_on_ready.checked           = data['beep_on_ready'];
                 
-                e_wifi_ssid.value             = data['wifi_ssid'];
-                e_wifi_password.value         = data['wifi_password'];
-                e_wifi_ip.value               = data['wifi_ip'];
-                e_wifi_subnet.value           = data['wifi_subnet'];
-                e_wifi_gateway.value          = data['wifi_gateway'];
-                e_wifi_dns.value              = data['wifi_dns'];
+                e_screen_timeout_minutes.value    = data['screen_timeout_minutes'];
+                e_backlight_timeout_minutes.value = data['backlight_timeout_minutes'];
+
+                e_wifi_ssid.value                 = data['wifi_ssid'];
+                e_wifi_password.value             = data['wifi_password'];
+                e_wifi_ip.value                   = data['wifi_ip'];
+                e_wifi_subnet.value               = data['wifi_subnet'];
+                e_wifi_gateway.value              = data['wifi_gateway'];
+                e_wifi_dns.value                  = data['wifi_dns'];
                 
-                e_local_ap_ssid.value         = data['local_ap_ssid'];
-                e_local_ap_password.value     = data['local_ap_password'];
-                e_local_ap_ip.value           = data['local_ap_ip'];
-                e_local_ap_subnet.value       = data['local_ap_subnet'];
-                e_local_ap_gateway.value      = data['local_ap_gateway'];
+                e_local_ap_ssid.value             = data['local_ap_ssid'];
+                e_local_ap_password.value         = data['local_ap_password'];
+                e_local_ap_ip.value               = data['local_ap_ip'];
+                e_local_ap_subnet.value           = data['local_ap_subnet'];
+                e_local_ap_gateway.value          = data['local_ap_gateway'];
                 
-                e_mqtt_broker.value           = data['mqtt_broker'];
-                e_mqtt_port.value             = data['mqtt_port'];
-                e_mqtt_topic.value            = data['mqtt_topic'];
+                e_mqtt_broker.value               = data['mqtt_broker'];
+                e_mqtt_port.value                 = data['mqtt_port'];
+                e_mqtt_topic.value                = data['mqtt_topic'];
 
                 // Allow saving/scan once data is loaded
                 e_save_settings.disabled = false;
@@ -386,27 +421,30 @@ const char HTML_SETTINGS[] = R"=====(
 
                 post_data = {};
     
-                post_data["name"]                = e_grill_name.value;
-                post_data["temperature_unit"]    = e_temperature_unit.value;
-                post_data["beep_enabled"]        = e_beep_enabled.checked;
-                post_data["beep_volume"]         = e_beep_volume.value;
-                post_data["beep_degrees_before"] = e_beep_degrees_before.value;
-                post_data["beep_outside_target"] = e_beep_outside_target.checked;
-                post_data["beep_on_ready"]       = e_beep_on_ready.checked;
-                post_data["wifi_ssid"]           = e_wifi_ssid.value;
-                post_data["wifi_password"]       = e_wifi_password.value;
-                post_data["wifi_ip"]             = e_wifi_ip.value;
-                post_data["wifi_subnet"]         = e_wifi_subnet.value;
-                post_data["wifi_gateway"]        = e_wifi_gateway.value;
-                post_data["wifi_dns"]            = e_wifi_dns.value;
-                post_data["local_ap_ssid"]       = e_local_ap_ssid.value;
-                post_data["local_ap_password"]   = e_local_ap_password.value;
-                post_data["local_ap_ip"]         = e_local_ap_ip.value;
-                post_data["local_ap_subnet"]     = e_local_ap_subnet.value;
-                post_data["local_ap_gateway"]    = e_local_ap_gateway.value;
-                post_data["mqtt_broker"]         = e_mqtt_broker.value;
-                post_data["mqtt_port"]           = e_mqtt_port.value;
-                post_data["mqtt_topic"]          = e_mqtt_topic.value;
+                post_data["name"]                      = e_grill_name.value;
+                post_data["temperature_unit"]          = e_temperature_unit.value;
+                post_data["beep_enabled"]              = e_beep_enabled.checked;
+                post_data["beep_volume"]               = e_beep_volume.value;
+                post_data["beep_degrees_before"]       = e_beep_degrees_before.value;
+                post_data["beep_outside_target"]       = e_beep_outside_target.checked;
+                post_data["beep_on_ready"]             = e_beep_on_ready.checked;
+                post_data['screen_timeout_minutes']    = e_screen_timeout_minutes.value;
+                post_data['backlight_timeout_minutes'] = e_backlight_timeout_minutes.value;
+
+                post_data["wifi_ssid"]                 = e_wifi_ssid.value;
+                post_data["wifi_password"]             = e_wifi_password.value;
+                post_data["wifi_ip"]                   = e_wifi_ip.value;
+                post_data["wifi_subnet"]               = e_wifi_subnet.value;
+                post_data["wifi_gateway"]              = e_wifi_gateway.value;
+                post_data["wifi_dns"]                  = e_wifi_dns.value;
+                post_data["local_ap_ssid"]             = e_local_ap_ssid.value;
+                post_data["local_ap_password"]         = e_local_ap_password.value;
+                post_data["local_ap_ip"]               = e_local_ap_ip.value;
+                post_data["local_ap_subnet"]           = e_local_ap_subnet.value;
+                post_data["local_ap_gateway"]          = e_local_ap_gateway.value;
+                post_data["mqtt_broker"]               = e_mqtt_broker.value;
+                post_data["mqtt_port"]                 = e_mqtt_port.value;
+                post_data["mqtt_topic"]                = e_mqtt_topic.value;
 
                 console.log(post_data)
 

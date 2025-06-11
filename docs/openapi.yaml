@@ -336,6 +336,14 @@ components:
           type: integer
           example: 5
           description: Beep when the probe reaches this amount of degrees before the target temperature
+        screen_timeout_minutes:
+          type: integer
+          example: 0
+          description: How many minutes before the screen turns off automatically. 0 disables the timeout.
+        backlight_timeout_minutes:
+          type: integer
+          example: 0
+          description: How many minutes before the backlight turns off automatically. 0 disables the timeout.
         mqtt_broker:
           type: string
           example: "broker.test.com"
