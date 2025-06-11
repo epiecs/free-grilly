@@ -129,6 +129,13 @@ namespace config{
     bool alarm_mute                     = false;
     int alarm_beep_amount               = 20;
     int alarm_beep_duration_ms          = 800;
+
+    // ***********************************
+    // * Screen
+    // ***********************************
+
+    int screen_timeout_minutes          = 0;
+    int backlight_timeout_minutes       = 0;
 }
 
 namespace grill{
