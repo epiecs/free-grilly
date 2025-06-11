@@ -46,36 +46,39 @@ void GrillConfig::load_settings(){
     // * Read from nvs
     // ***********************************
     // Grill
-    config::grill_name          = config::settings_storage.getString("grill_name", "Free-Grilly");
-    config::grill_uuid          = config::settings_storage.getString("grill_uuid", "");
+    config::grill_name                = config::settings_storage.getString("grill_name", "Free-Grilly");
+    config::grill_uuid                = config::settings_storage.getString("grill_uuid", "");
     
-    config::temperature_unit    = config::settings_storage.getString("temp_unit");
-    config::beep_enabled        = config::settings_storage.getBool("beep_enabled");
-    config::beep_on_ready       = config::settings_storage.getBool("beep_on_ready");
-    config::beep_outside_target = config::settings_storage.getBool("beep_out_targ");
-    config::beep_volume         = config::settings_storage.getInt("beep_volume");
-    config::beep_degrees_before = config::settings_storage.getInt("beep_before");
+    config::temperature_unit          = config::settings_storage.getString("temp_unit");
+    config::beep_enabled              = config::settings_storage.getBool("beep_enabled");
+    config::beep_on_ready             = config::settings_storage.getBool("beep_on_ready");
+    config::beep_outside_target       = config::settings_storage.getBool("beep_out_targ");
+    config::beep_volume               = config::settings_storage.getInt("beep_volume");
+    config::beep_degrees_before       = config::settings_storage.getInt("beep_before");
 
-    config::mqtt_broker         = config::settings_storage.getString("mqtt_broker");
-    config::mqtt_port           = config::settings_storage.getInt("mqtt_port", 1883);
-    config::mqtt_topic          = config::settings_storage.getString("mqtt_topic", "free-grilly");
+    config::screen_timeout_minutes    = config::settings_storage.getInt("screen_to_mins");
+    config::backlight_timeout_minutes = config::settings_storage.getInt("backl_to_mins");
+
+    config::mqtt_broker               = config::settings_storage.getString("mqtt_broker");
+    config::mqtt_port                 = config::settings_storage.getInt("mqtt_port", 1883);
+    config::mqtt_topic                = config::settings_storage.getString("mqtt_topic", "free-grilly");
 
     // Wifi
-    config::wifi_ssid           = config::settings_storage.getString("wifi_ssid", "");
-    config::wifi_password       = config::settings_storage.getString("wifi_password", "");
+    config::wifi_ssid                 = config::settings_storage.getString("wifi_ssid", "");
+    config::wifi_password             = config::settings_storage.getString("wifi_password", "");
     
-    config::wifi_ip             = config::settings_storage.getString("wifi_ip", wifi_ip_default);
-    config::wifi_subnet         = config::settings_storage.getString("wifi_subnet", wifi_subnet_default);
-    config::wifi_gateway        = config::settings_storage.getString("wifi_gateway", wifi_gateway_default);
-    config::wifi_dns            = config::settings_storage.getString("wifi_dns", wifi_dns_default);
+    config::wifi_ip                   = config::settings_storage.getString("wifi_ip", wifi_ip_default);
+    config::wifi_subnet               = config::settings_storage.getString("wifi_subnet", wifi_subnet_default);
+    config::wifi_gateway              = config::settings_storage.getString("wifi_gateway", wifi_gateway_default);
+    config::wifi_dns                  = config::settings_storage.getString("wifi_dns", wifi_dns_default);
     
     // shorter keys since keys should max be 15 chars
-    config::local_ap_ssid       = config::settings_storage.getString("l_ap_ssid", "");
-    config::local_ap_password   = config::settings_storage.getString("l_ap_password", "");
+    config::local_ap_ssid             = config::settings_storage.getString("l_ap_ssid", "");
+    config::local_ap_password         = config::settings_storage.getString("l_ap_password", "");
     
-    config::local_ap_ip         = config::settings_storage.getString("l_ap_ip", local_ap_ip_default);
-    config::local_ap_subnet     = config::settings_storage.getString("l_ap_subnet", local_ap_subnet_default);
-    config::local_ap_gateway    = config::settings_storage.getString("l_ap_gateway", local_ap_gateway_default);
+    config::local_ap_ip               = config::settings_storage.getString("l_ap_ip", local_ap_ip_default);
+    config::local_ap_subnet           = config::settings_storage.getString("l_ap_subnet", local_ap_subnet_default);
+    config::local_ap_gateway          = config::settings_storage.getString("l_ap_gateway", local_ap_gateway_default);
 
     grill::buzzer.set_volume(config::beep_volume);
 

@@ -161,7 +161,7 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
 
     // Set default value for empty topics
     if(config::mqtt_topic.length() == 0){
-        config::mqtt_topic = 'free-grilly';
+        config::mqtt_topic = "free-grilly";
     }
 
     config::config_helper.save_settings();

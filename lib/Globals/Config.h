@@ -61,4 +61,8 @@ namespace config{
     extern bool alarm_mute;
     extern int alarm_beep_amount;
     extern int alarm_beep_duration_ms;
+
+    // Screen
+    extern int screen_timeout_minutes;
+    extern int backlight_timeout_minutes;
 }
