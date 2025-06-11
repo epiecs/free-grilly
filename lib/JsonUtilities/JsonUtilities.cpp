@@ -136,11 +136,11 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
         return {false, "local_ap_password should be empty or at least 8 characters"};
     }
 
-    if(json_data["screen_timeout_minutes"] < 0){
+    if(json_data["screen_timeout_minutes"].as<int>() < 0){
         return {false, "screen_timeout_minutes should be > 0"};
     }
 
-    if(json_data["backlight_timeout_minutes"] < 0){
+    if(json_data["backlight_timeout_minutes"].as<int>() < 0){
         return {false, "backlight_timeout_minutes should be > 0"};
     }
 
