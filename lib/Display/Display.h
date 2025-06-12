@@ -3,6 +3,7 @@
 #include <vector>
 #include <utility>
 
+#include "Config.h"
 
 // ***********************************
 // * Definitions
@@ -58,6 +59,17 @@ private:
     *	@return true 
     */
    bool draw_screen_info(void);
+    /**
+    *	@brief enables / disables the screen background LED
+    *	@return true 
+    */
+   bool screen_background_pwr(status_type type = ENABLE);
+    /**
+    *	@brief enables / disables the screen
+    *	@return true 
+    */
+   bool screen_pwr(status_type type = ENABLE);
+   
 };
 
 extern disp display;

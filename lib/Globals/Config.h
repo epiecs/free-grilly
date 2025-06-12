@@ -8,6 +8,11 @@ class JsonUtilities;
 class WebServer;
 class WifiClient;
 
+typedef enum {
+	ENABLE,
+	DISABLE
+} status_type;
+
 namespace config{
 
     // Settings storage

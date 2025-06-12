@@ -7,10 +7,14 @@
 #include "Grill.h"
 #include "Probe.h"
 #include "Config.h"
+#include "Power.h"
+
 
 U8G2_ST7565_64128N_F_4W_SW_SPI screen(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /* cs=*/ 5, /* dc=*/ 17, /* reset=*/ 16); 
-bool is_critical_battery_flash = false;
-int current_screen_page = 0;
+bool is_critical_battery_flash          = false;
+int current_screen_page                 = 0;
+unsigned long millis_backlight_timeout  = 0;
+unsigned long millis_screen_timeout     = 0;
 
 static const unsigned char battery_icon[]       U8X8_PROGMEM = {0xfe,0x07,0x01,0x08,0x01,0x38,0x01,0x28,0x01,0x28,0x01,0x38,0x01,0x08,0xfe,0x07};
 static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x10,0x08,0x04,0x1e,0x0f,0x04,0x02,0x01};
@@ -29,21 +33,66 @@ bool disp::init(void){
     screen.setContrast(10);
     screen.setFontMode(1);
     screen.setBitmapMode(1);
+    screen_background_pwr(ENABLE);
     return true;
 }
 
 bool disp::switch_page(void){
-    current_screen_page++;
     if (current_screen_page >= 1) {current_screen_page = 0;}
+    screen_background_pwr(ENABLE);
+    screen_pwr(ENABLE);
     return true;
 }
 
 bool disp::show_settings_page(void){
     current_screen_page = 10;
+    screen_background_pwr(ENABLE);
+    screen_pwr(ENABLE);
     return true;
 }
 
+bool disp::screen_background_pwr(status_type type){
+    switch (type)
+	{
+	case ENABLE:
+        power.setPowerRail(ENABLE,gpio::power_screen_backlight);
+        millis_backlight_timeout = millis();
+        break;
+    case DISABLE:
+        power.setPowerRail(DISABLE,gpio::power_screen_backlight);
+        break;
+    }
+    return true;
+}
+
+bool disp::screen_pwr(status_type type){
+    switch (type)
+	{
+	case ENABLE:
+        screen.setPowerSave(ENABLE);
+        millis_screen_timeout = millis();
+        break;
+    case DISABLE:
+        screen.setPowerSave(DISABLE);
+        break;
+    }
+    return true;
+}
+
+
 bool disp::display_update(void) {
+    // ***********************************
+    // * Screen timeouts
+    // ***********************************
+    if(config::backlight_timeout_minutes > 0 and millis_backlight_timeout + (config::backlight_timeout_minutes * 60000) < millis()) {
+        screen_background_pwr(DISABLE);
+    }
+    if(config::screen_timeout_minutes > 0 and millis_screen_timeout + (config::screen_timeout_minutes * 60000) < millis()) {
+        screen_pwr(DISABLE);
+        return true; 
+    }
+
+
     screen.clearBuffer(); 
      
     // ***********************************

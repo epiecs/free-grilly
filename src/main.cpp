@@ -400,8 +400,8 @@ void task_screen(void* pvParameters) {
     Serial.println("Launching task :: SCREEN");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
     
-    pinMode(gpio::power_screen_backlight, OUTPUT);
-    digitalWrite(gpio::power_screen_backlight, HIGH);
+    //pinMode(gpio::power_screen_backlight, OUTPUT);
+    //digitalWrite(gpio::power_screen_backlight, HIGH);
     
     display.init();
 

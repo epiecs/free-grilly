@@ -158,14 +158,16 @@ bool pwr::init(void) {
 	return true; 
 }
 
-bool pwr::setPowerRail(pwr_state type, int GPIO) {
+bool pwr::setPowerRail(status_type type, int GPIO) {
 	switch (type)
 	{
 	case ENABLE:
-		digitalWrite(GPIO, LOW);
+		if(GPIO = gpio::power_screen_backlight) { digitalWrite(GPIO, HIGH);  }
+		else { digitalWrite(GPIO, LOW); }
 		break;
 	case DISABLE:
-		digitalWrite(GPIO, HIGH);
+		if(GPIO = gpio::power_screen_backlight) { digitalWrite(GPIO, LOW);  }
+		else { digitalWrite(GPIO, HIGH); }
 		break;
 	}
 	return false;

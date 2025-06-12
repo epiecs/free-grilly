@@ -2,6 +2,7 @@
 #include <Arduino.h>
 
 #include "Gpio.h"
+#include "Config.h"
 
 // ***********************************
 // * Definitions
@@ -39,10 +40,10 @@ typedef enum {
 	F
 } temp_unit;
 
-typedef enum {
-	ENABLE,
-	DISABLE
-} pwr_state;
+//typedef enum {
+//	ENABLE,
+//	DISABLE
+//} pwr_state;
 
 
 class bat {
@@ -158,7 +159,7 @@ public:
 	*	@param GPIO GPIO pin of the power rail
 	*	@return true on success
 	*/
-	bool setPowerRail(pwr_state type = DISABLE, int GPIO = gpio::power_screen_backlight);
+	bool setPowerRail(status_type type = DISABLE, int GPIO = gpio::power_screen_backlight);
 	/**
 	*	@brief Disables the power rails and put the device in deep sleep
 	*	@return true on success
