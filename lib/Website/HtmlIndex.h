@@ -180,7 +180,7 @@ const char HTML_INDEX[] = R"=====(
     <script type="text/javascript">
 
         //Only used during tests, the real implementation uses relative urls
-        const base_url = "http://192.168.178.108";
+        const base_url = "";
         
         const api_polling_interval = 1000;
         const api_unreachable_intervals = 10;

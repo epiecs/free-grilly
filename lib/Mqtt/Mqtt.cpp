@@ -91,12 +91,24 @@ bool Mqtt::reconnect(){
 
         Mqtt::setServer(config::mqtt_broker.c_str(), config::mqtt_port);
 
-        if(!Mqtt::connect(Mqtt::client_name.c_str())){
-            Serial.print("MQTT Connection failed, rc= ");
-            Serial.print(Mqtt::state());
-            Serial.println("Waiting 5 seconds to retry");
-            delay(5000);
-            continue;
+        if(config::mqtt_user != "" && config::mqtt_password != ""){
+            Serial.println("Trying to connect to MQTT using user/pass");
+            if(!Mqtt::connect(Mqtt::client_name.c_str(), config::mqtt_user.c_str(), config::mqtt_password.c_str())){
+                Serial.print("MQTT Connection failed, rc= ");
+                Serial.print(Mqtt::state());
+                Serial.println("Waiting 5 seconds to retry");
+                delay(5000);
+                continue;
+            }
+        } else {
+            Serial.println("Trying to connect to MQTT without authentication");
+            if(!Mqtt::connect(Mqtt::client_name.c_str())){
+                Serial.print("MQTT Connection failed, rc= ");
+                Serial.print(Mqtt::state());
+                Serial.println("Waiting 5 seconds to retry");
+                delay(5000);
+                continue;
+            }
         }
 
         Serial.print("MQTT Connected to server with client ");

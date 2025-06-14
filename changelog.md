@@ -1,7 +1,20 @@
 # Changelog (firmware only)
 
+## 2025-06-14
+
+- Added the option to set the timeout for the backlight and/or the screen (Enhancement for issue #2)
+- Web interface
+    - You can now toggle to only view connected probes in the webinterface - Thanks @Bardesss!
+    - Added inputs for mqtt and backlight enhancements
+- MQTT
+    - Fixed bug with string literal used in the wrong location
+    - Fixed bug where we forgot to cast to the correct data type
+    - Added the option to set a mqtt username and password (Enhancement for issue #4)
+- API
+    - Added documentation and fields for mqtt user/pass and screen/backlight enhancements
+
 ## 2025-06-01
-- Aixed bug where stacksize was not big enough to run the factory reset
+- Fixed bug where stacksize was not big enough to run the factory reset
 - Added a config flag that checks if Free-Grilly has internet access
 
 ## 2025-05-30

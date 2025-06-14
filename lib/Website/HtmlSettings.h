@@ -284,6 +284,18 @@ const char HTML_SETTINGS[] = R"=====(
                 <input type="text" class="form-control" id="mqtt_topic">
             </div>
         </div>
+        <div class="row mt-2">
+            <label for="local_ap_gateway" class="col-sm-2 col-form-label">Mqtt username</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="mqtt_user">
+            </div>
+        </div>
+        <div class="row mt-2">
+            <label for="local_ap_gateway" class="col-sm-2 col-form-label">Mqtt password</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="mqtt_password">
+            </div>
+        </div>
 
         <div class="row mt-4">
             <div class="col">
@@ -331,6 +343,8 @@ const char HTML_SETTINGS[] = R"=====(
         e_mqtt_broker               = document.getElementById("mqtt_broker");
         e_mqtt_port                 = document.getElementById("mqtt_port");
         e_mqtt_topic                = document.getElementById("mqtt_topic");
+        e_mqtt_user                 = document.getElementById("mqtt_user");
+        e_mqtt_password             = document.getElementById("mqtt_password");
         
         e_save_settings             = document.getElementById("save_settings");
         e_wifi_scan                 = document.getElementById("wifi_scan");
@@ -372,6 +386,8 @@ const char HTML_SETTINGS[] = R"=====(
                 e_mqtt_broker.value               = data['mqtt_broker'];
                 e_mqtt_port.value                 = data['mqtt_port'];
                 e_mqtt_topic.value                = data['mqtt_topic'];
+                e_mqtt_user.value                 = data['mqtt_user'];
+                e_mqtt_password.value             = data['mqtt_password'];
 
                 // Allow saving/scan once data is loaded
                 e_save_settings.disabled = false;
@@ -445,6 +461,8 @@ const char HTML_SETTINGS[] = R"=====(
                 post_data["mqtt_broker"]               = e_mqtt_broker.value;
                 post_data["mqtt_port"]                 = e_mqtt_port.value;
                 post_data["mqtt_topic"]                = e_mqtt_topic.value;
+                post_data["mqtt_user"]                 = e_mqtt_user.value;
+                post_data["mqtt_password"]             = e_mqtt_password.value;
 
                 console.log(post_data)
 

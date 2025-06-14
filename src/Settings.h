@@ -80,6 +80,8 @@ namespace config{
     String mqtt_broker                  = "";
     int    mqtt_port                    = 1883;
     String mqtt_topic                   = "free-grilly";
+    String mqtt_user                    = "";
+    String mqtt_password                = "";
     
     // ***********************************
     // * Json Utilities

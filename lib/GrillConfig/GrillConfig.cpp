@@ -62,6 +62,8 @@ void GrillConfig::load_settings(){
     config::mqtt_broker               = config::settings_storage.getString("mqtt_broker");
     config::mqtt_port                 = config::settings_storage.getInt("mqtt_port", 1883);
     config::mqtt_topic                = config::settings_storage.getString("mqtt_topic", "free-grilly");
+    config::mqtt_user                 = config::settings_storage.getString("mqtt_user");
+    config::mqtt_password             = config::settings_storage.getString("mqtt_password");
 
     // Wifi
     config::wifi_ssid                 = config::settings_storage.getString("wifi_ssid", "");
@@ -106,6 +108,8 @@ void GrillConfig::save_settings(){
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
     config::settings_storage.putInt("mqtt_port", config::mqtt_port);
     config::settings_storage.putString("mqtt_topic", config::mqtt_topic);
+    config::settings_storage.putString("mqtt_user", config::mqtt_user);
+    config::settings_storage.putString("mqtt_password", config::mqtt_password);
 
     config::settings_storage.putString("wifi_ssid", config::wifi_ssid);
     config::settings_storage.putString("wifi_password", config::wifi_password);
@@ -173,6 +177,8 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
     config::settings_storage.putInt("mqtt_port", config::mqtt_port);
     config::settings_storage.putString("mqtt_topic", config::mqtt_topic);
+    config::settings_storage.putString("mqtt_user", config::mqtt_user);
+    config::settings_storage.putString("mqtt_password", config::mqtt_password);
 
     config::settings_storage.putString("wifi_ssid", "");
     config::settings_storage.putString("wifi_password", "");
@@ -226,6 +232,10 @@ void GrillConfig::print_settings(){
     Serial.println(config::mqtt_port);
     Serial.print("-- mqtt_topic: ");
     Serial.println(config::mqtt_topic);
+    Serial.print("-- mqtt_user: ");
+    Serial.println(config::mqtt_user);
+    Serial.print("-- mqtt_password: ");
+    Serial.println(config::mqtt_password);
 
     Serial.print("-- wifi_ssid: ");
     Serial.println(config::wifi_ssid);

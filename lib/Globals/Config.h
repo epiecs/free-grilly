@@ -40,6 +40,8 @@ namespace config{
     extern String mqtt_broker;
     extern int    mqtt_port;
     extern String mqtt_topic;
+    extern String mqtt_user;
+    extern String mqtt_password;
 
     // Json Utilities
     extern JsonUtilities json_handler;

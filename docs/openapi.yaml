@@ -353,6 +353,12 @@ components:
         mqtt_topic:
           type: string
           example: "free-grilly"
+        mqtt_user:
+          type: string
+          example: ""
+        mqtt_password:
+          type: string
+          example: ""
         wifi_ssid:
           type: string
           example: my-home-wifi
