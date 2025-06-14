@@ -48,9 +48,17 @@ const char HTML_INDEX[] = R"=====(
                 <span class="badge bg-danger" id="grill-wifi-connected">WIFI <span id="grill-wifi-strength">0%</span></span>
             </div>
         </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="form-check form-switch float-end">
+                    <input class="form-check-input" type="checkbox" id="toggle-disconnected-probes">
+                    <label class="form-check-label" for="toggle-disconnected-probes">Show disconnected probes</label>
+                </div>
+            </div>
+        </div>
         <!-- <div class="row pt-1 row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-2"> -->
         <div class="row">
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-1">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -64,7 +72,7 @@ const char HTML_INDEX[] = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-2">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -78,7 +86,7 @@ const char HTML_INDEX[] = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-3">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -92,7 +100,7 @@ const char HTML_INDEX[] = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-4">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -106,7 +114,7 @@ const char HTML_INDEX[] = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-5">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -120,7 +128,7 @@ const char HTML_INDEX[] = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-6">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -134,7 +142,7 @@ const char HTML_INDEX[] = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-7">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -148,7 +156,7 @@ const char HTML_INDEX[] = R"=====(
                     </div>
                 </div>
             </div>
-            <div class="my-2 col-sm-12 col-md-6">
+            <div class="my-2 col-sm-12 col-md-6" id="probe-card-8">
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
@@ -163,13 +171,16 @@ const char HTML_INDEX[] = R"=====(
                 </div>
             </div>
         </div>
+        <div id="no-probes-alert" class="alert alert-info text-center" style="display:none;" role="alert">
+            All probes are disconnected. Please connect a probe or use the toggle to show disconnected probes.
+        </div>
     </div>
 
     <script src="bootstrap.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
         //Only used during tests, the real implementation uses relative urls
-        const base_url = "";
+        const base_url = "http://192.168.178.108";
         
         const api_polling_interval = 1000;
         const api_unreachable_intervals = 10;
@@ -183,13 +194,14 @@ const char HTML_INDEX[] = R"=====(
 
         // Selectors
         const e_probes = new Array(8);
+        const e_probe_cards = new Array(8);
         for(let probe_nr = 1; probe_nr < 9; probe_nr++){
             e_probes[probe_nr] = {};
-
             e_probes[probe_nr]["status"]              = document.getElementById("probe-" + probe_nr + "-status");
             e_probes[probe_nr]["temperature"]         = document.getElementById("probe-" + probe_nr + "-temperature");
             e_probes[probe_nr]["target_temperature"]  = document.getElementById("probe-" + probe_nr + "-target");
             e_probes[probe_nr]["minimum_temperature"] = document.getElementById("probe-" + probe_nr + "-minimum");
+            e_probe_cards[probe_nr] = document.getElementById("probe-card-" + probe_nr);
         }
 
         e_grill_name                      = document.getElementById("grill-name");
@@ -202,6 +214,32 @@ const char HTML_INDEX[] = R"=====(
         e_wifi_strength                   = document.getElementById("grill-wifi-strength");
 
         let wifi_signal_strength = 0;
+
+        const toggleDisconnected = document.getElementById("toggle-disconnected-probes");
+        let showDisconnected = false;
+        toggleDisconnected.addEventListener('change', function() {
+            showDisconnected = this.checked;
+            updateProbeVisibility();
+        });
+        function updateProbeVisibility() {
+            let anyVisible = false;
+            for(let probe_nr = 1; probe_nr < 9; probe_nr++) {
+                if(e_probes[probe_nr]["status"].textContent === "Disconnected") {
+                    e_probe_cards[probe_nr].style.display = showDisconnected ? '' : 'none';
+                } else {
+                    e_probe_cards[probe_nr].style.display = '';
+                }
+                if(e_probe_cards[probe_nr].style.display !== 'none') {
+                    anyVisible = true;
+                }
+            }
+            const alertBox = document.getElementById('no-probes-alert');
+            if(!anyVisible) {
+                alertBox.style.display = '';
+            } else {
+                alertBox.style.display = 'none';
+            }
+        }
 
         async function pollTemperatures() {
             
@@ -339,6 +377,7 @@ const char HTML_INDEX[] = R"=====(
                     e_probes[probe_nr]["minimum_temperature"].textContent = data['probes'][probe_nr - 1]['minimum_temperature'].toFixed(2) + " " + temp_unit;
                     e_probes[probe_nr]["target_temperature"].textContent  = data['probes'][probe_nr - 1]['target_temperature'].toFixed(2) + " " + temp_unit;
                 }
+                updateProbeVisibility();
 
             } catch (error) {
                 console.error('Grill is unreachable:', error);
