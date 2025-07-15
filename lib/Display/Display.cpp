@@ -174,18 +174,7 @@ bool disp::draw_screen_temp(void){
         screen.setCursor(62, 17); screen.print(connectedProbeInfo.second[0]);
         screen.setFont(u8g2_font_profont29_tr);  
         screen.setCursor(28, 45);
-        switch (connectedProbeInfo.second[0]) {
-            case 1: screen.print(grill::probe_1.celcius); break;
-            case 2: screen.print(grill::probe_2.celcius); break;
-            case 3: screen.print(grill::probe_3.celcius); break;
-            case 4: screen.print(grill::probe_4.celcius); break;
-            case 5: screen.print(grill::probe_5.celcius); break;
-            case 6: screen.print(grill::probe_6.celcius); break;
-            case 7: screen.print(grill::probe_7.celcius); break;
-            case 8: screen.print(grill::probe_8.celcius); break;
-        default:
-            break;
-        }
+        draw_temp(connectedProbeInfo.second[0]);
         break;
     case 2:
         screen.drawLine(63, 9, 63, 63);
@@ -197,18 +186,7 @@ bool disp::draw_screen_temp(void){
             screen.setFont(u8g2_font_profont15_tr);  
             if(i == 0) { screen.setCursor(12, 34);}
             if(i == 1) { screen.setCursor(76, 34);}
-            switch (connectedProbeInfo.second[i]) {
-                case 1: screen.print(grill::probe_1.celcius); break;
-                case 2: screen.print(grill::probe_2.celcius); break;
-                case 3: screen.print(grill::probe_3.celcius); break;
-                case 4: screen.print(grill::probe_4.celcius); break;
-                case 5: screen.print(grill::probe_5.celcius); break;
-                case 6: screen.print(grill::probe_6.celcius); break;
-                case 7: screen.print(grill::probe_7.celcius); break;
-                case 8: screen.print(grill::probe_8.celcius); break;
-            default:
-                break;
-            }
+            draw_temp(connectedProbeInfo.second[i]);
         }
         break;
     case 3:
@@ -224,18 +202,7 @@ bool disp::draw_screen_temp(void){
             if(i == 0) { screen.setCursor(3, 33);}
             if(i == 1) { screen.setCursor(46, 33);}
             if(i == 2) { screen.setCursor(89, 33);}
-            switch (connectedProbeInfo.second[i]) {
-                case 1: screen.print(grill::probe_1.celcius); break;
-                case 2: screen.print(grill::probe_2.celcius); break;
-                case 3: screen.print(grill::probe_3.celcius); break;
-                case 4: screen.print(grill::probe_4.celcius); break;
-                case 5: screen.print(grill::probe_5.celcius); break;
-                case 6: screen.print(grill::probe_6.celcius); break;
-                case 7: screen.print(grill::probe_7.celcius); break;
-                case 8: screen.print(grill::probe_8.celcius); break;
-            default:
-                break;
-            }
+            draw_temp(connectedProbeInfo.second[i]);
         }
         break;
     case 4:
@@ -253,18 +220,7 @@ bool disp::draw_screen_temp(void){
             if(i == 1) { screen.setCursor(76, 34);}
             if(i == 2) { screen.setCursor(12, 63);}
             if(i == 3) { screen.setCursor(76, 63);}
-            switch (connectedProbeInfo.second[i]) {
-                case 1: screen.print(grill::probe_1.celcius); break;
-                case 2: screen.print(grill::probe_2.celcius); break;
-                case 3: screen.print(grill::probe_3.celcius); break;
-                case 4: screen.print(grill::probe_4.celcius); break;
-                case 5: screen.print(grill::probe_5.celcius); break;
-                case 6: screen.print(grill::probe_6.celcius); break;
-                case 7: screen.print(grill::probe_7.celcius); break;
-                case 8: screen.print(grill::probe_8.celcius); break;
-            default:
-                break;
-            }
+            draw_temp(connectedProbeInfo.second[i]);
         }
         break;
     
@@ -342,6 +298,38 @@ bool disp::draw_thermometer(int xLoc, int yLoc, int probe_temp, int probe_target
     if(probe_temp >= probe_target - 0 ) { screen.drawLine(xLoc+2, yLoc+3, xLoc+2, yLoc+3); }
     if(probe_temp >= probe_target + 5 ) { screen.drawLine(xLoc+2, yLoc+2, xLoc+2, yLoc+2); }
     if(probe_temp >= probe_target + 10) { screen.drawLine(xLoc+2, yLoc+1, xLoc+2, yLoc+1); }
+    return true;
+} 
+
+bool disp::draw_temp(int connectedProbe) {
+    if(config::temperature_unit == "celcius"){
+        switch (connectedProbe) {
+            case 1: screen.print(grill::probe_1.celcius); break;
+            case 2: screen.print(grill::probe_2.celcius); break;
+            case 3: screen.print(grill::probe_3.celcius); break;
+            case 4: screen.print(grill::probe_4.celcius); break;
+            case 5: screen.print(grill::probe_5.celcius); break;
+            case 6: screen.print(grill::probe_6.celcius); break;
+            case 7: screen.print(grill::probe_7.celcius); break;
+            case 8: screen.print(grill::probe_8.celcius); break;
+        default:
+            break;
+        }
+    }
+    else {
+        switch (connectedProbe) {
+            case 1: screen.print(grill::probe_1.fahrenheit); break;
+            case 2: screen.print(grill::probe_2.fahrenheit); break;
+            case 3: screen.print(grill::probe_3.fahrenheit); break;
+            case 4: screen.print(grill::probe_4.fahrenheit); break;
+            case 5: screen.print(grill::probe_5.fahrenheit); break;
+            case 6: screen.print(grill::probe_6.fahrenheit); break;
+            case 7: screen.print(grill::probe_7.fahrenheit); break;
+            case 8: screen.print(grill::probe_8.fahrenheit); break;
+        default:
+            break;
+        }
+    }
     return true;
 } 
 

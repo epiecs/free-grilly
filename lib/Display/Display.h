@@ -44,32 +44,37 @@ private:
     */
     bool draw_thermometer(int xLoc = 0, int yLoc = 0, int probe_temp = 0, int probe_target = 0);
     /**
-    *	@brief Subroutine to create the temp screen
+    *	@brief Subroutine to update the temperature 
+    *   @param connectedProbe probe number
     *	@return true 
     */
-   std::pair<int, std::vector<int>> get_connected_probes(void);
-   /**
-   *	@brief Checks how many probes are connected
-   *	@return number of probes connected 
-   *    @return vector of connected probes
-   */
-   bool draw_screen_temp(void);
+    bool draw_temp(int connectedProbe);
+    /**
+    *	@brief Checks how many probes are connected
+    *	@return number of probes connected 
+    *    @return vector of connected probes
+    */
+    std::pair<int, std::vector<int>> get_connected_probes(void);
+    /**
+    *	@brief Subroutine to draw the temp page
+    *	@return true 
+    */
+    bool draw_screen_temp(void);
     /**
     *	@brief Subroutine to create the wifi screen
     *	@return true 
     */
-   bool draw_screen_info(void);
+    bool draw_screen_info(void);
     /**
     *	@brief enables / disables the screen background LED
     *	@return true 
     */
-   bool screen_background_pwr(status_type type = ENABLE);
+    bool screen_background_pwr(status_type type = ENABLE);
     /**
     *	@brief enables / disables the screen
     *	@return true 
     */
-   bool screen_pwr(status_type type = ENABLE);
-   
+    bool screen_pwr(status_type type = ENABLE);
 };
 
 extern disp display;
