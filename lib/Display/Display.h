@@ -50,9 +50,21 @@ private:
     */
     bool draw_temp(int connectedProbe);
     /**
+    *	@brief Subroutine to get the temperature 
+    *   @param connectedProbe probe number
+    *	@return true 
+    */
+    int get_target_temp(int connectedProbe);
+    /**
+    *	@brief Subroutine to get the target temperature 
+    *   @param connectedProbe probe number
+    *	@return true 
+    */
+    float get_temp(int connectedProbe);
+    /**
     *	@brief Checks how many probes are connected
     *	@return number of probes connected 
-    *    @return vector of connected probes
+    *   @return vector of connected probes
     */
     std::pair<int, std::vector<int>> get_connected_probes(void);
     /**
