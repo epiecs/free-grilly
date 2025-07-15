@@ -17,8 +17,9 @@ int current_screen_page                 = 0;
 unsigned long millis_backlight_timeout  = 0;
 unsigned long millis_screen_timeout     = 0;
 
-static const unsigned char battery_icon[]       U8X8_PROGMEM = {0xfe,0x07,0x01,0x08,0x01,0x38,0x01,0x28,0x01,0x28,0x01,0x38,0x01,0x08,0xfe,0x07};
-static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x10,0x08,0x04,0x1e,0x0f,0x04,0x02,0x01};
+static const unsigned char battery_icon[]       U8X8_PROGMEM = {0xfe,0x03,0x01,0x04,0x01,0x0c,0x01,0x0c,0x01,0x04,0xfe,0x03};
+static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x3d,0xe5,0x25,0x26,0xe4,0x3c};
+//static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x10,0x08,0x04,0x1e,0x0f,0x04,0x02,0x01};
 static const unsigned char wifi_signal1[]       U8X8_PROGMEM = {0x01,0x01};
 static const unsigned char wifi_signal2[]       U8X8_PROGMEM = {0x01,0x01,0x01,0x01};
 static const unsigned char wifi_signal3[]       U8X8_PROGMEM = {0x01,0x01,0x01,0x01,0x01,0x01};
@@ -92,40 +93,33 @@ bool disp::display_update(void) {
     }
 
     screen.clearBuffer(); 
+    screen.drawLine(2, 9, 125, 9);
      
     // ***********************************
     // * Battery elements
     // ***********************************
-    screen.drawLine(2, 9, 125, 9);
-    screen.drawXBMP(114, 0, 14, 8, battery_icon);
-
-    if     (grill::battery_percentage >= 90)                                    { screen.drawBox(115, 1, 10, 6); }
-    else if(grill::battery_percentage >= 80 and grill::battery_percentage < 90) { screen.drawBox(115, 1, 9 , 6); }
-    else if(grill::battery_percentage >= 70 and grill::battery_percentage < 80) { screen.drawBox(115, 1, 8 , 6); }
-    else if(grill::battery_percentage >= 60 and grill::battery_percentage < 70) { screen.drawBox(115, 1, 7 , 6); }
-    else if(grill::battery_percentage >= 50 and grill::battery_percentage < 60) { screen.drawBox(115, 1, 6 , 6); }
-    else if(grill::battery_percentage >= 40 and grill::battery_percentage < 50) { screen.drawBox(115, 1, 5 , 6); }
-    else if(grill::battery_percentage >= 30 and grill::battery_percentage < 40) { screen.drawBox(115, 1, 4 , 6); }
-    else if(grill::battery_percentage >= 20 and grill::battery_percentage < 30) { screen.drawBox(115, 1, 3 , 6); }
-    else if(grill::battery_percentage >= 10 and grill::battery_percentage < 20) { screen.drawBox(115, 1, 2 , 6); }
-    else if(grill::battery_percentage > 10){
+    if (grill::battery_percentage < 10){
         if(is_critical_battery_flash){
-            screen.drawLine(115, 1, 115, 6);
             is_critical_battery_flash = false;
+            screen.drawXBMP(114, 0, 12, 6, battery_icon);
         }
-        else {
-            is_critical_battery_flash = true;
-        }       
+        else { is_critical_battery_flash = true; }       
+    }
+    else {
+        screen.drawXBMP(114, 0, 12, 6, battery_icon);
+        if (grill::battery_percentage >= 80) { screen.drawLine(122, 2, 122, 3); }
+        if (grill::battery_percentage >= 60) { screen.drawLine(120, 2, 120, 3); }
+        if (grill::battery_percentage >= 40) { screen.drawLine(118, 2, 118, 3); }
+        if (grill::battery_percentage >= 10) { screen.drawLine(116, 2, 116, 3); }
     }
 
     if(grill::battery_charging) {
-        screen.drawXBMP(108, 0, 5,  8, battery_charging);
+        screen.drawXBMP(105, 0, 8,  6, battery_charging);
     }
     
     // ***********************************
     // * Wifi Elements
     // ***********************************
-    Serial.println(WiFi.RSSI());
     if(grill::wifi_connected) {
         if(WiFi.RSSI() > -90) {screen.drawXBMP(96 , 6, 1, 2, wifi_signal1);}
         if(WiFi.RSSI() > -80) {screen.drawXBMP(98 , 4, 1, 4, wifi_signal2);}
