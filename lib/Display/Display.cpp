@@ -28,6 +28,7 @@ static const unsigned char volume_3[]           U8X8_PROGMEM = {0x08,0x0c,0xaf,0
 static const unsigned char volume_2[]           U8X8_PROGMEM = {0x08,0x0c,0x2f,0x2f,0x0c,0x08};
 static const unsigned char volume_1[]           U8X8_PROGMEM = {0x08,0x0c,0x2f,0x2f,0x0c,0x08};
 static const unsigned char volume_mute[]        U8X8_PROGMEM = {0x08,0xac,0x4f,0xaf,0x0c,0x08};
+static const unsigned char degrees[]            U8X8_PROGMEM = {0x02,0x05,0x02};
 
 
 disp::disp() {}
@@ -95,7 +96,7 @@ bool disp::display_update(void) {
     }
 
     screen.clearBuffer(); 
-    screen.drawLine(2, 9, 125, 9);
+    screen.drawLine(2, 7, 125, 7);
      
     // ***********************************
     // * Battery elements
@@ -152,7 +153,6 @@ bool disp::display_update(void) {
     else if (config::beep_volume == 0)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_mute);}
 
 
-
     switch (current_screen_page) {
     case 0:
         draw_screen_temp();
@@ -173,6 +173,13 @@ bool disp::display_update(void) {
 }
 
 bool disp::draw_screen_temp(void){
+    // ***********************************
+    // * Temp unit Elements
+    // ***********************************
+    screen.setFont(u8g2_font_4x6_tr);
+    if (config::temperature_unit == "celcius"){screen.drawXBMP(2, 1, 3, 3, degrees); screen.drawUTF8(6, 6, "C");}
+    else                                      {screen.drawXBMP(2, 1, 3, 3, degrees); screen.drawUTF8(6, 6, "F");}
+
     std::pair<int, std::vector<int>> connectedProbeInfo = get_connected_probes();
     switch (connectedProbeInfo.first) {
     case 0:
@@ -276,8 +283,8 @@ bool disp::draw_screen_temp(void){
 }
 
 bool disp::draw_screen_info(void){
-    screen.setFont(u8g2_font_5x8_tr);
-    screen.drawStr(2, 8, "Info");
+    screen.setFont(u8g2_font_4x6_tr);
+    screen.drawStr(2, 6, "Info");
 
     screen.setFont(u8g2_font_4x6_tr);
     // Grill info
