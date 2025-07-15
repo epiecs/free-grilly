@@ -17,6 +17,7 @@ int notification_offset                 = 0;
 int current_screen_page                 = 0;
 float current_active_temp               = 0;
 int current_target_temp                 = 0;
+int current_minimum_temp                = 0;
 unsigned long millis_backlight_timeout  = 0;
 unsigned long millis_screen_timeout     = 0;
 
@@ -199,9 +200,28 @@ bool disp::draw_screen_temp(void){
         current_active_temp = get_temp(connectedProbeInfo.second[0]);
         screen.setFont(u8g2_font_profont29_tr); screen.setCursor(28, 45); screen.print(current_active_temp);
 
+        // temp range 
+        current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[0]);
+        if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) {
+            screen.drawFrame(121, 10, 7, 53);
+
+            screen.drawLine(120, 21, 118, 21);
+            int target_offset = 0;
+            if (current_target_temp > 99) {target_offset = 4;}
+            screen.setFont(u8g2_font_4x6_tr); screen.setCursor(110 - target_offset, 24); screen.print(current_target_temp);
+            screen.drawLine(120, 41, 118, 41);
+            target_offset = 0;
+            if (current_minimum_temp > 99) {target_offset = 4;}
+            screen.setFont(u8g2_font_4x6_tr); screen.setCursor(110 - target_offset, 44); screen.print(current_minimum_temp);
+
+            int range_offset = 20+(20*((current_active_temp-current_minimum_temp)/(current_target_temp-current_minimum_temp)));
+            if (range_offset > 50) {range_offset = 50;} if (range_offset < 1) {range_offset = 0;}
+            screen.drawBox(122, 60 - range_offset, 5, 2 + range_offset);
+        }
+
         // temp target 
         current_target_temp = get_target_temp(connectedProbeInfo.second[0]);
-        if (current_target_temp > 0) {
+        if (current_target_temp > 0 && current_minimum_temp == 0) {
             screen.drawFrame(121, 10, 7, 53);
 
             screen.drawLine(120, 21, 118, 21);
@@ -415,6 +435,23 @@ int disp::get_target_temp(int connectedProbe) {
             case 6: temp = grill::probe_6.target_temperature; break;
             case 7: temp = grill::probe_7.target_temperature; break;
             case 8: temp = grill::probe_8.target_temperature; break;
+        default:
+            break;
+        }
+    return temp;
+}
+
+int disp::get_minimum_temp(int connectedProbe) {
+    int temp = 0;
+        switch (connectedProbe) {
+            case 1: temp = grill::probe_1.minimum_temperature; break;
+            case 2: temp = grill::probe_2.minimum_temperature; break;
+            case 3: temp = grill::probe_3.minimum_temperature; break;
+            case 4: temp = grill::probe_4.minimum_temperature; break;
+            case 5: temp = grill::probe_5.minimum_temperature; break;
+            case 6: temp = grill::probe_6.minimum_temperature; break;
+            case 7: temp = grill::probe_7.minimum_temperature; break;
+            case 8: temp = grill::probe_8.minimum_temperature; break;
         default:
             break;
         }

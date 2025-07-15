@@ -55,8 +55,14 @@ private:
     *	@return true 
     */
     int get_target_temp(int connectedProbe);
+        /**
+    *	@brief Subroutine to get the temperature 
+    *   @param connectedProbe probe number
+    *	@return true 
+    */
+    int get_minimum_temp(int connectedProbe);
     /**
-    *	@brief Subroutine to get the target temperature 
+    *	@brief Subroutine to get the minimum temperature 
     *   @param connectedProbe probe number
     *	@return true 
     */
