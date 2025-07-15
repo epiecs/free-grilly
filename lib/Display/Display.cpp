@@ -22,6 +22,12 @@ static const unsigned char battery_icon[]       U8X8_PROGMEM = {0xfe,0x03,0x01,0
 static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x3d,0xe5,0x25,0x26,0xe4,0x3c};
 static const unsigned char wifi_disconnected[]  U8X8_PROGMEM = {0x05,0x02,0x05};
 static const unsigned char probe_thermometer[]  U8X8_PROGMEM = {0x04,0x0a,0x0a,0x1b,0x0a,0x0a,0x0a,0x11,0x11,0x11,0x0e};
+static const unsigned char volume_5[]           U8X8_PROGMEM = {0x48,0x8c,0xaf,0xaf,0x8c,0x48};
+static const unsigned char volume_4[]           U8X8_PROGMEM = {0x08,0x8c,0xaf,0xaf,0x8c,0x08};
+static const unsigned char volume_3[]           U8X8_PROGMEM = {0x08,0x0c,0xaf,0xaf,0x0c,0x08};
+static const unsigned char volume_2[]           U8X8_PROGMEM = {0x08,0x0c,0x2f,0x2f,0x0c,0x08};
+static const unsigned char volume_1[]           U8X8_PROGMEM = {0x08,0x0c,0x2f,0x2f,0x0c,0x08};
+static const unsigned char volume_mute[]        U8X8_PROGMEM = {0x08,0xac,0x4f,0xaf,0x0c,0x08};
 
 
 disp::disp() {}
@@ -80,10 +86,10 @@ bool disp::display_update(void) {
     // ***********************************
     // * Screen timeouts
     // ***********************************
-    if(config::backlight_timeout_minutes > 0 and millis_backlight_timeout + (config::backlight_timeout_minutes * 60000) < millis()) {
+    if (config::backlight_timeout_minutes > 0 and millis_backlight_timeout + (config::backlight_timeout_minutes * 60000) < millis()) {
         screen_background_pwr(DISABLE);
     }
-    if(config::screen_timeout_minutes > 0 and millis_screen_timeout + (config::screen_timeout_minutes * 60000) < millis()) {
+    if (config::screen_timeout_minutes > 0 and millis_screen_timeout + (config::screen_timeout_minutes * 60000) < millis()) {
         screen_pwr(DISABLE);
         return true; 
     }
@@ -95,7 +101,7 @@ bool disp::display_update(void) {
     // * Battery elements
     // ***********************************
     if (grill::battery_percentage < 10){
-        if(is_critical_battery_flash){
+        if (is_critical_battery_flash){
             is_critical_battery_flash = false;
             screen.drawXBMP(114, 0, 12, 6, battery_icon);
         }
@@ -119,11 +125,11 @@ bool disp::display_update(void) {
     // * Wifi Elements
     // ***********************************
     if(grill::wifi_connected) {
-        if(WiFi.RSSI() > -90) {screen.drawLine(101 - notification_offset, 4, 101 - notification_offset, 5);}
-        if(WiFi.RSSI() > -80) {screen.drawLine(103 - notification_offset, 3, 103 - notification_offset, 5);}
-        if(WiFi.RSSI() > -70) {screen.drawLine(105 - notification_offset, 2, 105 - notification_offset, 5);}
-        if(WiFi.RSSI() > -60) {screen.drawLine(107 - notification_offset, 1, 107 - notification_offset, 5);}
-        if(WiFi.RSSI() > -50) {screen.drawLine(109 - notification_offset, 0, 109 - notification_offset, 5);}
+        if (WiFi.RSSI() > -90) {screen.drawLine(101 - notification_offset, 4, 101 - notification_offset, 5);}
+        if (WiFi.RSSI() > -80) {screen.drawLine(103 - notification_offset, 3, 103 - notification_offset, 5);}
+        if (WiFi.RSSI() > -70) {screen.drawLine(105 - notification_offset, 2, 105 - notification_offset, 5);}
+        if (WiFi.RSSI() > -60) {screen.drawLine(107 - notification_offset, 1, 107 - notification_offset, 5);}
+        if (WiFi.RSSI() > -50) {screen.drawLine(109 - notification_offset, 0, 109 - notification_offset, 5);}
     }
     else {
         screen.drawLine(100 - notification_offset, 2, 102 - notification_offset, 0); // cross
@@ -134,6 +140,18 @@ bool disp::display_update(void) {
         screen.drawLine(107 - notification_offset, 1, 107 - notification_offset, 5);
         screen.drawLine(109 - notification_offset, 0, 109 - notification_offset, 5);
     }
+
+    // ***********************************
+    // * Volume Elements
+    // ***********************************
+    if (config::beep_volume == 5)       { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_5);}
+    else if (config::beep_volume == 4)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_4);}
+    else if (config::beep_volume == 3)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_3);}
+    else if (config::beep_volume == 2)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_2);}
+    else if (config::beep_volume == 1)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_1);}
+    else if (config::beep_volume == 0)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_mute);}
+
+
 
     switch (current_screen_page) {
     case 0:
