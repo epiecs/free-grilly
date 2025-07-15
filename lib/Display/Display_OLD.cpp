@@ -2,7 +2,6 @@
 #include <U8g2lib.h>
 #include <vector>
 #include <utility>
-#include <WiFi.h>
 
 #include "Display.h"
 #include "Grill.h"
@@ -53,7 +52,8 @@ bool disp::show_settings_page(void){
 }
 
 bool disp::screen_background_pwr(status_type type){
-    switch (type) {
+    switch (type)
+	{
 	case ENABLE:
         power.setPowerRail(ENABLE,gpio::power_screen_backlight);
         millis_backlight_timeout = millis();
@@ -66,7 +66,8 @@ bool disp::screen_background_pwr(status_type type){
 }
 
 bool disp::screen_pwr(status_type type){
-    switch (type) {
+    switch (type)
+	{
 	case ENABLE:
         screen.setPowerSave(ENABLE);
         millis_screen_timeout = millis();
@@ -91,12 +92,12 @@ bool disp::display_update(void) {
         return true; 
     }
 
+
     screen.clearBuffer(); 
      
     // ***********************************
     // * Battery elements
     // ***********************************
-    screen.drawLine(2, 9, 125, 9);
     screen.drawXBMP(114, 0, 14, 8, battery_icon);
 
     if     (grill::battery_percentage >= 90)                                    { screen.drawBox(115, 1, 10, 6); }
@@ -125,19 +126,18 @@ bool disp::display_update(void) {
     // ***********************************
     // * Wifi Elements
     // ***********************************
-    Serial.println(WiFi.RSSI());
     if(grill::wifi_connected) {
-        if(WiFi.RSSI() > -90) {screen.drawXBMP(96 , 6, 1, 2, wifi_signal1);}
-        if(WiFi.RSSI() > -80) {screen.drawXBMP(98 , 4, 1, 4, wifi_signal2);}
-        if(WiFi.RSSI() > -70) {screen.drawXBMP(100, 2, 1, 6, wifi_signal3);}
-        if(WiFi.RSSI() > -60) {screen.drawXBMP(102, 0, 1, 8, wifi_signal4);}
+        if(grill::wifi_signal < 50) {screen.drawXBMP(96, 0, 1, 8, wifi_signal4);}
+        if(grill::wifi_signal < 56) {screen.drawXBMP(94, 2, 1, 6, wifi_signal3);}
+        if(grill::wifi_signal < 66) {screen.drawXBMP(92, 4, 1, 4, wifi_signal2);}
+        if(grill::wifi_signal < 75) {screen.drawXBMP(90, 6, 1, 2, wifi_signal1);}
     }
     else {
-        screen.drawXBMP(95 , 1, 3, 3, wifi_disconnected);
-        screen.drawXBMP(96 , 6, 1, 2, wifi_signal1);
-        screen.drawXBMP(98 , 4, 1, 4, wifi_signal2);
-        screen.drawXBMP(100, 2, 1, 6, wifi_signal3);
-        screen.drawXBMP(102, 0, 1, 8, wifi_signal4);
+        screen.drawXBMP(89, 1, 3, 3, wifi_disconnected);
+        screen.drawXBMP(90, 6, 1, 2, wifi_signal1);
+        screen.drawXBMP(92, 4, 1, 4, wifi_signal2);
+        screen.drawXBMP(94, 2, 1, 6, wifi_signal3);
+        screen.drawXBMP(96, 0, 1, 8, wifi_signal4);
     }
 
     switch (current_screen_page) {
@@ -265,6 +265,7 @@ bool disp::draw_screen_temp(void){
 bool disp::draw_screen_info(void){
     screen.setFont(u8g2_font_5x8_tr);
     screen.drawStr(2, 8, "Info");
+    screen.drawLine(2, 9, 124, 9);
 
     screen.setFont(u8g2_font_4x6_tr);
     // Grill info
