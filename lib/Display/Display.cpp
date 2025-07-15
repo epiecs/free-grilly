@@ -13,17 +13,13 @@
 
 U8G2_ST7565_64128N_F_4W_SW_SPI screen(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /* cs=*/ 5, /* dc=*/ 17, /* reset=*/ 16); 
 bool is_critical_battery_flash          = false;
+int notification_offset                 = 0;
 int current_screen_page                 = 0;
 unsigned long millis_backlight_timeout  = 0;
 unsigned long millis_screen_timeout     = 0;
 
 static const unsigned char battery_icon[]       U8X8_PROGMEM = {0xfe,0x03,0x01,0x04,0x01,0x0c,0x01,0x0c,0x01,0x04,0xfe,0x03};
 static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x3d,0xe5,0x25,0x26,0xe4,0x3c};
-//static const unsigned char battery_charging[]   U8X8_PROGMEM = {0x10,0x08,0x04,0x1e,0x0f,0x04,0x02,0x01};
-static const unsigned char wifi_signal1[]       U8X8_PROGMEM = {0x01,0x01};
-static const unsigned char wifi_signal2[]       U8X8_PROGMEM = {0x01,0x01,0x01,0x01};
-static const unsigned char wifi_signal3[]       U8X8_PROGMEM = {0x01,0x01,0x01,0x01,0x01,0x01};
-static const unsigned char wifi_signal4[]       U8X8_PROGMEM = {0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01};
 static const unsigned char wifi_disconnected[]  U8X8_PROGMEM = {0x05,0x02,0x05};
 static const unsigned char probe_thermometer[]  U8X8_PROGMEM = {0x04,0x0a,0x0a,0x1b,0x0a,0x0a,0x0a,0x11,0x11,0x11,0x0e};
 
@@ -115,23 +111,28 @@ bool disp::display_update(void) {
 
     if(grill::battery_charging) {
         screen.drawXBMP(105, 0, 8,  6, battery_charging);
+        notification_offset = 9;
     }
+    else {notification_offset = 0;}
     
     // ***********************************
     // * Wifi Elements
     // ***********************************
     if(grill::wifi_connected) {
-        if(WiFi.RSSI() > -90) {screen.drawXBMP(96 , 6, 1, 2, wifi_signal1);}
-        if(WiFi.RSSI() > -80) {screen.drawXBMP(98 , 4, 1, 4, wifi_signal2);}
-        if(WiFi.RSSI() > -70) {screen.drawXBMP(100, 2, 1, 6, wifi_signal3);}
-        if(WiFi.RSSI() > -60) {screen.drawXBMP(102, 0, 1, 8, wifi_signal4);}
+        if(WiFi.RSSI() > -90) {screen.drawLine(101 - notification_offset, 4, 101 - notification_offset, 5);}
+        if(WiFi.RSSI() > -80) {screen.drawLine(103 - notification_offset, 3, 103 - notification_offset, 5);}
+        if(WiFi.RSSI() > -70) {screen.drawLine(105 - notification_offset, 2, 105 - notification_offset, 5);}
+        if(WiFi.RSSI() > -60) {screen.drawLine(107 - notification_offset, 1, 107 - notification_offset, 5);}
+        if(WiFi.RSSI() > -50) {screen.drawLine(109 - notification_offset, 0, 109 - notification_offset, 5);}
     }
     else {
-        screen.drawXBMP(95 , 1, 3, 3, wifi_disconnected);
-        screen.drawXBMP(96 , 6, 1, 2, wifi_signal1);
-        screen.drawXBMP(98 , 4, 1, 4, wifi_signal2);
-        screen.drawXBMP(100, 2, 1, 6, wifi_signal3);
-        screen.drawXBMP(102, 0, 1, 8, wifi_signal4);
+        screen.drawLine(100 - notification_offset, 2, 102 - notification_offset, 0); // cross
+        screen.drawLine(100 - notification_offset, 0, 102 - notification_offset, 2); // cross
+        screen.drawLine(101 - notification_offset, 4, 101 - notification_offset, 5);
+        screen.drawLine(103 - notification_offset, 3, 103 - notification_offset, 5);
+        screen.drawLine(105 - notification_offset, 2, 105 - notification_offset, 5);
+        screen.drawLine(107 - notification_offset, 1, 107 - notification_offset, 5);
+        screen.drawLine(109 - notification_offset, 0, 109 - notification_offset, 5);
     }
 
     switch (current_screen_page) {
