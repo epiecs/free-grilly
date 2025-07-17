@@ -1,5 +1,8 @@
 # Changelog (firmware only)
 
+## 2025-07-17
+- Fix for issue #7 where Fahrenheit was not displayed on the lcd
+
 ## 2025-06-14
 
 - Added the option to set the timeout for the backlight and/or the screen (Enhancement for issue #2)
