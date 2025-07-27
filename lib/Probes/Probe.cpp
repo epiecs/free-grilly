@@ -211,6 +211,14 @@ void Probe::set_type(String probe_type, int reference_kohm, int reference_celciu
         Probe::type              = "maverick_et733";
         return;
     }
+
+    if(probe_type == "weber_igrill"){
+        Probe::reference_beta    = 3830;
+        Probe::reference_celcius = 25;
+        Probe::reference_kohm    = 100;
+        Probe::type              = "weber_igrill";
+        return;
+    }
     
     Probe::reference_beta    = reference_beta;
     Probe::reference_celcius = reference_celcius;

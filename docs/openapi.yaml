@@ -233,6 +233,7 @@ components:
             - grilleye_iris
             - ikea_fantast
             - maverick_et733
+            - weber_igrill
         reference_kohm:
           type: 
             - "number"

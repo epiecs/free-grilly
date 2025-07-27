@@ -1,5 +1,9 @@
 # Changelog (firmware only)
 
+## 2025-07-27
+- Fix for issue #12 where you could only set custom values for probe 1
+- Added support for i-grill probes (Thanks @Robbie1983)
+
 ## 2025-07-17
 - Fix for issue #7 where Fahrenheit was not displayed on the lcd
 

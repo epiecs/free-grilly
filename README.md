@@ -115,6 +115,7 @@ Free-Grilly supports more probes that the included Grilleye Iris probes. Support
 | Grilleye Iris  | 25    | 100      | 4250     | The best probe you can use. Fast and accurate  |
 | Ikea fantast   | 25    | 230      | 4250     | Slow. Do not use for quick measurements        |
 | Maverick ET733 | 25    | 200      | 4250     |                                                |
+| Weber Igrill   | 25    | 100      | 3830     |                                                |
 
 Apart from that you can also add your own `custom` **NTC** probes if you know the 3 most important values
 -   Reference temperature in Celcius

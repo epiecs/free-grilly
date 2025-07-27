@@ -78,6 +78,7 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
                                     <option value="custom">Custom</option>
                                 </select>
                             </div>
@@ -129,6 +130,8 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
+                                    <option value="custom">Custom</option>
                                   </select>
                             </div>
                         </div>
@@ -179,6 +182,8 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
+                                    <option value="custom">Custom</option>
                                   </select>
                             </div>
                         </div>
@@ -229,6 +234,8 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
+                                    <option value="custom">Custom</option>
                                   </select>
                             </div>
                         </div>
@@ -279,6 +286,8 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
+                                    <option value="custom">Custom</option>
                                   </select>
                             </div>
                         </div>
@@ -329,6 +338,8 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
+                                    <option value="custom">Custom</option>
                                   </select>
                             </div>
                         </div>
@@ -379,6 +390,8 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
+                                    <option value="custom">Custom</option>
                                   </select>
                             </div>
                         </div>
@@ -429,6 +442,8 @@ const char HTML_PROBES[] = R"=====(
                                     <option value="grilleye_iris">Grilleye Iris</option>
                                     <option value="ikea_fantast">Ikea Fantast</option>
                                     <option value="maverick_et733">Maverick ET733</option>
+                                    <option value="weber_igrill">Weber iGrill</option>
+                                    <option value="custom">Custom</option>
                                   </select>
                             </div>
                         </div>
