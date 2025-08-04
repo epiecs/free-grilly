@@ -67,8 +67,8 @@ namespace config{
     // * Buffers
     // ***********************************
 
-    int json_buffer_size                = 2000;
-    int mqtt_buffer_size                = 2000;
+    int json_buffer_size                = 3000;
+    int mqtt_buffer_size                = 3000;
 
     // ***********************************
     // * Mqtt

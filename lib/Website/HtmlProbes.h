@@ -60,6 +60,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 1</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -112,6 +118,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 2</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -164,6 +176,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 3</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -216,6 +234,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 4</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -268,6 +292,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 5</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -320,6 +350,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 6</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -372,6 +408,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 7</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -424,6 +466,12 @@ const char HTML_PROBES[] = R"=====(
                     <div class="card-body py-1 px-2">
                         <div class="row my-1">
                             <div class="col-12">Probe 8</div>
+                            <div class="col-6"><small>Name</small></div>
+                            <div class="col-6 text-end">
+                                <input class="form-control form-control-sm probe-name" type="text">
+                            </div>
+                        </div>
+                        <div class="row my-1">
                             <div class="col-6"><small>Target temperature</small></div>
                             <div class="col-6 text-end">
                                 <input class="form-control form-control-sm probe-target-temperature" type="text">
@@ -501,6 +549,7 @@ const char HTML_PROBES[] = R"=====(
                     
                     e_probe = document.querySelector('[data-probe="' + probe['probe_id'] +'"]');
 
+                    e_probe.querySelector(".probe-name").value                = probe["name"];
                     e_probe.querySelector(".probe-target-temperature").value  = probe["target_temperature"];
                     e_probe.querySelector(".probe-minimum-temperature").value = probe["minimum_temperature"];
                     e_probe.querySelector(".probe-reference-kohm").value      = probe["reference_kohm"];
@@ -530,6 +579,7 @@ const char HTML_PROBES[] = R"=====(
                     probe_data = {};
     
                     probe_data["probe_id"]            = e_probe.dataset.probe;
+                    probe_data["name"]                = e_probe.querySelector(".probe-name").value;
                     probe_data["target_temperature"]  = e_probe.querySelector(".probe-target-temperature").value;
                     probe_data["minimum_temperature"] = e_probe.querySelector(".probe-minimum-temperature").value;
                     probe_data["reference_kohm"]      = e_probe.querySelector(".probe-reference-kohm").value;

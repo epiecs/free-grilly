@@ -186,6 +186,11 @@ void Probe::check_temperature_status(){
     }
 }
 
+void Probe::set_name(String probe_name){
+    
+    Probe::name = probe_name;
+}
+
 void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){
     
     if(probe_type == "grilleye_iris"){
