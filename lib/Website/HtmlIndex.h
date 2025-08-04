@@ -1,5 +1,4 @@
 const char HTML_INDEX[] = R"=====(
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -62,7 +61,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-1-name">Probe 1&nbsp;&nbsp;<span id="probe-1-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-1-name"> Probe 1</span>&nbsp;&nbsp;<span id="probe-1-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-1-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-1-target">0 C</small></div>
@@ -76,7 +75,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-2-name">Probe 2&nbsp;&nbsp;<span id="probe-2-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-2-name"> Probe 2</span>&nbsp;&nbsp;<span id="probe-2-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-2-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-2-target">0 C</small></div>
@@ -90,7 +89,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-3-name">Probe 3&nbsp;&nbsp;<span id="probe-3-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-3-name"> Probe 3</span>&nbsp;&nbsp;<span id="probe-3-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-3-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-3-target">0 C</small></div>
@@ -104,7 +103,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-4-name">Probe 4&nbsp;&nbsp;<span id="probe-4-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-4-name"> Probe 4</span>&nbsp;&nbsp;<span id="probe-4-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-4-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-4-target">0 C</small></div>
@@ -118,7 +117,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-5-name">Probe 5&nbsp;&nbsp;<span id="probe-5-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-5-name"> Probe 5</span>&nbsp;&nbsp;<span id="probe-5-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-5-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-5-target">0 C</small></div>
@@ -132,7 +131,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-6-name">Probe 6&nbsp;&nbsp;<span id="probe-6-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-6-name"> Probe 6</span>&nbsp;&nbsp;<span id="probe-6-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-6-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-6-target">0 C</small></div>
@@ -146,7 +145,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-7-name">Probe 7&nbsp;&nbsp;<span id="probe-7-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-7-name"> Probe 7</span>&nbsp;&nbsp;<span id="probe-7-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-7-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-7-target">0 C</small></div>
@@ -160,7 +159,7 @@ const char HTML_INDEX[] = R"=====(
                 <div class="card">
                     <div class="card-body py-1 px-2">
                         <div class="row">
-                            <div class="col-8" id="probe-8-name">Probe 8&nbsp;&nbsp;<span id="probe-8-status" class="badge text-dark bg-light"></span></div>
+                            <div class="col-8"><span id="probe-8-name"> Probe 8</span>&nbsp;&nbsp;<span id="probe-8-status" class="badge text-dark bg-light"></span></div>
                             <div class="col-4 probe-temperature text-end" id="probe-8-temperature">0 C</div>
                             <div class="col-5 col-sm-7"><small>Target temperature</small></div>
                             <div class="col-7 col-sm-5 probe-temperature text-end"><small id="probe-8-target">0 C</small></div>
@@ -307,11 +306,12 @@ const char HTML_INDEX[] = R"=====(
                 for(let probe_nr = 1; probe_nr < 9; probe_nr++)
                 {
                     if(data['probes'][probe_nr - 1]['connected'] == true){
-                        e_probes[probe_nr]["temperature"].textContent = data['probes'][probe_nr - 1]['temperature'].toFixed(2) + " " + temp_unit;
 
+                        e_probes[probe_nr]["temperature"].textContent = data['probes'][probe_nr - 1]['temperature'].toFixed(2) + " " + temp_unit;
+                        
                         //* target temperature mode
                         if(data['probes'][probe_nr - 1]['minimum_temperature'] == 0){
-
+                            
                             let temperature_difference = data['probes'][probe_nr - 1]['target_temperature'] - data['probes'][probe_nr - 1]['temperature']
 
                             if(temperature_difference >= 10){
@@ -360,12 +360,8 @@ const char HTML_INDEX[] = R"=====(
                                     e_probes[probe_nr]["status"].classList.remove(...status_classlist);
                                     e_probes[probe_nr]["status"].classList.add(...["bg-warning"]);
                                 }
-                            
                             }
-                            
-                        
                         }
-
 
                     }else{
                         e_probes[probe_nr]["temperature"].textContent = "-";
@@ -374,11 +370,12 @@ const char HTML_INDEX[] = R"=====(
                         e_probes[probe_nr]["status"].classList.remove(...status_classlist);
                         e_probes[probe_nr]["status"].classList.add(...["bg-light", "text-dark"]);
                     }
-                    
+
                     e_probes[probe_nr]["name"].textContent                = data['probes'][probe_nr - 1]['name'];
                     e_probes[probe_nr]["minimum_temperature"].textContent = data['probes'][probe_nr - 1]['minimum_temperature'].toFixed(2) + " " + temp_unit;
                     e_probes[probe_nr]["target_temperature"].textContent  = data['probes'][probe_nr - 1]['target_temperature'].toFixed(2) + " " + temp_unit;
                 }
+
                 updateProbeVisibility();
 
             } catch (error) {
@@ -399,6 +396,5 @@ const char HTML_INDEX[] = R"=====(
     </script>
   </body>
 </html>
-
 
 )=====";

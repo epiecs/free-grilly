@@ -2,6 +2,7 @@
 
 ## 2025-08-04
 - Enhancement for issue #14 to be able to set names for probes
+- Fixed but with labels not showing correctly on the main page
 
 ## 2025-07-27
 - Fix for issue #12 where you could only set custom values for probe 1
