@@ -1,6 +1,9 @@
 # Changelog (firmware only)
 
-## 2025-08-04
+## 2025-08-05
+- bugfix for issue #16 due to incorrect buffer sizes
+
+## 2025-08-04 - Deprecated due to bug
 - Enhancement for issue #14 to be able to set names for probes
 - Fixed but with labels not showing correctly on the main page
 
