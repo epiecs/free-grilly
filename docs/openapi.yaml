@@ -55,8 +55,7 @@ components:
           description: The unique id in UUIDv4 format
         firmware_version:
           type: string
-          format: yy.mm.dd
-          example: 25.3.1
+          example: 25.03.01
           description: The current firmware version in CalVer
         battery_percentage:
           type: integer
@@ -76,7 +75,6 @@ components:
           description: The name of the wifi network that the grill is connected to
         wifi_signal:
           type: integer
-          format: -dbm
           example: -61
           description: The wifi signal expressed in dbm. The closer to 0 the better.
         wifi_ip:
@@ -275,7 +273,6 @@ components:
           description: Wifi SSID
         signal_strength:
           type: integer
-          format: -dbm
           example: -61
           description: The wifi signal expressed in dbm. The closer to 0 the better.
         auth_method:
@@ -309,8 +306,7 @@ components:
           readOnly: true
         firmware_version:
           type: string
-          format: yy.mm.dd
-          example: 25.3.1
+          example: 25.03.01
           description: The current firmware version in CalVer
           readOnly: true
         temperature_unit:
