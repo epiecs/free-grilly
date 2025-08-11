@@ -193,12 +193,26 @@ bool disp::draw_screen_temp(void){
         screen.drawLine(31, 49, 96, 49);
         break;
     case 1:
-        screen.setFont(u8g2_font_profont10_tr);
-        screen.setCursor(62, 17); screen.print(connectedProbeInfo.second[0]);
+
+
+        // probe name
+        screen.setFont(u8g2_font_profont12_tr); screen.drawStr(3, 20, "P : Pork");
+        screen.setCursor(9, 20); screen.print(connectedProbeInfo.second[0]);
+         
 
         // temp text
         current_active_temp = get_temp(connectedProbeInfo.second[0]);
-        screen.setFont(u8g2_font_profont29_tr); screen.setCursor(28, 45); screen.print(current_active_temp);
+        screen.setFont(u8g2_font_profont29_tr); screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);      
+
+        // status text
+        screen.setFont(u8g2_font_profont10_tr); 
+        screen.drawStr(3, 53, "PLACEHOLDER STATUS 1");
+        screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
+
+
+        // ! temp text
+        //!current_active_temp = get_temp(connectedProbeInfo.second[0]);
+        //!screen.setFont(u8g2_font_profont29_tr); screen.setCursor(28, 45); screen.print(current_active_temp);
 
         // temp range 
         current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[0]);
