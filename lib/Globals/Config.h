@@ -72,4 +72,5 @@ namespace config{
     // Screen
     extern int screen_timeout_minutes;
     extern int backlight_timeout_minutes;
+    extern int backlight_brightness;
 }

@@ -29,6 +29,14 @@ namespace gpio{
     int mux_selector_a         = 33;
     int mux_selector_b         = 25;
     int mux_selector_c         = 26;
+
+    int pwm_screen_channel     = 1;
+    int pwm_screen_frequency   = 5000;  
+    int pwm_screen_resolution  = 8;
+
+    int pwm_buzzer_channel     = 2;
+    int pwm_buzzer_frequency   = 100;  
+    int pwm_buzzer_resolution  = 8;
 }
 
 namespace config{
@@ -138,6 +146,7 @@ namespace config{
 
     int screen_timeout_minutes          = 0;
     int backlight_timeout_minutes       = 0;
+    int backlight_brightness            = 255;
 }
 
 namespace grill{

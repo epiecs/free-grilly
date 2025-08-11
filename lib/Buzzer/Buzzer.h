@@ -11,9 +11,9 @@ private:
                            523, 587, 659, 698, 784, 880, 988,     // natural(middle) 7-13
                            1047,1175,1319,1397,1568,1760,1967};   // sharp(high) 14-20
 
-    int channel         = 0;                                      // The starting PWM channel
-    int frequency       = 100;                                    // The starting frequency
-    int resolution      = 8;                                      // 8 bits resolution from 0-255
+    //int channel         = 2;                                      // The starting PWM channel
+    //int frequency       = 100;                                    // The starting frequency
+    //int resolution      = 8;                                      // 8 bits resolution from 0-255
                                                                   // used for volume control
 
     int beep_frequency  = 2500;                                   // Frequency used for beeps

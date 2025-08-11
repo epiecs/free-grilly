@@ -152,7 +152,10 @@ uint16_t bat::i2cWriteBytes(uint8_t subAddress, uint8_t * src, uint8_t count) {
 pwr::pwr() {};
 
 bool pwr::init(void) {
-	pinMode(gpio::power_screen_backlight, OUTPUT);
+	//!pinMode(gpio::power_screen_backlight, OUTPUT);
+	ledcSetup(gpio::pwm_screen_channel, gpio::pwm_screen_frequency, gpio::pwm_screen_resolution);
+	ledcAttachPin(gpio::power_screen_backlight, gpio::pwm_screen_channel);
+	setScreenBrightness(config::backlight_brightness);
 	pinMode(gpio::power_adc_circuit, OUTPUT);
 	pinMode(gpio::power_probes, OUTPUT);
 	return true; 
@@ -162,15 +165,22 @@ bool pwr::setPowerRail(status_type type, int GPIO) {
 	switch (type)
 	{
 	case ENABLE:
-		if(GPIO = gpio::power_screen_backlight) { digitalWrite(GPIO, HIGH);  }
-		else { digitalWrite(GPIO, LOW); }
+		/*if(GPIO = gpio::power_screen_backlight) { digitalWrite(GPIO, HIGH);  }
+		else { }*/
+		digitalWrite(GPIO, LOW);
 		break;
 	case DISABLE:
-		if(GPIO = gpio::power_screen_backlight) { digitalWrite(GPIO, LOW);  }
-		else { digitalWrite(GPIO, HIGH); }
+		/*if(GPIO = gpio::power_screen_backlight) { digitalWrite(GPIO, LOW);  }
+		else { }*/
+		digitalWrite(GPIO, HIGH); 
 		break;
 	}
 	return false;
+}
+
+bool pwr::setScreenBrightness(int brightness) {
+	ledcWrite(gpio::pwm_screen_channel , brightness);
+	return true;
 }
 
 bool pwr::shutdown(void) {

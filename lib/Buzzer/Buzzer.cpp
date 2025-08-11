@@ -6,18 +6,18 @@
 #include "Gpio.h"
 
 Buzzer::Buzzer(){    
-    ledcSetup(Buzzer::channel, Buzzer::frequency, Buzzer::resolution);
+    ledcSetup(gpio::pwm_buzzer_channel, gpio::pwm_buzzer_frequency, gpio::pwm_buzzer_resolution);
 }
 
 void Buzzer::beep(int beeps_amount, int duration){
-    ledcAttachPin(gpio::buzzer, channel);
+    ledcAttachPin(gpio::buzzer, gpio::pwm_buzzer_channel);
     
     for (int beep = 0; beep < beeps_amount; beep++){
-        ledcWriteTone(Buzzer::channel, Buzzer::beep_frequency);
-        ledcWrite(Buzzer::channel, Buzzer::volume);
+        ledcWriteTone(gpio::pwm_buzzer_channel, Buzzer::beep_frequency);
+        ledcWrite(gpio::pwm_buzzer_channel, Buzzer::volume);
         delay(duration);  
-        ledcWriteTone(Buzzer::channel, 0);
-        ledcWrite(Buzzer::channel, 0);
+        ledcWriteTone(gpio::pwm_buzzer_channel, 0);
+        ledcWrite(gpio::pwm_buzzer_channel, 0);
         delay(duration);  
     } 
 
@@ -26,14 +26,14 @@ void Buzzer::beep(int beeps_amount, int duration){
 
 void Buzzer::play_all_notes(){
     
-    ledcAttachPin(gpio::buzzer, channel);
+    ledcAttachPin(gpio::buzzer, gpio::pwm_buzzer_channel);
     
     Serial.println(sizeof Buzzer::notes / sizeof Buzzer::notes[0]);
 
     for(int note = 0; note < 21; note++){
         Serial.println(Buzzer::notes[note]);
 
-        ledcWriteTone(Buzzer::channel, Buzzer::notes[note]);
+        ledcWriteTone(gpio::pwm_buzzer_channel, Buzzer::notes[note]);
         delay(300);
     }
     
