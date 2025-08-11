@@ -1,4 +1,6 @@
 # Changelog (firmware only)
+## TBD
+- Added the option to set the brightness for the backlight of the screen (Enhancement for issue #10)
 
 ## 2025-08-05
 - bugfix for issue #16 due to incorrect buffer sizes
