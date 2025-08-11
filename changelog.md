@@ -1,5 +1,19 @@
 # Changelog (firmware only)
 
+## 2025-08-05
+- bugfix for issue #16 due to incorrect buffer sizes
+
+## 2025-08-04 - Deprecated due to bug
+- Enhancement for issue #14 to be able to set names for probes
+- Fixed but with labels not showing correctly on the main page
+
+## 2025-07-27
+- Fix for issue #12 where you could only set custom values for probe 1
+- Added support for i-grill probes (Thanks @Robbie1983)
+
+## 2025-07-17
+- Fix for issue #7 where Fahrenheit was not displayed on the lcd
+
 ## 2025-06-14
 
 - Added the option to set the timeout for the backlight and/or the screen (Enhancement for issue #2)

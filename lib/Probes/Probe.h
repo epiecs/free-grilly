@@ -36,6 +36,8 @@ public:
 	int reference_beta;									// Beta value from the datasheet
 
 	String type = "grilleye_iris";						// The probe type
+	
+	String name = "Probe";      						// The probe name
 
 	float temperature;								    // The last known temperature for the chosen temperature_unit
 														// in the grill settings
@@ -94,6 +96,13 @@ public:
 	 * @param reference_beta optional, only needed for custom type
 	 */
 	void set_type(String probe_type, int reference_kohm = 100, int reference_celcius = 25, int reference_beta = 4250);
+
+	/**
+	 * @brief Set the name of probe. 
+	 * 
+	 * @param probe_name the name
+	 */
+	void set_name(String probe_name);
 
 	/**
 	 * @brief Sets the temperature values of the probe. Also checks the probe alarms. If the minimum temperature is not set to 0 then we are in range mode.

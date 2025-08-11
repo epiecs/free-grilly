@@ -186,6 +186,11 @@ void Probe::check_temperature_status(){
     }
 }
 
+void Probe::set_name(String probe_name){
+    
+    Probe::name = probe_name;
+}
+
 void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){
     
     if(probe_type == "grilleye_iris"){
@@ -209,6 +214,14 @@ void Probe::set_type(String probe_type, int reference_kohm, int reference_celciu
         Probe::reference_celcius = 25;
         Probe::reference_kohm    = 200;
         Probe::type              = "maverick_et733";
+        return;
+    }
+
+    if(probe_type == "weber_igrill"){
+        Probe::reference_beta    = 3830;
+        Probe::reference_celcius = 25;
+        Probe::reference_kohm    = 100;
+        Probe::type              = "weber_igrill";
         return;
     }
     

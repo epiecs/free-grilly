@@ -19,6 +19,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 
 - [Free-Grilly: Community Firmware for Grilleye Max](#free-grilly-community-firmware-for-grilleye-max)
   - [Features](#features)
+  - [Apps and Integrations](#apps-and-integrations)
   - [API documentation](#api-documentation)
   - [Todo](#todo)
   - [Installation](#installation)
@@ -43,9 +44,14 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 * **Over-the-Air (OTA) Updates:** Easily update the firmware wirelessly through the web interface once the initial flashing is done.
 * **Local REST API:** Provides a RESTful API endpoint on the device for integration with custom scripts, home automation systems, or other applications.
 * * **MQTT support:** All data (grill status/probes/settings) are sent to a mqtt topic. You can also configure probes and settings via mqtt.
+  * [Mqtt documentation](docs/mqtt.md)
 * **Battery Management:** Includes functional battery monitoring and management based on the device's hardware.
 * **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
+
+## Apps and integrations
+
+- An Iphone app created by @rogiernl: https://testflight.apple.com/join/wYTte6sP
 
 ## API documentation
 
@@ -114,6 +120,7 @@ Free-Grilly supports more probes that the included Grilleye Iris probes. Support
 | Grilleye Iris  | 25    | 100      | 4250     | The best probe you can use. Fast and accurate  |
 | Ikea fantast   | 25    | 230      | 4250     | Slow. Do not use for quick measurements        |
 | Maverick ET733 | 25    | 200      | 4250     |                                                |
+| Weber Igrill   | 25    | 100      | 3830     |                                                |
 
 Apart from that you can also add your own `custom` **NTC** probes if you know the 3 most important values
 -   Reference temperature in Celcius

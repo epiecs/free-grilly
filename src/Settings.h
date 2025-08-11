@@ -54,7 +54,7 @@ namespace config{
 
     String grill_name                   = "";
     String grill_uuid                   = "";
-    String grill_firmware_version       = "25.06.14";
+    String grill_firmware_version       = "25.08.05";
 
     String temperature_unit             = "celcius";
     bool beep_enabled                   = true;
@@ -67,8 +67,8 @@ namespace config{
     // * Buffers
     // ***********************************
 
-    int json_buffer_size                = 2000;
-    int mqtt_buffer_size                = 2000;
+    int json_buffer_size                = 3000;
+    int mqtt_buffer_size                = 3000;
 
     // ***********************************
     // * Mqtt

@@ -271,82 +271,100 @@ void GrillConfig::print_settings(){
 void GrillConfig::load_probes(){
 
     String type = "";
-    int kohm = 0;
-    int beta = 0;
-    int temp = 0;
+    String name = "";
+    int kohm    = 0;
+    int beta    = 0;
+    int temp    = 0;
 
     type = config::settings_storage.getString("p1_type");
+    name = config::settings_storage.getString("p1_name", "Probe 1");
     kohm = config::settings_storage.getInt("p1_ref_kohm");
     temp = config::settings_storage.getInt("p1_ref_temp");
     beta = config::settings_storage.getInt("p1_ref_beta");
     grill::probe_1.target_temperature = config::settings_storage.getFloat("p1_target_temp");
     grill::probe_1.minimum_temperature = config::settings_storage.getFloat("p1_min_temp");
     grill::probe_1.set_type(type, kohm, temp, beta);
+    grill::probe_1.set_name(name);
     
     type = config::settings_storage.getString("p2_type");
+    name = config::settings_storage.getString("p2_name", "Probe 2");
     kohm = config::settings_storage.getInt("p2_ref_kohm");
     temp = config::settings_storage.getInt("p2_ref_temp");
     beta = config::settings_storage.getInt("p2_ref_beta");
     grill::probe_2.target_temperature = config::settings_storage.getFloat("p2_target_temp");
     grill::probe_2.minimum_temperature = config::settings_storage.getFloat("p2_min_temp");
     grill::probe_2.set_type(type, kohm, temp, beta);
+    grill::probe_2.set_name(name);
     
     type = config::settings_storage.getString("p3_type");
+    name = config::settings_storage.getString("p3_name", "Probe 3");
     kohm = config::settings_storage.getInt("p3_ref_kohm");
     temp = config::settings_storage.getInt("p3_ref_temp");
     beta = config::settings_storage.getInt("p3_ref_beta");
     grill::probe_3.target_temperature = config::settings_storage.getFloat("p3_target_temp");
     grill::probe_3.minimum_temperature = config::settings_storage.getFloat("p3_min_temp");
     grill::probe_3.set_type(type, kohm, temp, beta);
+    grill::probe_3.set_name(name);
     
     type = config::settings_storage.getString("p4_type");
+    name = config::settings_storage.getString("p4_name", "Probe 4");
     kohm = config::settings_storage.getInt("p4_ref_kohm");
     temp = config::settings_storage.getInt("p4_ref_temp");
     beta = config::settings_storage.getInt("p4_ref_beta");
     grill::probe_4.target_temperature = config::settings_storage.getFloat("p4_target_temp");
     grill::probe_4.minimum_temperature = config::settings_storage.getFloat("p4_min_temp");
     grill::probe_4.set_type(type, kohm, temp, beta);
+    grill::probe_4.set_name(name);
     
     type = config::settings_storage.getString("p5_type");
+    name = config::settings_storage.getString("p5_name", "Probe 5");
     kohm = config::settings_storage.getInt("p5_ref_kohm");
     temp = config::settings_storage.getInt("p5_ref_temp");
     beta = config::settings_storage.getInt("p5_ref_beta");
     grill::probe_5.target_temperature = config::settings_storage.getFloat("p5_target_temp");
     grill::probe_5.minimum_temperature = config::settings_storage.getFloat("p5_min_temp");
     grill::probe_5.set_type(type, kohm, temp, beta);
+    grill::probe_5.set_name(name);
     
     type = config::settings_storage.getString("p6_type");
+    name = config::settings_storage.getString("p6_name", "Probe 6");
     kohm = config::settings_storage.getInt("p6_ref_kohm");
     temp = config::settings_storage.getInt("p6_ref_temp");
     beta = config::settings_storage.getInt("p6_ref_beta");
     grill::probe_6.target_temperature = config::settings_storage.getFloat("p6_target_temp");
     grill::probe_6.minimum_temperature = config::settings_storage.getFloat("p6_min_temp");
     grill::probe_6.set_type(type, kohm, temp, beta);
+    grill::probe_6.set_name(name);
     
     type = config::settings_storage.getString("p7_type");
+    name = config::settings_storage.getString("p7_name", "Probe 7");
     kohm = config::settings_storage.getInt("p7_ref_kohm");
     temp = config::settings_storage.getInt("p7_ref_temp");
     beta = config::settings_storage.getInt("p7_ref_beta");
     grill::probe_7.target_temperature = config::settings_storage.getFloat("p7_target_temp");
     grill::probe_7.minimum_temperature = config::settings_storage.getFloat("p7_min_temp");
     grill::probe_7.set_type(type, kohm, temp, beta);
+    grill::probe_7.set_name(name);
     
     type = config::settings_storage.getString("p8_type");
+    name = config::settings_storage.getString("p8_name", "Probe 8");
     kohm = config::settings_storage.getInt("p8_ref_kohm");
     beta = config::settings_storage.getInt("p8_ref_temp"); 
     temp = config::settings_storage.getInt("p8_ref_beta");
     grill::probe_8.target_temperature = config::settings_storage.getFloat("p8_target_temp");
     grill::probe_8.minimum_temperature = config::settings_storage.getFloat("p8_min_temp");
     grill::probe_8.set_type(type, kohm, temp, beta);
+    grill::probe_8.set_name(name);
 
     GrillConfig::print_probes();
 }
 
 void GrillConfig::save_probes(){
-    Serial.println("Initializing probes");
+    Serial.println("Saving probes");
 
     // We can take the base values from the object since we already supply this in the constructor
     config::settings_storage.putString("p1_type", grill::probe_1.type);
+    config::settings_storage.putString("p1_name", grill::probe_1.name);
     config::settings_storage.putInt("p1_ref_kohm", grill::probe_1.reference_kohm);
     config::settings_storage.putInt("p1_ref_beta", grill::probe_1.reference_beta);
     config::settings_storage.putInt("p1_ref_temp", grill::probe_1.reference_celcius);
@@ -354,6 +372,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p1_min_temp", grill::probe_1.minimum_temperature);
     
     config::settings_storage.putString("p2_type", grill::probe_2.type);
+    config::settings_storage.putString("p2_name", grill::probe_2.name);
     config::settings_storage.putInt("p2_ref_kohm", grill::probe_2.reference_kohm);
     config::settings_storage.putInt("p2_ref_beta", grill::probe_2.reference_beta);
     config::settings_storage.putInt("p2_ref_temp", grill::probe_2.reference_celcius);
@@ -361,6 +380,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p2_min_temp", grill::probe_2.minimum_temperature);
     
     config::settings_storage.putString("p3_type", grill::probe_3.type);
+    config::settings_storage.putString("p3_name", grill::probe_3.name);
     config::settings_storage.putInt("p3_ref_kohm", grill::probe_3.reference_kohm);
     config::settings_storage.putInt("p3_ref_beta", grill::probe_3.reference_beta);
     config::settings_storage.putInt("p3_ref_temp", grill::probe_3.reference_celcius);
@@ -368,6 +388,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p3_min_temp", grill::probe_3.minimum_temperature);
     
     config::settings_storage.putString("p4_type", grill::probe_4.type);
+    config::settings_storage.putString("p4_name", grill::probe_4.name);
     config::settings_storage.putInt("p4_ref_kohm", grill::probe_4.reference_kohm);
     config::settings_storage.putInt("p4_ref_beta", grill::probe_4.reference_beta);
     config::settings_storage.putInt("p4_ref_temp", grill::probe_4.reference_celcius);
@@ -375,6 +396,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p4_min_temp", grill::probe_4.minimum_temperature);
     
     config::settings_storage.putString("p5_type", grill::probe_5.type);
+    config::settings_storage.putString("p5_name", grill::probe_5.name);
     config::settings_storage.putInt("p5_ref_kohm", grill::probe_5.reference_kohm);
     config::settings_storage.putInt("p5_ref_beta", grill::probe_5.reference_beta);
     config::settings_storage.putInt("p5_ref_temp", grill::probe_5.reference_celcius);
@@ -382,6 +404,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p5_min_temp", grill::probe_5.minimum_temperature);
     
     config::settings_storage.putString("p6_type", grill::probe_6.type);
+    config::settings_storage.putString("p6_name", grill::probe_6.name);
     config::settings_storage.putInt("p6_ref_kohm", grill::probe_6.reference_kohm);
     config::settings_storage.putInt("p6_ref_beta", grill::probe_6.reference_beta);
     config::settings_storage.putInt("p6_ref_temp", grill::probe_6.reference_celcius);
@@ -389,6 +412,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p6_min_temp", grill::probe_6.minimum_temperature);
     
     config::settings_storage.putString("p7_type", grill::probe_7.type);
+    config::settings_storage.putString("p7_name", grill::probe_7.name);
     config::settings_storage.putInt("p7_ref_kohm", grill::probe_7.reference_kohm);
     config::settings_storage.putInt("p7_ref_beta", grill::probe_7.reference_beta);
     config::settings_storage.putInt("p7_ref_temp", grill::probe_7.reference_celcius);
@@ -396,6 +420,7 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p7_min_temp", grill::probe_7.minimum_temperature);
     
     config::settings_storage.putString("p8_type", grill::probe_8.type);
+    config::settings_storage.putString("p8_name", grill::probe_8.name);
     config::settings_storage.putInt("p8_ref_kohm", grill::probe_8.reference_kohm);
     config::settings_storage.putInt("p8_ref_beta", grill::probe_8.reference_beta);
     config::settings_storage.putInt("p8_ref_temp", grill::probe_8.reference_celcius);
@@ -411,6 +436,7 @@ void GrillConfig::initialize_probes(){
 
     // We can take the base values from the object since we already supply this in the constructor
     config::settings_storage.putString("p1_type", "grilleye_iris");
+    config::settings_storage.putString("p1_name", "Probe 1");
     config::settings_storage.putInt("p1_ref_kohm", grill::probe_1.reference_kohm);
     config::settings_storage.putInt("p1_ref_beta", grill::probe_1.reference_beta);
     config::settings_storage.putInt("p1_ref_temp", grill::probe_1.reference_celcius);
@@ -418,6 +444,7 @@ void GrillConfig::initialize_probes(){
     config::settings_storage.putFloat("p1_target_temp", grill::probe_1.target_temperature);
     
     config::settings_storage.putString("p2_type", "grilleye_iris");
+    config::settings_storage.putString("p2_name", "Probe 2");
     config::settings_storage.putInt("p2_ref_kohm", grill::probe_2.reference_kohm);
     config::settings_storage.putInt("p2_ref_beta", grill::probe_2.reference_beta);
     config::settings_storage.putInt("p2_ref_temp", grill::probe_2.reference_celcius);
@@ -425,6 +452,7 @@ void GrillConfig::initialize_probes(){
     config::settings_storage.putFloat("p2_target_temp", grill::probe_2.target_temperature);
     
     config::settings_storage.putString("p3_type", "grilleye_iris");
+    config::settings_storage.putString("p3_name", "Probe 3");
     config::settings_storage.putInt("p3_ref_kohm", grill::probe_3.reference_kohm);
     config::settings_storage.putInt("p3_ref_beta", grill::probe_3.reference_beta);
     config::settings_storage.putInt("p3_ref_temp", grill::probe_3.reference_celcius);
@@ -432,6 +460,7 @@ void GrillConfig::initialize_probes(){
     config::settings_storage.putFloat("p3_target_temp", grill::probe_3.target_temperature);
     
     config::settings_storage.putString("p4_type", "grilleye_iris");
+    config::settings_storage.putString("p4_name", "Probe 4");
     config::settings_storage.putInt("p4_ref_kohm", grill::probe_4.reference_kohm);
     config::settings_storage.putInt("p4_ref_beta", grill::probe_4.reference_beta);
     config::settings_storage.putInt("p4_ref_temp", grill::probe_4.reference_celcius);
@@ -439,6 +468,7 @@ void GrillConfig::initialize_probes(){
     config::settings_storage.putFloat("p4_target_temp", grill::probe_4.target_temperature);
     
     config::settings_storage.putString("p5_type", "grilleye_iris");
+    config::settings_storage.putString("p5_name", "Probe 5");
     config::settings_storage.putInt("p5_ref_kohm", grill::probe_5.reference_kohm);
     config::settings_storage.putInt("p5_ref_beta", grill::probe_5.reference_beta);
     config::settings_storage.putInt("p5_ref_temp", grill::probe_5.reference_celcius);
@@ -446,6 +476,7 @@ void GrillConfig::initialize_probes(){
     config::settings_storage.putFloat("p5_target_temp", grill::probe_5.target_temperature);
     
     config::settings_storage.putString("p6_type", "grilleye_iris");
+    config::settings_storage.putString("p6_name", "Probe 6");
     config::settings_storage.putInt("p6_ref_kohm", grill::probe_6.reference_kohm);
     config::settings_storage.putInt("p6_ref_beta", grill::probe_6.reference_beta);
     config::settings_storage.putInt("p6_ref_temp", grill::probe_6.reference_celcius);
@@ -453,6 +484,7 @@ void GrillConfig::initialize_probes(){
     config::settings_storage.putFloat("p6_target_temp", grill::probe_6.target_temperature);
     
     config::settings_storage.putString("p7_type", "grilleye_iris");
+    config::settings_storage.putString("p7_name", "Probe 7");
     config::settings_storage.putInt("p7_ref_kohm", grill::probe_7.reference_kohm);
     config::settings_storage.putInt("p7_ref_beta", grill::probe_7.reference_beta);
     config::settings_storage.putInt("p7_ref_temp", grill::probe_7.reference_celcius);
@@ -460,6 +492,7 @@ void GrillConfig::initialize_probes(){
     config::settings_storage.putFloat("p7_target_temp", grill::probe_7.target_temperature);
     
     config::settings_storage.putString("p8_type", "grilleye_iris");
+    config::settings_storage.putString("p8_name", "Probe 8");
     config::settings_storage.putInt("p8_ref_kohm", grill::probe_8.reference_kohm);
     config::settings_storage.putInt("p8_ref_beta", grill::probe_8.reference_beta);
     config::settings_storage.putInt("p8_ref_temp", grill::probe_8.reference_celcius);   
@@ -469,7 +502,8 @@ void GrillConfig::initialize_probes(){
 
 void GrillConfig::print_probes(){
 
-    String type = "";
+    String type  = "";
+    String name  = "";
     float target = 0;
     float min    = 0;
     int   kohm   = 0;
@@ -479,75 +513,83 @@ void GrillConfig::print_probes(){
     Serial.println("|++++++++++ PROBE Settings ++++++++++|");
 
     target = config::settings_storage.getFloat("p1_target_temp");
+    name   = config::settings_storage.getString("p1_name", "Probe 1");
     min    = config::settings_storage.getFloat("p1_min_temp");
     type   = config::settings_storage.getString("p1_type");
     kohm   = config::settings_storage.getInt("p1_ref_kohm");
     temp   = config::settings_storage.getInt("p1_ref_temp");
     beta   = config::settings_storage.getInt("p1_ref_beta");
-    Serial.printf("Probe 1 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 1 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
     
     target = config::settings_storage.getFloat("p2_target_temp");
+    name   = config::settings_storage.getString("p2_name", "Probe 2");
     min    = config::settings_storage.getFloat("p2_min_temp");
     type   = config::settings_storage.getString("p2_type");
     kohm   = config::settings_storage.getInt("p2_ref_kohm");
     temp   = config::settings_storage.getInt("p2_ref_temp");
     beta   = config::settings_storage.getInt("p2_ref_beta");
-    Serial.printf("Probe 2 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 2 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
     
     target = config::settings_storage.getFloat("p3_target_temp");
+    name   = config::settings_storage.getString("p3_name", "Probe 3");
     min    = config::settings_storage.getFloat("p3_min_temp");
     type   = config::settings_storage.getString("p3_type");
     kohm   = config::settings_storage.getInt("p3_ref_kohm");
     temp   = config::settings_storage.getInt("p3_ref_temp");
     beta   = config::settings_storage.getInt("p3_ref_beta");
-    Serial.printf("Probe 3 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 3 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
     
     target = config::settings_storage.getFloat("p4_target_temp");
+    name   = config::settings_storage.getString("p4_name", "Probe 4");
     min    = config::settings_storage.getFloat("p4_min_temp");
     type   = config::settings_storage.getString("p4_type");
     kohm   = config::settings_storage.getInt("p4_ref_kohm");
     temp   = config::settings_storage.getInt("p4_ref_temp");
     beta   = config::settings_storage.getInt("p4_ref_beta");
-    Serial.printf("Probe 4 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 4 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
     
     target = config::settings_storage.getFloat("p5_target_temp");
+    name   = config::settings_storage.getString("p5_name", "Probe 5");
     min    = config::settings_storage.getFloat("p5_min_temp");
     type   = config::settings_storage.getString("p5_type");
     kohm   = config::settings_storage.getInt("p5_ref_kohm");
     temp   = config::settings_storage.getInt("p5_ref_temp");
     beta   = config::settings_storage.getInt("p5_ref_beta");
-    Serial.printf("Probe 5 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 5 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
     
     target = config::settings_storage.getFloat("p6_target_temp");
+    name   = config::settings_storage.getString("p6_name", "Probe 6");
     min    = config::settings_storage.getFloat("p6_min_temp");
     type   = config::settings_storage.getString("p6_type");
     kohm   = config::settings_storage.getInt("p6_ref_kohm");
     temp   = config::settings_storage.getInt("p6_ref_temp");
     beta   = config::settings_storage.getInt("p6_ref_beta");
-    Serial.printf("Probe 6 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 6 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
     
     target = config::settings_storage.getFloat("p7_target_temp");
+    name   = config::settings_storage.getString("p7_name", "Probe 7");
     min    = config::settings_storage.getFloat("p7_min_temp");
     type   = config::settings_storage.getString("p7_type");
     kohm   = config::settings_storage.getInt("p7_ref_kohm");
     temp   = config::settings_storage.getInt("p7_ref_temp");
     beta   = config::settings_storage.getInt("p7_ref_beta");
-    Serial.printf("Probe 7 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 7 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
     
     target = config::settings_storage.getFloat("p8_target_temp");
+    name   = config::settings_storage.getString("p8_name", "Probe 8");
     min    = config::settings_storage.getFloat("p8_min_temp");
     type   = config::settings_storage.getString("p8_type");
     kohm   = config::settings_storage.getInt("p8_ref_kohm");
     temp   = config::settings_storage.getInt("p8_ref_temp");
     beta   = config::settings_storage.getInt("p8_ref_beta");
-    Serial.printf("Probe 8 :: %f %f - %s %d %d %d", target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 8 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
     Serial.println("");
 
     Serial.println("|++++++++++ PROBE Settings ++++++++++|");

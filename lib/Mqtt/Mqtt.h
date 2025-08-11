@@ -5,7 +5,7 @@
 class Mqtt : public PubSubClient{
 
 private:
-    String client_name          = "";
+    String client_name              = "";
 
     // topics to publish to
     String pub_topic_grill          = "";
