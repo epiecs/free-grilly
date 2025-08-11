@@ -15,6 +15,7 @@ U8G2_ST7565_64128N_F_4W_SW_SPI screen(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /*
 bool is_critical_battery_flash          = false;
 int notification_offset                 = 0;
 int current_screen_page                 = 0;
+String current_active_name              = "";
 float current_active_temp               = 0;
 int current_target_temp                 = 0;
 int current_minimum_temp                = 0;
@@ -196,10 +197,11 @@ bool disp::draw_screen_temp(void){
 
 
         // probe name
-        screen.setFont(u8g2_font_profont12_tr); screen.drawStr(3, 20, "P : Pork");
+        current_active_name = get_name(connectedProbeInfo.second[0]);
+        screen.setFont(u8g2_font_profont12_tr); screen.drawStr(3, 20, "P :");
         screen.setCursor(9, 20); screen.print(connectedProbeInfo.second[0]);
-         
-
+        screen.setCursor(22, 20); screen.print(current_active_name);
+        
         // temp text
         current_active_temp = get_temp(connectedProbeInfo.second[0]);
         screen.setFont(u8g2_font_profont29_tr); screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);      
@@ -404,6 +406,23 @@ bool disp::draw_temp(int connectedProbe) {
     }
     return true;
 } 
+
+String disp::get_name(int connectedProbe) {
+    String name = "";
+    switch (connectedProbe) {
+        case 1: name = grill::probe_1.name; break;
+        case 2: name = grill::probe_2.name; break;
+        case 3: name = grill::probe_3.name; break;
+        case 4: name = grill::probe_4.name; break;
+        case 5: name = grill::probe_5.name; break;
+        case 6: name = grill::probe_6.name; break;
+        case 7: name = grill::probe_7.name; break;
+        case 8: name = grill::probe_8.name; break;
+    default:
+        break;
+    }
+    return name;
+}
 
 float disp::get_temp(int connectedProbe) {
     float temp = 0;

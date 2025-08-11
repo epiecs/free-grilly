@@ -50,21 +50,27 @@ private:
     */
     bool draw_temp(int connectedProbe);
     /**
-    *	@brief Subroutine to get the temperature 
+    *	@brief Subroutine to get the target temperature 
     *   @param connectedProbe probe number
     *	@return true 
     */
     int get_target_temp(int connectedProbe);
         /**
-    *	@brief Subroutine to get the temperature 
+    *	@brief Subroutine to get the minimum temperature 
     *   @param connectedProbe probe number
     *	@return true 
     */
     int get_minimum_temp(int connectedProbe);
     /**
-    *	@brief Subroutine to get the minimum temperature 
+    *	@brief Subroutine to get the probe name 
     *   @param connectedProbe probe number
-    *	@return true 
+    *	@return name of probe 
+    */
+    String get_name(int connectedProbe);
+        /**
+    *	@brief Subroutine to get the temperature  
+    *   @param connectedProbe probe number
+    *	@return true
     */
     float get_temp(int connectedProbe);
     /**
