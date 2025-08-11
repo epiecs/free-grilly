@@ -38,7 +38,7 @@ disp::disp() {}
 
 bool disp::init(void){
     screen.begin();
-    screen.setContrast(10);
+    screen.setContrast(22);
     screen.setFontMode(1);
     screen.setBitmapMode(1);
     screen_background_pwr(ENABLE);
