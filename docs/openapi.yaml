@@ -345,6 +345,13 @@ components:
           type: integer
           example: 0
           description: How many minutes before the backlight turns off automatically. 0 disables the timeout.
+        backlight_brightness:
+          type: integer
+          description: Screen backlight brightness setting (0-5)
+          example: 5
+          default: 5
+          minimum: 0
+          maximum: 5
         mqtt_broker:
           type: string
           example: "broker.test.com"
