@@ -63,11 +63,11 @@ bool disp::show_settings_page(void){
 bool disp::screen_background_pwr(status_type type){
     switch (type) {
 	case ENABLE:
-        power.setPowerRail(ENABLE,gpio::power_screen_backlight);
+        power.setScreenBrightness(config::backlight_brightness);
         millis_backlight_timeout = millis();
         break;
     case DISABLE:
-        power.setPowerRail(DISABLE,gpio::power_screen_backlight);
+        power.setScreenBrightness(0);
         break;
     }
     return true;
@@ -89,7 +89,7 @@ bool disp::screen_pwr(status_type type){
 
 bool disp::display_update(void) {
     // ***********************************
-    // * Screen timeouts
+    // TODO * Screen timeouts
     // ***********************************
     if (config::backlight_timeout_minutes > 0 and millis_backlight_timeout + (config::backlight_timeout_minutes * 60000) < millis()) {
         screen_background_pwr(DISABLE);

@@ -61,11 +61,9 @@ public:
 	bool read_battery(void);
 
 private:
-
 	// ***********************************
 	// * Battery characteristics
 	// ***********************************
-
 	/**
 	*	@brief Reads and returns the battery voltage
 	*	@return battery voltage measured in V
@@ -159,7 +157,13 @@ public:
 	*	@param GPIO GPIO pin of the power rail
 	*	@return true on success
 	*/
-	bool setPowerRail(status_type type = DISABLE, int GPIO = gpio::power_screen_backlight);
+	bool setPowerRail(status_type type = DISABLE, int GPIO = gpio::power_adc_circuit);
+	/**
+	*	@brief Set the brightness of the screen 
+	*	@param int value between 0 & 255 
+	*	@return true on success
+	*/
+	bool setScreenBrightness(int brightness);
 	/**
 	*	@brief Disables the power rails and put the device in deep sleep
 	*	@return true on success

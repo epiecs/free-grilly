@@ -18,5 +18,13 @@ namespace gpio{
     extern int mux_selector_a;
     extern int mux_selector_b;
     extern int mux_selector_c;
+
+    extern int pwm_screen_channel;                                
+    extern int pwm_screen_frequency;
+    extern int pwm_screen_resolution;
+
+    extern int pwm_buzzer_channel;                                
+    extern int pwm_buzzer_frequency;
+    extern int pwm_buzzer_resolution;
 }
 
