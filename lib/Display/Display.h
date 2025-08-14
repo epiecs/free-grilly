@@ -50,7 +50,23 @@ private:
     */
     bool draw_temp(int connectedProbe);
     /**
-    *	@brief Subroutine to get the target temperature 
+    *	@brief Subroutine to draw the progress bar target
+    *   @param current_minimum_temp current minimum temperature setting
+    *   @param current_target_temp current target temperature setting
+    *   @param xLoc x-axis location offset from 0 (left)
+    *	@return true 
+    */
+    bool draw_progress_target(int current_minimum_temp, int current_target_temp, int xLoc = 0);
+    /**
+    *	@brief Subroutine to draw the progress bar range
+    *   @param current_minimum_temp current minimum temperature setting
+    *   @param current_target_temp current target temperature setting
+    *   @param xLoc x-axis location offset from 0 (left)
+    *	@return true 
+    */
+    bool draw_progress_range(int current_minimum_temp, int current_target_temp, int xLoc = 0);
+    /**
+    *	@brief Subroutine to get the target temperature
     *   @param connectedProbe probe number
     *	@return true 
     */

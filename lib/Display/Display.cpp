@@ -88,9 +88,6 @@ bool disp::screen_pwr(status_type type){
 
 
 bool disp::display_update(void) {
-    // ***********************************
-    // TODO * Screen timeouts
-    // ***********************************
     if (config::backlight_timeout_minutes > 0 and millis_backlight_timeout + (config::backlight_timeout_minutes * 60000) < millis()) {
         screen_background_pwr(DISABLE);
     }
@@ -194,63 +191,28 @@ bool disp::draw_screen_temp(void){
         screen.drawLine(31, 49, 96, 49);
         break;
     case 1:
-
-
-        // probe name
+        // variables
         current_active_name = get_name(connectedProbeInfo.second[0]);
+        current_active_temp = get_temp(connectedProbeInfo.second[0]);
+        current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[0]);
+        current_target_temp = get_target_temp(connectedProbeInfo.second[0]);
+        // probe name
         screen.setFont(u8g2_font_profont12_tr); screen.drawStr(3, 20, "P :");
         screen.setCursor(9, 20); screen.print(connectedProbeInfo.second[0]);
         screen.setCursor(22, 20); screen.print(current_active_name);
-        
         // temp text
-        current_active_temp = get_temp(connectedProbeInfo.second[0]);
-        screen.setFont(u8g2_font_profont29_tr); screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);      
-
+        screen.setFont(u8g2_font_profont29_tr); screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);     
         // status text
         screen.setFont(u8g2_font_profont10_tr); 
         screen.drawStr(3, 53, "PLACEHOLDER STATUS 1");
         screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
-
-
-        // ! temp text
-        //!current_active_temp = get_temp(connectedProbeInfo.second[0]);
-        //!screen.setFont(u8g2_font_profont29_tr); screen.setCursor(28, 45); screen.print(current_active_temp);
-
-        // temp range 
-        current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[0]);
-        if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) {
-            screen.drawFrame(121, 10, 7, 53);
-
-            screen.drawLine(120, 21, 118, 21);
-            int target_offset = 0;
-            if (current_target_temp > 99) {target_offset = 4;}
-            screen.setFont(u8g2_font_4x6_tr); screen.setCursor(110 - target_offset, 24); screen.print(current_target_temp);
-            screen.drawLine(120, 41, 118, 41);
-            target_offset = 0;
-            if (current_minimum_temp > 99) {target_offset = 4;}
-            screen.setFont(u8g2_font_4x6_tr); screen.setCursor(110 - target_offset, 44); screen.print(current_minimum_temp);
-
-            int range_offset = 20+(20*((current_active_temp-current_minimum_temp)/(current_target_temp-current_minimum_temp)));
-            if (range_offset > 50) {range_offset = 50;} if (range_offset < 1) {range_offset = 0;}
-            screen.drawBox(122, 60 - range_offset, 5, 2 + range_offset);
-        }
-
-        // temp target 
-        current_target_temp = get_target_temp(connectedProbeInfo.second[0]);
-        if (current_target_temp > 0 && current_minimum_temp == 0) {
-            screen.drawFrame(121, 10, 7, 53);
-
-            screen.drawLine(120, 21, 118, 21);
-            int target_offset = 0;
-            if (current_target_temp > 99) {target_offset = 4;}
-            screen.setFont(u8g2_font_4x6_tr); screen.setCursor(110 - target_offset, 24); screen.print(current_target_temp);
-
-            int range_offset = 40*(current_active_temp/current_target_temp);
-            if (range_offset > 50) {range_offset = 50;}
-            screen.drawBox(122, 60 - range_offset, 5, 2 + range_offset);
-        }
-        
+        // progress bar
+        if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) 
+            draw_progress_range(current_minimum_temp, current_target_temp, 121);
+        if (current_target_temp > 0 && current_minimum_temp == 0) 
+            draw_progress_target(current_minimum_temp, current_target_temp, 121);
         break;
+
     case 2:
         screen.drawLine(63, 9, 63, 63);
         for (int i = 0; i <= 1; i++){
@@ -374,6 +336,40 @@ bool disp::draw_thermometer(int xLoc, int yLoc, int probe_temp, int probe_target
     if(probe_temp >= probe_target + 10) { screen.drawLine(xLoc+2, yLoc+1, xLoc+2, yLoc+1); }
     return true;
 } 
+
+bool disp::draw_progress_range(int current_minimum_temp, int current_target_temp, int x_Loc) {
+    screen.drawFrame(x_Loc, 10, 7, 53);
+    screen.drawLine(x_Loc - 1, 21, x_Loc - 3, 21);
+    int target_offset = 0;
+    if (current_target_temp > 99) {target_offset = 4;}
+    screen.setFont(u8g2_font_4x6_tr); screen.setCursor(x_Loc - 11 - target_offset, 24); screen.print(current_target_temp);
+    screen.drawLine(x_Loc - 1, 41, x_Loc - 3, 41);
+    target_offset = 0;
+    if (current_minimum_temp > 99) {target_offset = 4;}
+    screen.setFont(u8g2_font_4x6_tr); screen.setCursor(x_Loc - 11 - target_offset, 44); screen.print(current_minimum_temp);
+
+    int range_offset = 20+(20*((current_active_temp-current_minimum_temp)/(current_target_temp-current_minimum_temp)));
+    if (range_offset > 50) {range_offset = 50;} if (range_offset < 1) {range_offset = 0;}
+    screen.drawBox(x_Loc+1, 60 - range_offset, 5, 2 + range_offset);
+
+    return true;
+}
+
+bool disp::draw_progress_target(int current_minimum_temp, int current_target_temp, int x_Loc) {
+        screen.drawFrame(x_Loc, 10, 7, 53);
+
+        screen.drawLine(x_Loc - 1, 21, x_Loc - 3, 21);
+        int target_offset = 0;
+        if (current_target_temp > 99) {target_offset = 4;}
+        screen.setFont(u8g2_font_4x6_tr); screen.setCursor(x_Loc - 11 - target_offset, 24); screen.print(current_target_temp);
+
+        int range_offset = 40*(current_active_temp/current_target_temp);
+        if (range_offset > 50) {range_offset = 50;}
+        screen.drawBox(x_Loc +1 , 60 - range_offset, 5, 2 + range_offset);
+    return true;
+}
+
+
 
 bool disp::draw_temp(int connectedProbe) {
     if(config::temperature_unit == "celcius"){
