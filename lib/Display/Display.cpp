@@ -196,35 +196,57 @@ bool disp::draw_screen_temp(void){
         current_active_temp = get_temp(connectedProbeInfo.second[0]);
         current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[0]);
         current_target_temp = get_target_temp(connectedProbeInfo.second[0]);
+
         // probe name
-        screen.setFont(u8g2_font_profont12_tr); screen.drawStr(3, 20, "P :");
+        screen.setFont(u8g2_font_profont12_tr);
+        screen.drawStr(3, 20, "P :");
         screen.setCursor(9, 20); screen.print(connectedProbeInfo.second[0]);
         screen.setCursor(22, 20); screen.print(current_active_name);
+        
         // temp text
-        screen.setFont(u8g2_font_profont29_tr); screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);     
+        screen.setFont(u8g2_font_profont29_tr); 
+        screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);      
+
         // status text
         screen.setFont(u8g2_font_profont10_tr); 
         screen.drawStr(3, 53, "PLACEHOLDER STATUS 1");
         screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
+       
         // progress bar
         if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) 
             draw_progress_range(current_minimum_temp, current_target_temp, 121);
         if (current_target_temp > 0 && current_minimum_temp == 0) 
             draw_progress_target(current_minimum_temp, current_target_temp, 121);
         break;
-
+        
     case 2:
-        screen.drawLine(63, 9, 63, 63);
         for (int i = 0; i <= 1; i++){
+            // variables
+            int x_offset = 0;
+            current_active_name = get_name(connectedProbeInfo.second[i]);
+            current_active_temp = get_temp(connectedProbeInfo.second[i]);
+            current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[i]);
+            current_target_temp = get_target_temp(connectedProbeInfo.second[i]);
+
+            // probe name
+            
+            if(i == 0) { x_offset = 3;} 
+            if(i == 1) { x_offset = 68;} 
             screen.setFont(u8g2_font_profont10_tr);
-            if(i == 0) { screen.setCursor(26, 17);}
-            if(i == 1) { screen.setCursor(92, 17);}
-            screen.print(connectedProbeInfo.second[i]);
-            screen.setFont(u8g2_font_profont15_tr);  
-            if(i == 0) { screen.setCursor(12, 34);}
-            if(i == 1) { screen.setCursor(76, 34);}
-            draw_temp(connectedProbeInfo.second[i]);
-        }
+            screen.drawStr(x_offset, 16, "P :");
+            screen.setCursor(x_offset + 5, 16); screen.print(connectedProbeInfo.second[i]);
+            screen.setCursor(x_offset + 15, 16); screen.print(current_active_name);
+            
+            // temp text
+            screen.setFont(u8g2_font_profont22_tr); 
+            screen.setCursor(x_offset, 36); screen.printf("%.0f", current_active_temp);      
+        
+            // progress bar
+            if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) 
+                draw_progress_range(current_minimum_temp, current_target_temp, x_offset + 55);
+            if (current_target_temp > 0 && current_minimum_temp == 0) 
+                draw_progress_target(current_minimum_temp, current_target_temp, x_offset + 53);
+            }
         break;
     case 3:
         screen.drawLine(42, 9, 42, 63);
