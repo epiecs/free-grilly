@@ -209,7 +209,7 @@ namespace task{
     int mqttStackSize         = 8000;
     int powerbuttonStackSize  = 10000; //Needed to be able to handle factory reset
     int probesStackSize       = 1000;
-    int screenStackSize       = 2000;
+    int screenStackSize       = 3000;
     int webserverStackSize    = 4000;
-    int stackmonitorStackSize = 5000;
+    int stackmonitorStackSize = 4000;
 }

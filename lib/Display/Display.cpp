@@ -33,6 +33,9 @@ static const unsigned char volume_2[]           U8X8_PROGMEM = {0x08,0x0c,0x2f,0
 static const unsigned char volume_1[]           U8X8_PROGMEM = {0x08,0x0c,0x2f,0x2f,0x0c,0x08};
 static const unsigned char volume_mute[]        U8X8_PROGMEM = {0x08,0xac,0x4f,0xaf,0x0c,0x08};
 static const unsigned char degrees[]            U8X8_PROGMEM = {0x02,0x05,0x02};
+static const unsigned char temp_low[]           U8X8_PROGMEM = {0x80,0x00,0xa0,0x02,0xc8,0x09,0x8c,0x18,0x90,0x04,0xa2,0x22,0xc4,0x11,0xff,0x7f,0xc4,0x11,0xa2,0x22,0x90,0x04,0x8c,0x18,0xc8,0x09,0xa0,0x02,0x80,0x00};
+static const unsigned char temp_high[]          U8X8_PROGMEM = {0x44,0x04,0x88,0x08,0x88,0x08,0x88,0x08,0x44,0x04,0x22,0x02,0x11,0x01,0x11,0x01,0x11,0x01,0x22,0x02};
+
 
 
 disp::disp() {}
@@ -203,13 +206,13 @@ bool disp::draw_screen_temp(void){
         screen.setCursor(9, 20); screen.print(connectedProbeInfo.second[0]);
         screen.setCursor(22, 20); screen.print(current_active_name);
         
-        // temp text
+        // probe temp 
         screen.setFont(u8g2_font_profont29_tr); 
         screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);      
 
         // status text
         screen.setFont(u8g2_font_profont10_tr); 
-        screen.drawStr(3, 53, "PLACEHOLDER STATUS 1");
+        screen.drawStr(3, 53, "00:00");
         screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
        
         // progress bar
@@ -222,31 +225,54 @@ bool disp::draw_screen_temp(void){
     case 2:
         for (int i = 0; i <= 1; i++){
             // variables
-            int x_offset = 0;
+            int y_offset = 0;
             current_active_name = get_name(connectedProbeInfo.second[i]);
             current_active_temp = get_temp(connectedProbeInfo.second[i]);
             current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[i]);
             current_target_temp = get_target_temp(connectedProbeInfo.second[i]);
 
+            if(i == 0) { y_offset = 16;}
+            if(i == 1) { y_offset = 45;}
+
+            // divider 
+            screen.drawLine(0, 36, 127, 36);
+
             // probe name
-            
-            if(i == 0) { x_offset = 3;} 
-            if(i == 1) { x_offset = 68;} 
-            screen.setFont(u8g2_font_profont10_tr);
-            screen.drawStr(x_offset, 16, "P :");
-            screen.setCursor(x_offset + 5, 16); screen.print(connectedProbeInfo.second[i]);
-            screen.setCursor(x_offset + 15, 16); screen.print(current_active_name);
-            
-            // temp text
+            screen.setFont(u8g2_font_profont10_tr); 
+            screen.drawStr(2, y_offset, "P :");
+            screen.setCursor(7, y_offset); screen.print(connectedProbeInfo.second[i]);
+            screen.setCursor(18, y_offset); screen.print(current_active_name);
+
+            // status text
+            screen.drawStr(102, y_offset, "00:00");
+
+            // probe temp 
             screen.setFont(u8g2_font_profont22_tr); 
-            screen.setCursor(x_offset, 36); screen.printf("%.0f", current_active_temp);      
-        
-            // progress bar
-            if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) 
-                draw_progress_range(current_minimum_temp, current_target_temp, x_offset + 55);
-            if (current_target_temp > 0 && current_minimum_temp == 0) 
-                draw_progress_target(current_minimum_temp, current_target_temp, x_offset + 53);
+            screen.setCursor(3, y_offset+18); screen.printf("%.1f", current_active_temp); 
+
+            // progress status
+            screen.setFont(u8g2_font_profont11_tr);
+            if (current_minimum_temp <= 0 and current_target_temp > 0 and current_active_temp > current_target_temp){
+                screen.drawStr(125-screen.getStrWidth("READY"), y_offset+17, "READY");
+                screen.setDrawColor(2);
+                screen.drawBox(95, y_offset+9, 31, 9);
+                screen.setDrawColor(1);
             }
+            else {
+                if(current_target_temp > 0 and current_active_temp > current_target_temp) {
+                    screen.drawStr(125-screen.getStrWidth("HIGH"), y_offset+17, "HIGH");
+                    screen.setDrawColor(2);
+                    screen.drawBox(101, y_offset+9, 25, 9);
+                    screen.setDrawColor(1);
+                    }
+                else if (current_active_temp < current_minimum_temp){
+                    screen.drawStr(125-screen.getStrWidth("LOW"), y_offset+17, "LOW");
+                    screen.setDrawColor(2);
+                    screen.drawBox(107, y_offset+9, 19, 9);
+                    screen.setDrawColor(1);
+                    }
+                }
+        }
         break;
     case 3:
         screen.drawLine(42, 9, 42, 63);
