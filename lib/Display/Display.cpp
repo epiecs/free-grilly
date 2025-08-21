@@ -3,6 +3,10 @@
 #include <vector>
 #include <utility>
 #include <WiFi.h>
+#include <chrono>
+#include <string>
+#include <iomanip>
+#include <sstream>
 
 #include "Display.h"
 #include "Grill.h"
@@ -20,6 +24,7 @@ String current_active_name              = "";
 float current_active_temp               = 0;
 int current_target_temp                 = 0;
 int current_minimum_temp                = 0;
+std::string current_elapsed_time        = "";
 unsigned long millis_backlight_timeout  = 0;
 unsigned long millis_screen_timeout     = 0;
 
@@ -165,8 +170,6 @@ bool disp::display_update(void) {
     else if (config::beep_volume == 1)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_1);}
     else if (config::beep_volume == 0)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_mute);}
     
-    Serial.println(current_screen_page);
-    
     if(current_screen_page == 0) {draw_screen_temp();}
     else if (current_screen_page > 0 and current_screen_page < 9) {
         screen.setFont(u8g2_font_4x6_tr);
@@ -229,6 +232,7 @@ bool disp::draw_screen_temp(void){
             current_active_temp = get_temp(connectedProbeInfo.second[i]);
             current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[i]);
             current_target_temp = get_target_temp(connectedProbeInfo.second[i]);
+            current_elapsed_time = get_connection_time(connectedProbeInfo.second[i]);
 
             if(i == 0) { y_offset = 16;}
             if(i == 1) { y_offset = 45;}
@@ -240,7 +244,8 @@ bool disp::draw_screen_temp(void){
             screen.setCursor(18, y_offset); screen.print(current_active_name);
 
             // status text
-            screen.drawStr(102, y_offset, "00:00");
+            screen.setCursor(102, y_offset); screen.printf(current_elapsed_time.c_str());
+            //screen.drawStr(102, y_offset, "00:00");
 
             // probe temp 
             screen.setFont(u8g2_font_profont22_tr); 
@@ -408,6 +413,7 @@ bool disp::draw_screen_details(int connectedProbe){
     current_active_temp = get_temp(connectedProbe);
     current_minimum_temp = get_minimum_temp(connectedProbe);
     current_target_temp = get_target_temp(connectedProbe);
+    current_elapsed_time = get_connection_time(connectedProbe);
 
     // probe name
     screen.setFont(u8g2_font_profont12_tr);
@@ -421,7 +427,8 @@ bool disp::draw_screen_details(int connectedProbe){
 
     // status text
     screen.setFont(u8g2_font_profont10_tr); 
-    screen.drawStr(3, 53, "00:00");
+    screen.setCursor(3, 53); screen.printf(current_elapsed_time.c_str());
+    //screen.drawStr(3, 53, "00:00");
     screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
     
     // progress bar
@@ -552,6 +559,44 @@ String disp::get_name(int connectedProbe) {
     }
     return name;
 }
+
+std::string disp::get_connection_time(int connectedProbe) {                                                                                                                                                                                                                                                                   
+    long connected_since;
+    long elapsed_seconds;
+    switch (connectedProbe) {
+        case 1: connected_since = grill::probe_1.connected_time; break;
+        case 2: connected_since = grill::probe_2.connected_time; break;
+        case 3: connected_since = grill::probe_3.connected_time; break;
+        case 4: connected_since = grill::probe_4.connected_time; break;
+        case 5: connected_since = grill::probe_5.connected_time; break;
+        case 6: connected_since = grill::probe_6.connected_time; break;
+        case 7: connected_since = grill::probe_7.connected_time; break;
+        case 8: connected_since = grill::probe_8.connected_time; break;
+    default:
+        break;
+    }
+    
+    elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count() - connected_since;
+    std::ostringstream oss;
+    if (elapsed_seconds < 3600) {                                                                                                                                                                       
+        int minutes = elapsed_seconds / 60;                                                                                                                                                                                                                                                            
+        int seconds = elapsed_seconds % 60;        
+         
+        oss << std::setfill('0') << std::setw(2) << minutes << ":"
+            << std::setfill('0') << std::setw(2) << seconds;
+        return oss.str();                                                                                                                                                                                
+     }
+     else {                                                                                                                                                                                                                                                                                   
+        int hours = elapsed_seconds / 3600;                                                                                                                                                                                                                                                            
+        int minutes = (elapsed_seconds % 3600) / 60;  
+        
+        oss << std::setfill('0') << std::setw(2) << hours << ":"
+            << std::setfill('0') << std::setw(2) << minutes;
+        return oss.str();      
+    }                                                                                                                                                                                                                                                                                          
+     return "conversion fault"; 
+}
+
 
 float disp::get_temp(int connectedProbe) {
     float temp = 0;

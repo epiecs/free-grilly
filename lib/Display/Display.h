@@ -84,6 +84,12 @@ private:
     */
     String get_name(int connectedProbe);
         /**
+    *	@brief Subroutine to get the time since connection  
+    *   @param connectedProbe probe number
+    *	@return true
+    */
+    std::string get_connection_time(int connectedProbe);
+        /**
     *	@brief Subroutine to get the temperature  
     *   @param connectedProbe probe number
     *	@return true
