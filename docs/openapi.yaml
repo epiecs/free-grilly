@@ -99,6 +99,10 @@ components:
               probe_id:
                 type: integer
                 description: The number of the probe
+              name:
+                type: string
+                example: Probe 1
+                description: The probe name
               temperature:
                 type: 
                   - "number"
@@ -128,41 +132,49 @@ components:
                 description: Is the probe connected
             example:
               - probe_id: 1
+                name: Ambient Probe
                 temperature: 23.71832
                 minimum_temperature: null
                 target_temperature: 23.71832
                 connected: true
               - probe_id: 2
+                name: Pork shoulder
                 temperature: null
                 minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 3
+                name: Probe 3
                 temperature: 110.12578
                 minimum_temperature: 90.00001
                 target_temperature: 120.00001
                 connected: true
               - probe_id: 4
+                name: Probe 4
                 temperature: 250.12578
                 minimum_temperature: null
                 target_temperature: 280.12578
                 connected: true
               - probe_id: 5
+                name: Probe 5
                 temperature: null
                 minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 6
+                name: Probe 6
                 temperature: null
                 minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 7
+                name: Probe 7
                 temperature: null
                 minimum_temperature: null
                 target_temperature: null
                 connected: false
               - probe_id: 8
+                name: Probe 8
                 temperature: null
                 minimum_temperature: null
                 target_temperature: null
