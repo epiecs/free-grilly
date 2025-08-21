@@ -223,6 +223,9 @@ bool disp::draw_screen_temp(void){
         break;
         
     case 2:
+        // divider 
+        screen.drawLine(0, 36, 127, 36);
+
         for (int i = 0; i <= 1; i++){
             // variables
             int y_offset = 0;
@@ -233,9 +236,6 @@ bool disp::draw_screen_temp(void){
 
             if(i == 0) { y_offset = 16;}
             if(i == 1) { y_offset = 45;}
-
-            // divider 
-            screen.drawLine(0, 36, 127, 36);
 
             // probe name
             screen.setFont(u8g2_font_profont10_tr); 
@@ -248,7 +248,7 @@ bool disp::draw_screen_temp(void){
 
             // probe temp 
             screen.setFont(u8g2_font_profont22_tr); 
-            screen.setCursor(3, y_offset+18); screen.printf("%.1f", current_active_temp); 
+            screen.setCursor(2, y_offset+18); screen.printf("%.1f", current_active_temp); 
 
             // progress status
             screen.setFont(u8g2_font_profont11_tr);
@@ -274,7 +274,7 @@ bool disp::draw_screen_temp(void){
                 }
         }
         break;
-    case 3:
+    /*case 3:
         screen.drawLine(42, 9, 42, 63);
         screen.drawLine(84, 9, 84, 63);
         for (int i = 0; i <= 2; i++){
@@ -308,9 +308,66 @@ bool disp::draw_screen_temp(void){
             draw_temp(connectedProbeInfo.second[i]);
         }
         break;
-    
+    */
     default:
-         // Probe numbers
+        if(connectedProbeInfo.first <= 4) {
+            // divider 
+            screen.drawLine(64, 8, 64, 63);
+            screen.drawLine(0, 36, 127, 36);
+
+            for (int i = 0; i <= connectedProbeInfo.first-1; i++){
+                int y_offset = 0;
+                int x_offset = 0;
+                current_active_name = get_name(connectedProbeInfo.second[i]);
+                current_active_temp = get_temp(connectedProbeInfo.second[i]);
+                current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[i]);
+                current_target_temp = get_target_temp(connectedProbeInfo.second[i]);
+
+                if(i == 0) { x_offset = 2; y_offset = 16;}
+                if(i == 1) { x_offset = 67; y_offset = 16;}
+                if(i == 2) { x_offset = 2; y_offset = 45;}
+                if(i == 3) { x_offset = 67; y_offset = 45;}
+                
+                
+                
+                // progress status
+                screen.setFont(u8g2_font_profont10_tr); 
+                screen.drawStr(x_offset, y_offset, "P :");
+                screen.setCursor(x_offset + 5, y_offset); screen.print(connectedProbeInfo.second[i]);
+
+                if (current_minimum_temp <= 0 and current_target_temp > 0 and current_active_temp > current_target_temp){
+                    screen.drawStr(x_offset+16, y_offset, "READY");
+                    screen.setDrawColor(2);
+                    screen.drawBox(x_offset+15, y_offset-7, 26, 8);
+                    screen.setDrawColor(1);
+                }
+                else {
+                    if(current_target_temp > 0 and current_active_temp > current_target_temp) {
+                        screen.drawStr(x_offset+16, y_offset, "HIGH");
+                        screen.setDrawColor(2);
+                        screen.drawBox(x_offset+15, y_offset-7, 21, 8);
+                        screen.setDrawColor(1);
+                    }
+                    else if (current_active_temp < current_minimum_temp){
+                        screen.drawStr(x_offset+16, y_offset, "LOW");
+                        screen.setDrawColor(2);
+                        screen.drawBox(x_offset+15, y_offset-7, 16, 8);
+                        screen.setDrawColor(1);
+                    }
+                    else {
+                        // probe name
+                        screen.setCursor(x_offset + 16, y_offset); screen.print(current_active_name);  
+                    }
+                }
+                
+                
+                // probe temp 
+                screen.setFont(u8g2_font_profont22_tr); 
+                screen.setCursor(x_offset, y_offset+18); screen.printf("%.1f", current_active_temp); 
+            }        
+        }
+        else {
+                     // Probe numbers
         screen.setFont(u8g2_font_5x8_tr);
         screen.drawStr(2, 20, "1:");
         screen.drawStr(2, 33, "2:");
@@ -343,6 +400,8 @@ bool disp::draw_screen_temp(void){
         if(grill::probe_7.target_temperature > 0) { draw_thermometer(119,37,grill::probe_7.celcius,grill::probe_7.target_temperature); }
         if(grill::probe_8.target_temperature > 0) { draw_thermometer(119,50,grill::probe_8.celcius,grill::probe_8.target_temperature); }
         break;
+        }
+
     }
     return true;
 }
