@@ -197,7 +197,10 @@ components:
             - 8
         name:
           type: string
-          example: Probe 1
+          examples: 
+            - Probe 1
+            - Ambient Probe
+            - Pork shoulder
           description: The probe name
         temperature:
           type: 
