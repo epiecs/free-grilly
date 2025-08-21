@@ -165,6 +165,20 @@ const char HTML_SETTINGS[] = R"=====(
                 </div>
             </div>
 
+            <div class="row mt-2">
+                <label for="backlight_brightness" class="col-sm-2 col-form-label">Backlight brightness</label>
+                <div class="col-sm-10">
+                    <select id="backlight_brightness" class="form-select">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+
         </div>
         
         <div class="row mt-4">
@@ -323,6 +337,7 @@ const char HTML_SETTINGS[] = R"=====(
         e_beep_on_ready             = document.getElementById("beep_on_ready");
         e_screen_timeout_minutes    = document.getElementById("screen_timeout_minutes");
         e_backlight_timeout_minutes = document.getElementById("backlight_timeout_minutes");
+        e_backlight_brightness      = document.getElementById("backlight_brightness");
         
         e_wifi_scan_results         = document.getElementById("wifi_scan_results");
         
@@ -369,6 +384,7 @@ const char HTML_SETTINGS[] = R"=====(
                 
                 e_screen_timeout_minutes.value    = data['screen_timeout_minutes'];
                 e_backlight_timeout_minutes.value = data['backlight_timeout_minutes'];
+                e_backlight_brightness.value      = data['backlight_brightness'];
 
                 e_wifi_ssid.value                 = data['wifi_ssid'];
                 e_wifi_password.value             = data['wifi_password'];
@@ -446,6 +462,7 @@ const char HTML_SETTINGS[] = R"=====(
                 post_data["beep_on_ready"]             = e_beep_on_ready.checked;
                 post_data['screen_timeout_minutes']    = e_screen_timeout_minutes.value;
                 post_data['backlight_timeout_minutes'] = e_backlight_timeout_minutes.value;
+                post_data['backlight_brightness']      = e_backlight_brightness.value;
 
                 post_data["wifi_ssid"]                 = e_wifi_ssid.value;
                 post_data["wifi_password"]             = e_wifi_password.value;

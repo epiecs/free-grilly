@@ -179,6 +179,16 @@ bool pwr::setPowerRail(status_type type, int GPIO) {
 }
 
 bool pwr::setScreenBrightness(int brightness) {
+
+	// Convert brightness from 0-5 to 0-255 with a min/max setting
+	brightness = (brightness * 50) + 5;
+
+	if(brightness < 25){
+		brightness = 25;
+	} else if (brightness > 255){
+		brightness = 255;
+	}
+
 	ledcWrite(gpio::pwm_screen_channel , brightness);
 	return true;
 }

@@ -13,6 +13,7 @@
 #include "Config.h"
 #include "Grill.h"
 #include "Mqtt.h"
+#include "Power.h"
 #include "Probe.h"
 #include "Util.h"
 
@@ -59,6 +60,8 @@ void GrillConfig::load_settings(){
     config::screen_timeout_minutes    = config::settings_storage.getInt("screen_to_mins");
     config::backlight_timeout_minutes = config::settings_storage.getInt("backl_to_mins");
 
+    config::backlight_brightness      = config::settings_storage.getInt("backl_bright", 5);
+
     config::mqtt_broker               = config::settings_storage.getString("mqtt_broker");
     config::mqtt_port                 = config::settings_storage.getInt("mqtt_port", 1883);
     config::mqtt_topic                = config::settings_storage.getString("mqtt_topic", "free-grilly");
@@ -104,6 +107,7 @@ void GrillConfig::save_settings(){
     config::settings_storage.putInt("beep_before", config::beep_degrees_before);    
     config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
     config::settings_storage.putInt("backl_to_mins", config::backlight_timeout_minutes);
+    config::settings_storage.putInt("backl_bright", config::backlight_brightness);
 
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
     config::settings_storage.putInt("mqtt_port", config::mqtt_port);
@@ -125,6 +129,7 @@ void GrillConfig::save_settings(){
     config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
 
     grill::buzzer.set_volume(config::beep_volume);
+    power.setScreenBrightness(config::backlight_brightness);
 
     if(reload_wifi){
         connect_to_wifi();
@@ -173,6 +178,7 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putInt("beep_before", config::beep_degrees_before);
     config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
     config::settings_storage.putInt("backl_to_mins", config::backlight_timeout_minutes);
+    config::settings_storage.putInt("backl_bright", config::backlight_brightness);
 
     config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
     config::settings_storage.putInt("mqtt_port", config::mqtt_port);
@@ -225,6 +231,8 @@ void GrillConfig::print_settings(){
     Serial.println(config::screen_timeout_minutes);
     Serial.print("-- backlight_timeout_minutes: ");
     Serial.println(config::backlight_timeout_minutes);
+    Serial.print("-- backlight_brightness: ");
+    Serial.println(config::backlight_brightness);
 
     Serial.print("-- mqtt_broker: ");
     Serial.println(config::mqtt_broker);

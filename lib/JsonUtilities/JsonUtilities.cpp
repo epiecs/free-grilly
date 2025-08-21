@@ -110,6 +110,7 @@ void JsonUtilities::load_json_settings(char* buffer){
     jsondoc["beep_on_ready"]             = config::beep_on_ready;
     jsondoc["screen_timeout_minutes"]    = config::screen_timeout_minutes;
     jsondoc["backlight_timeout_minutes"] = config::backlight_timeout_minutes;
+    jsondoc["backlight_brightness"]      = config::backlight_brightness;
     
     jsondoc["mqtt_broker"]               = config::mqtt_broker;
     jsondoc["mqtt_port"]                 = config::mqtt_port;
@@ -165,6 +166,7 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
     config::beep_on_ready             = json_data["beep_on_ready"];
     config::screen_timeout_minutes    = json_data["screen_timeout_minutes"];
     config::backlight_timeout_minutes = json_data["backlight_timeout_minutes"];
+    config::backlight_brightness      = json_data["backlight_brightness"];
 
     config::mqtt_broker               = json_data["mqtt_broker"].as<String>();
     config::mqtt_port                 = json_data["mqtt_port"];
