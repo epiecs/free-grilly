@@ -101,6 +101,11 @@ private:
     */
     bool draw_screen_temp(void);
     /**
+    *	@brief Subroutine to create the temp detail screen
+    *	@return true 
+    */
+    bool draw_screen_details(int connectedProbe);
+    /**
     *	@brief Subroutine to create the wifi screen
     *	@return true 
     */

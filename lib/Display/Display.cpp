@@ -13,6 +13,7 @@
 
 U8G2_ST7565_64128N_F_4W_SW_SPI screen(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /* cs=*/ 5, /* dc=*/ 17, /* reset=*/ 16); 
 bool is_critical_battery_flash          = false;
+bool is_display_updating                = false;
 int notification_offset                 = 0;
 int current_screen_page                 = 0;
 String current_active_name              = "";
@@ -50,9 +51,15 @@ bool disp::init(void){
 }
 
 bool disp::switch_page(void){
-    if (current_screen_page >= 1) {current_screen_page = 0;}
+    std::pair<int, std::vector<int>> connectedProbeInfo = get_connected_probes();
+        
+
+    if (current_screen_page >= connectedProbeInfo.first) {current_screen_page = 0;} 
+    else {current_screen_page++;}
+   
     screen_background_pwr(ENABLE);
     screen_pwr(ENABLE);
+    display_update();
     return true;
 }
 
@@ -91,6 +98,8 @@ bool disp::screen_pwr(status_type type){
 
 
 bool disp::display_update(void) {
+    if(is_display_updating) {return true;}  //* prevent mulitple simultanious display updates 
+    is_display_updating = true;
     if (config::backlight_timeout_minutes > 0 and millis_backlight_timeout + (config::backlight_timeout_minutes * 60000) < millis()) {
         screen_background_pwr(DISABLE);
     }
@@ -155,14 +164,25 @@ bool disp::display_update(void) {
     else if (config::beep_volume == 2)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_2);}
     else if (config::beep_volume == 1)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_1);}
     else if (config::beep_volume == 0)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_mute);}
+    
+    Serial.println(current_screen_page);
+    
+    if(current_screen_page == 0) {draw_screen_temp();}
+    else if (current_screen_page > 0 and current_screen_page < 9) {
+        screen.setFont(u8g2_font_4x6_tr);
+        screen.drawStr(2, 6, "Details");
+        std::pair<int, std::vector<int>> connectedProbeInfo = get_connected_probes();
+        draw_screen_details(connectedProbeInfo.second[current_screen_page-1]);
+    }
+    else if (current_screen_page == 10) {draw_screen_info();}
+    else {current_screen_page = 0;}
 
-
-    switch (current_screen_page) {
+    /*switch (current_screen_page) {
     case 0:
         draw_screen_temp();
         break;
     case 1:
-        draw_screen_temp();
+        draw_screen_details(0);
         break;
     case 10:
         draw_screen_info();
@@ -170,9 +190,10 @@ bool disp::display_update(void) {
     default:
         draw_screen_temp();
         break;
-    }    
+    }    */
 
     screen.sendBuffer();
+    is_display_updating = false;
 	return true; 
 }
 
@@ -194,32 +215,7 @@ bool disp::draw_screen_temp(void){
         screen.drawLine(31, 49, 96, 49);
         break;
     case 1:
-        // variables
-        current_active_name = get_name(connectedProbeInfo.second[0]);
-        current_active_temp = get_temp(connectedProbeInfo.second[0]);
-        current_minimum_temp = get_minimum_temp(connectedProbeInfo.second[0]);
-        current_target_temp = get_target_temp(connectedProbeInfo.second[0]);
-
-        // probe name
-        screen.setFont(u8g2_font_profont12_tr);
-        screen.drawStr(3, 20, "P :");
-        screen.setCursor(9, 20); screen.print(connectedProbeInfo.second[0]);
-        screen.setCursor(22, 20); screen.print(current_active_name);
-        
-        // probe temp 
-        screen.setFont(u8g2_font_profont29_tr); 
-        screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);      
-
-        // status text
-        screen.setFont(u8g2_font_profont10_tr); 
-        screen.drawStr(3, 53, "00:00");
-        screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
-       
-        // progress bar
-        if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) 
-            draw_progress_range(current_minimum_temp, current_target_temp, 121);
-        if (current_target_temp > 0 && current_minimum_temp == 0) 
-            draw_progress_target(current_minimum_temp, current_target_temp, 121);
+        draw_screen_details(connectedProbeInfo.second[0]);  // Reuse of the details screen
         break;
         
     case 2:
@@ -403,6 +399,36 @@ bool disp::draw_screen_temp(void){
         }
 
     }
+    return true;
+}
+
+bool disp::draw_screen_details(int connectedProbe){
+    // variables
+    current_active_name = get_name(connectedProbe);
+    current_active_temp = get_temp(connectedProbe);
+    current_minimum_temp = get_minimum_temp(connectedProbe);
+    current_target_temp = get_target_temp(connectedProbe);
+
+    // probe name
+    screen.setFont(u8g2_font_profont12_tr);
+    screen.drawStr(3, 20, "P :");
+    screen.setCursor(9, 20); screen.print(connectedProbe);
+    screen.setCursor(22, 20); screen.print(current_active_name);
+    
+    // probe temp 
+    screen.setFont(u8g2_font_profont29_tr); 
+    screen.setCursor(3, 42); screen.printf("%.1f", current_active_temp);      
+
+    // status text
+    screen.setFont(u8g2_font_profont10_tr); 
+    screen.drawStr(3, 53, "00:00");
+    screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
+    
+    // progress bar
+    if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) 
+        draw_progress_range(current_minimum_temp, current_target_temp, 121);
+    if (current_target_temp > 0 && current_minimum_temp == 0) 
+        draw_progress_target(current_minimum_temp, current_target_temp, 121);
     return true;
 }
 
