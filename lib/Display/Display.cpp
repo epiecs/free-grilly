@@ -244,7 +244,7 @@ bool disp::draw_screen_temp(void){
             screen.setCursor(18, y_offset); screen.print(current_active_name);
 
             // status text
-            screen.setCursor(102, y_offset); screen.printf(current_elapsed_time.c_str());
+            screen.setCursor(88, y_offset); screen.printf(current_elapsed_time.c_str());
             //screen.drawStr(102, y_offset, "00:00");
 
             // probe temp 
@@ -273,7 +273,7 @@ bool disp::draw_screen_temp(void){
                     screen.setDrawColor(1);
                     }
                 }
-        }
+        } 
         break;
     /*case 3:
         screen.drawLine(42, 9, 42, 63);
@@ -429,7 +429,28 @@ bool disp::draw_screen_details(int connectedProbe){
     screen.setFont(u8g2_font_profont10_tr); 
     screen.setCursor(3, 53); screen.printf(current_elapsed_time.c_str());
     //screen.drawStr(3, 53, "00:00");
-    screen.drawStr(3, 62, "PLACEHOLDER STATUS 2");
+    screen.drawStr(3, 62, "STATUS 2");
+
+    if (current_minimum_temp <= 0 and current_target_temp > 0 and current_active_temp > current_target_temp){
+        screen.drawStr(95, 62, "READY");
+        screen.setDrawColor(2);
+        screen.drawBox(94, 55, 26, 8);
+        screen.setDrawColor(1);
+    }
+    else {
+        if(current_target_temp > 0 and current_active_temp > current_target_temp) {
+            screen.drawStr(100, 62, "HIGH");
+            screen.setDrawColor(2);
+            screen.drawBox(99, 55, 21, 8);
+            screen.setDrawColor(1);
+            }
+        else if (current_active_temp < current_minimum_temp){
+            screen.drawStr(105, 62, "LOW");
+            screen.setDrawColor(2);
+            screen.drawBox(104, 55, 16, 8);
+            screen.setDrawColor(1);
+            }
+        }
     
     // progress bar
     if (current_minimum_temp > 0 && current_target_temp > current_minimum_temp) 
@@ -578,23 +599,33 @@ std::string disp::get_connection_time(int connectedProbe) {
     
     elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count() - connected_since;
     std::ostringstream oss;
-    if (elapsed_seconds < 3600) {                                                                                                                                                                       
+
+    int hours = elapsed_seconds / 3600;   
+    int minutes = elapsed_seconds / 60;  
+    int seconds = elapsed_seconds % 60;
+
+     oss << std::setfill('0') << std::setw(2) << hours << ":"
+         << std::setfill('0') << std::setw(2) << minutes << ":"
+         << std::setfill('0') << std::setw(2) << seconds;
+    return oss.str();
+
+    /*if (elapsed_seconds < 3600) {                                                                                                                                                                       
         int minutes = elapsed_seconds / 60;                                                                                                                                                                                                                                                            
         int seconds = elapsed_seconds % 60;        
          
-        oss << std::setfill('0') << std::setw(2) << minutes << ":"
-            << std::setfill('0') << std::setw(2) << seconds;
+        oss << std::setfill('0') << std::setw(2) << minutes << "m"
+            << std::setfill('0') << std::setw(2) << seconds << "s";
         return oss.str();                                                                                                                                                                                
      }
      else {                                                                                                                                                                                                                                                                                   
         int hours = elapsed_seconds / 3600;                                                                                                                                                                                                                                                            
         int minutes = (elapsed_seconds % 3600) / 60;  
         
-        oss << std::setfill('0') << std::setw(2) << hours << ":"
-            << std::setfill('0') << std::setw(2) << minutes;
+        oss << std::setfill('0') << std::setw(2) << hours << "h"
+            << std::setfill('0') << std::setw(2) << minutes << "m";
         return oss.str();      
-    }                                                                                                                                                                                                                                                                                          
-     return "conversion fault"; 
+    }                                */                                                                                                                                                                                                                                                          
+     //return "conversion fault"; 
 }
 
 
