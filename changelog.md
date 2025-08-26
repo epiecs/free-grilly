@@ -2,6 +2,10 @@
 ## TBD
 - Added the option to set the brightness for the backlight of the screen (Enhancement for issue #10)
 
+## 2025-08-26
+- Updated the web interface to show the mqtt topics when setting up mqtt
+- Updated the documentation with a guide on how to use mqtt
+
 ## 2025-08-05
 - bugfix for issue #16 due to incorrect buffer sizes
 

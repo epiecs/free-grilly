@@ -284,6 +284,21 @@ const char HTML_SETTINGS[] = R"=====(
             <h5>MQTT</h5>
         </div>
         <div class="row mt-2">
+            <div class="col-sm-12">
+            <dl>
+                <dt>Topics free-grilly publishes to</dt>
+                    <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/grill</small></dd>
+                    <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/probes</small></dd>
+                    <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/settings</small></dd>
+                    <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/# (wildcard that receives all messages)</small></dd>
+                
+                <dt>Topics free-grilly subscribes to</dt>
+                    <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/config/probes</small></dd>
+                    <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/config/settings</small></dd>
+            </dl>
+            </div>
+        </div>
+        <div class="row mt-2">
             <label for="mqtt_broker" class="col-sm-2 col-form-label">Mqtt broker / port</label>
             <div class="col-sm-8">
                 <input type="text" class="form-control" id="mqtt_broker">
@@ -367,11 +382,16 @@ const char HTML_SETTINGS[] = R"=====(
         e_alert                     = document.getElementById("alert");
         e_alert_text                = document.getElementById("alert-text");
 
+        e_mqtt_prefix               = document.getElementsByClassName("prefix");
+        e_mqtt_uuid                 = document.getElementsByClassName("uuid");
+
         async function getSettings() {
             try {
                 const response = await fetch(base_url + "/api/settings");
                 data = await response.json();
 
+                console.log(data);
+                
                 e_grill_name.value                = data['name'];
 
                 e_temperature_unit.value          = data['temperature_unit'];
@@ -409,6 +429,13 @@ const char HTML_SETTINGS[] = R"=====(
                 e_save_settings.disabled = false;
                 e_wifi_scan.disabled = false;
 
+                for (var i = 0; i < e_mqtt_prefix.length; i++) {
+                    e_mqtt_prefix[i].innerHTML = data['mqtt_topic'];
+                }
+
+                for (var i = 0; i < e_mqtt_uuid.length; i++) {
+                    e_mqtt_uuid[i].innerHTML = data['uuid'];
+                }
 
             } catch (error) {
                 console.error('Grill is unreachable:', error);
@@ -519,6 +546,12 @@ const char HTML_SETTINGS[] = R"=====(
 
         e_wifi_scan.addEventListener('click', (event) => {
             scanNetworks();
+        })
+
+        e_mqtt_topic.addEventListener('keyup', (event) => {
+            for (var i = 0; i < e_mqtt_prefix.length; i++) {
+                e_mqtt_prefix[i].innerHTML = e_mqtt_topic.value;
+            }
         })
 
         e_wifi_scan_results.addEventListener('change', (event) => {
