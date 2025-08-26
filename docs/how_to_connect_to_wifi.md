@@ -15,8 +15,10 @@ First, you'll connect directly to the device to access its settings.
 ![device infoscreen](screenshots/device_infoscreen_notconnected.png "device infoscreen")
 
 2.  On your phone or computer, open your Wi-Fi settings and connect to the network name (SSID) shown on the `L-SSID` line of the Info Screen. By default, this network has no password.
+    
+> [!Warning]
+> Your phone or PC might warn you that this network has "no internet connection." This is normal. If prompted, choose the option to **"Stay Connected"** or  **"Use this network anyway."**
 
-    > **Important:** Your phone or PC might warn you that this network has "no internet connection." This is normal. If prompted, choose the option to **"Stay Connected"** or  **"Use this network anyway."**
 3.  Open a web browser and navigate to the IP address shown on the `L-IP` line (the default is `192.168.200.10`). You should now see the device's web interface.
 ![Homescreen](screenshots/interface_home.png "Homescreen")
 
@@ -42,5 +44,5 @@ Once the device is connected to your home Wi-Fi, you can access it like any othe
 2.  Open a web browser and enter the **new** IP address shown on the device's Info Screen (on the `IP` line).
 3.  You can now interact with your device from anywhere on your local network.
 
-
-    > **Info:** In case you want to fully reset your device you can hold the side button for **10+ seconds** until you hear three long beeps. This will reset all settings to default and forget your wifi credentials.
+> [!Note]
+> In case you want to fully reset your device you can hold the side button for **10+ seconds** until you hear three long beeps. This will reset all settings to default and forget your wifi credentials.
