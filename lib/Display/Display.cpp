@@ -114,6 +114,7 @@ bool disp::display_update(void) {
     }
 
     screen.clearBuffer(); 
+    delay(10);
     screen.drawLine(2, 7, 125, 7);
      
     // ***********************************
