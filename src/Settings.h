@@ -62,7 +62,7 @@ namespace config{
 
     String grill_name                   = "";
     String grill_uuid                   = "";
-    String grill_firmware_version       = "25.08.12";
+    String grill_firmware_version       = "25.08.27-beta";
 
     String temperature_unit             = "celcius";
     bool beep_enabled                   = true;
