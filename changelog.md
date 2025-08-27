@@ -1,6 +1,8 @@
 # Changelog (firmware only)
 ## TBD
 - Added the option to set the brightness for the backlight of the screen (Enhancement for issue #10)
+- The mqtt code now first checks for retained messages from external systems in case of disconnects
+- Fixed openapi spec to correctly show probes under the grill endpoint
 
 ## 2025-08-26
 - Updated the web interface to show the mqtt topics when setting up mqtt

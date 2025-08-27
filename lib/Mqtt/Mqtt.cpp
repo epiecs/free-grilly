@@ -114,12 +114,12 @@ bool Mqtt::reconnect(){
         Serial.print("MQTT Connected to server with client ");
         Serial.println(Mqtt::client_name);
         
+        Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
+        Mqtt::subscribe(Mqtt::sub_topic_probes.c_str());
+
         Mqtt::publish_grill();
         Mqtt::publish_probes();
         Mqtt::publish_settings();
-
-        Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
-        Mqtt::subscribe(Mqtt::sub_topic_probes.c_str());
     }
     
     return true;
