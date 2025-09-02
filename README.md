@@ -8,6 +8,10 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 
 ---
 
+<img width="823" height="564" alt="image" src="https://github.com/user-attachments/assets/9a72935c-6b91-450a-b318-8b493ba91b6c" />
+
+---
+
 **⚠️ IMPORTANT DISCLAIMER ⚠️**
 
 * This firmware is unofficial and NOT affiliated with or endorsed by the original manufacturer (GrillEye® by G&C).
