@@ -1,8 +1,9 @@
 # Changelog (firmware only)
-## TBD
+## 2025-12-22
 - Added the option to set the brightness for the backlight of the screen (Enhancement for issue #10)
 - The mqtt code now first checks for retained messages from external systems in case of disconnects
 - Fixed openapi spec to correctly show probes under the grill endpoint
+- Merged Display beta branch (full release notes available under releases)
 
 ## 2025-08-26
 - Updated the web interface to show the mqtt topics when setting up mqtt
