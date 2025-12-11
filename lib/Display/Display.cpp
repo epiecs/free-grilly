@@ -602,7 +602,7 @@ std::string disp::get_connection_time(int connectedProbe) {
     std::ostringstream oss;
 
     int hours = elapsed_seconds / 3600;   
-    int minutes = elapsed_seconds / 60;  
+    int minutes = (elapsed_seconds / 60) % 60;  
     int seconds = elapsed_seconds % 60;
 
      oss << std::setfill('0') << std::setw(2) << hours << ":"
