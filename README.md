@@ -65,14 +65,9 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 ## Todo
 
 - Fully work out guide and readme
-  - add screenshots
+  - add documentation for the home assistant integration
 - source code
   - clean up of existing code and classes
-  - fix includes and forward declarations
-- features
-  - Have a temperature and range icon on the display to differentiate
-- screen layouts
-  - show shutdown graphic
 
 ## Installation
 
