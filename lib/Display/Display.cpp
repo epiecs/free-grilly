@@ -181,21 +181,6 @@ bool disp::display_update(void) {
     else if (current_screen_page == 10) {draw_screen_info();}
     else {current_screen_page = 0;}
 
-    /*switch (current_screen_page) {
-    case 0:
-        draw_screen_temp();
-        break;
-    case 1:
-        draw_screen_details(0);
-        break;
-    case 10:
-        draw_screen_info();
-        break;
-    default:
-        draw_screen_temp();
-        break;
-    }    */
-
     screen.sendBuffer();
     is_display_updating = false;
 	return true; 
@@ -276,41 +261,7 @@ bool disp::draw_screen_temp(void){
                 }
         } 
         break;
-    /*case 3:
-        screen.drawLine(42, 9, 42, 63);
-        screen.drawLine(84, 9, 84, 63);
-        for (int i = 0; i <= 2; i++){
-            screen.setFont(u8g2_font_profont10_tr);
-            if(i == 0) { screen.setCursor(28, 17);}
-            if(i == 1) { screen.setCursor(61, 17);}
-            if(i == 2) { screen.setCursor(104, 17);}
-            screen.print(connectedProbeInfo.second[i]);
-            screen.setFont(u8g2_font_profont12_tr);  
-            if(i == 0) { screen.setCursor(3, 33);}
-            if(i == 1) { screen.setCursor(46, 33);}
-            if(i == 2) { screen.setCursor(89, 33);}
-            draw_temp(connectedProbeInfo.second[i]);
-        }
-        break;
-    case 4:
-        screen.drawLine(63, 9, 63, 63);
-        screen.drawLine(0, 36, 126, 36);
-        for (int i = 0; i <= 3; i++){
-            screen.setFont(u8g2_font_profont10_tr);
-            if(i == 0) { screen.setCursor(28, 17);}
-            if(i == 1) { screen.setCursor(92, 17);}
-            if(i == 2) { screen.setCursor(28, 46);}
-            if(i == 3) { screen.setCursor(92, 46);}
-            screen.print(connectedProbeInfo.second[i]);
-            screen.setFont(u8g2_font_profont15_tr);  
-            if(i == 0) { screen.setCursor(12, 34);}
-            if(i == 1) { screen.setCursor(76, 34);}
-            if(i == 2) { screen.setCursor(12, 63);}
-            if(i == 3) { screen.setCursor(76, 63);}
-            draw_temp(connectedProbeInfo.second[i]);
-        }
-        break;
-    */
+    
     default:
         if(connectedProbeInfo.first <= 4) {
             // divider 
@@ -430,7 +381,7 @@ bool disp::draw_screen_details(int connectedProbe){
     screen.setFont(u8g2_font_profont10_tr); 
     screen.setCursor(3, 53); screen.printf(current_elapsed_time.c_str());
     //screen.drawStr(3, 53, "00:00");
-    screen.drawStr(3, 62, "STATUS 2");
+    //screen.drawStr(3, 62, "STATUS 2"); // Placeholder below the timer that can be used in the future to relay other information
 
     if (current_minimum_temp <= 0 and current_target_temp > 0 and current_active_temp > current_target_temp){
         screen.drawStr(95, 62, "READY");
@@ -609,24 +560,6 @@ std::string disp::get_connection_time(int connectedProbe) {
          << std::setfill('0') << std::setw(2) << minutes << ":"
          << std::setfill('0') << std::setw(2) << seconds;
     return oss.str();
-
-    /*if (elapsed_seconds < 3600) {                                                                                                                                                                       
-        int minutes = elapsed_seconds / 60;                                                                                                                                                                                                                                                            
-        int seconds = elapsed_seconds % 60;        
-         
-        oss << std::setfill('0') << std::setw(2) << minutes << "m"
-            << std::setfill('0') << std::setw(2) << seconds << "s";
-        return oss.str();                                                                                                                                                                                
-     }
-     else {                                                                                                                                                                                                                                                                                   
-        int hours = elapsed_seconds / 3600;                                                                                                                                                                                                                                                            
-        int minutes = (elapsed_seconds % 3600) / 60;  
-        
-        oss << std::setfill('0') << std::setw(2) << hours << "h"
-            << std::setfill('0') << std::setw(2) << minutes << "m";
-        return oss.str();      
-    }                                */                                                                                                                                                                                                                                                          
-     //return "conversion fault"; 
 }
 
 
