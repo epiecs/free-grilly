@@ -62,7 +62,7 @@ namespace config{
 
     String grill_name                   = "";
     String grill_uuid                   = "";
-    String grill_firmware_version       = "25.08.26";
+    String grill_firmware_version       = "25.08.27-beta";
 
     String temperature_unit             = "celcius";
     bool beep_enabled                   = true;
@@ -209,7 +209,7 @@ namespace task{
     int mqttStackSize         = 8000;
     int powerbuttonStackSize  = 10000; //Needed to be able to handle factory reset
     int probesStackSize       = 1000;
-    int screenStackSize       = 2000;
+    int screenStackSize       = 3000;
     int webserverStackSize    = 4000;
-    int stackmonitorStackSize = 5000;
+    int stackmonitorStackSize = 4000;
 }

@@ -50,9 +50,55 @@ private:
     */
     bool draw_temp(int connectedProbe);
     /**
+    *	@brief Subroutine to draw the progress bar target
+    *   @param current_minimum_temp current minimum temperature setting
+    *   @param current_target_temp current target temperature setting
+    *   @param xLoc x-axis location offset from 0 (left)
+    *	@return true 
+    */
+    bool draw_progress_target(int current_minimum_temp, int current_target_temp, int xLoc = 0);
+    /**
+    *	@brief Subroutine to draw the progress bar range
+    *   @param current_minimum_temp current minimum temperature setting
+    *   @param current_target_temp current target temperature setting
+    *   @param xLoc x-axis location offset from 0 (left)
+    *	@return true 
+    */
+    bool draw_progress_range(int current_minimum_temp, int current_target_temp, int xLoc = 0);
+    /**
+    *	@brief Subroutine to get the target temperature
+    *   @param connectedProbe probe number
+    *	@return true 
+    */
+    int get_target_temp(int connectedProbe);
+        /**
+    *	@brief Subroutine to get the minimum temperature 
+    *   @param connectedProbe probe number
+    *	@return true 
+    */
+    int get_minimum_temp(int connectedProbe);
+    /**
+    *	@brief Subroutine to get the probe name 
+    *   @param connectedProbe probe number
+    *	@return name of probe 
+    */
+    String get_name(int connectedProbe);
+        /**
+    *	@brief Subroutine to get the time since connection  
+    *   @param connectedProbe probe number
+    *	@return true
+    */
+    std::string get_connection_time(int connectedProbe);
+        /**
+    *	@brief Subroutine to get the temperature  
+    *   @param connectedProbe probe number
+    *	@return true
+    */
+    float get_temp(int connectedProbe);
+    /**
     *	@brief Checks how many probes are connected
     *	@return number of probes connected 
-    *    @return vector of connected probes
+    *   @return vector of connected probes
     */
     std::pair<int, std::vector<int>> get_connected_probes(void);
     /**
@@ -60,6 +106,11 @@ private:
     *	@return true 
     */
     bool draw_screen_temp(void);
+    /**
+    *	@brief Subroutine to create the temp detail screen
+    *	@return true 
+    */
+    bool draw_screen_details(int connectedProbe);
     /**
     *	@brief Subroutine to create the wifi screen
     *	@return true 

@@ -1,13 +1,13 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <math.h>
+#include <chrono>
 
 #include "Config.h"
 #include "Buzzer.h"
 #include "Probe.h"
 #include "Gpio.h"
 #include "Grill.h"
-
 
 Probe::Probe(int number, int reference_kohm, int reference_celcius, int reference_beta) {
     Probe::number = number;
@@ -125,7 +125,7 @@ float Probe::calculate_temperature() {
     if(config::temperature_unit == "fahrenheit"){
         Probe::temperature = Probe::fahrenheit;
     }
-
+    if (Probe::connected == false){Probe::connected_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();}
     Probe::connected  = true;
 
     return temperature;

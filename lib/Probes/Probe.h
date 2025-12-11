@@ -48,6 +48,7 @@ public:
 	float minimum_temperature 				   = 0;		// The minimum, used for temperature ranges
 	float target_temperature  				   = 0;		// The target temperature
 	bool connected            				   = false;	// If the probe is connected
+	long connected_time						   = 0;		// Time since probe is connected
 	
 	bool alarm                				   = false;	// Is the probe currently in an alarm state
 
