@@ -19,3 +19,13 @@ esptool.py --chip esp32 merge_bin -o dist/free-grilly-$(date +%Y-%m-%d)-full.bin
   0x8000 .pio/build/esp32dev/partitions.bin \
   0xe000 ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin \
   0x10000 .pio/build/esp32dev/firmware.bin
+
+# How to release
+# - Commit all code with correct commit comments
+# - run ./build_firmware_release.sh
+# - update changelog.md
+# - commit the updated src with version bump, changelog and new dist
+# - run git log to get the latest git commit hash
+# - git tag -a dd.mm.yy <git log hash>
+# - git push --tags
+# - prep release on github
