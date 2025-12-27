@@ -23,7 +23,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 
 - [Free-Grilly: Community Firmware for Grilleye Max](#free-grilly-community-firmware-for-grilleye-max)
   - [Features](#features)
-  - [Apps and Integrations](#apps-and-integrations)
+  - [Apps and integrations](#apps-and-integrations)
   - [API documentation](#api-documentation)
   - [Todo](#todo)
   - [Installation](#installation)
@@ -32,6 +32,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
     - [Button](#button)
   - [Updating Firmware (OTA)](#updating-firmware-ota)
   - [Supported probes](#supported-probes)
+  - [Home assistant support](#home-assistant-support)
   - [Contributing](#contributing)
 
 ## Features
@@ -127,6 +128,139 @@ Apart from that you can also add your own `custom` **NTC** probes if you know th
 -   Reference resistance in kOhm
 
 If you want you can use our [handy calculator spreadsheet](docs/probe_calculator.xlsx) if you want to calculate the values for your own probes. 
+
+## Home assistant support
+You can connect your free-grilly to your current home assistant installation when using the mqtt broker. For this you will need to manually create the needed entities. @woutercoppens provided us/you with a decent starting point. This can also be seen in issue #5:
+
+```yaml
+# Probe 1 (Defines Anchors)
+- name: "Free Grilly Probe 1 Temperature"
+  unique_id: "free_grilly_probe_1_temp"
+  <<: &probe_temp_defaults
+    state_topic: "free-grilly/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    payload_available: "online"
+    payload_not_available: "offline"
+    device: &device_info
+      identifiers: "free_grilly_7107d787" #Adjust
+      name: "Free Grilly Thermometer"
+      manufacturer: "Free-Grilly"
+      sw_version: "25.08.27"
+  value_template: "{{ value_json.probes[0].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[0].connected == true else 'offline' }}"
+
+- name: "Free Grilly Probe 1 Target"
+  unique_id: "free_grilly_probe_1_target"
+  <<: &probe_target_defaults
+    state_topic: "free-grilly/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
+    unit_of_measurement: "°C"
+    device_class: temperature
+    icon: mdi:target
+    payload_available: "online"
+    payload_not_available: "offline"
+    device: *device_info
+  value_template: "{{ value_json.probes[0].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[0].connected == true else 'offline' }}"
+
+# Probe 2
+- name: "Free Grilly Probe 2 Temperature"
+  unique_id: "free_grilly_probe_2_temp"
+  <<: *probe_temp_defaults
+  value_template: "{{ value_json.probes[1].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[1].connected == true else 'offline' }}"
+- name: "Free Grilly Probe 2 Target"
+  unique_id: "free_grilly_probe_2_target"
+  <<: *probe_target_defaults
+  value_template: "{{ value_json.probes[1].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[1].connected == true else 'offline' }}"
+
+# Probe 3
+- name: "Free Grilly Probe 3 Temperature"
+  unique_id: "free_grilly_probe_3_temp"
+  <<: *probe_temp_defaults
+  value_template: "{{ value_json.probes[2].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[2].connected == true else 'offline' }}"
+- name: "Free Grilly Probe 3 Target"
+  unique_id: "free_grilly_probe_3_target"
+  <<: *probe_target_defaults
+  value_template: "{{ value_json.probes[2].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[2].connected == true else 'offline' }}"
+
+# Probe 4
+- name: "Free Grilly Probe 4 Temperature"
+  unique_id: "free_grilly_probe_4_temp"
+  <<: *probe_temp_defaults
+  value_template: "{{ value_json.probes[3].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[3].connected == true else 'offline' }}"
+- name: "Free Grilly Probe 4 Target"
+  unique_id: "free_grilly_probe_4_target"
+  <<: *probe_target_defaults
+  value_template: "{{ value_json.probes[3].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[3].connected == true else 'offline' }}"
+
+# Probe 5
+- name: "Free Grilly Probe 5 Temperature"
+  unique_id: "free_grilly_probe_5_temp"
+  <<: *probe_temp_defaults
+  value_template: "{{ value_json.probes[4].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[4].connected == true else 'offline' }}"
+- name: "Free Grilly Probe 5 Target"
+  unique_id: "free_grilly_probe_5_target"
+  <<: *probe_target_defaults
+  value_template: "{{ value_json.probes[4].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[4].connected == true else 'offline' }}"
+
+# Probe 6
+- name: "Free Grilly Probe 6 Temperature"
+  unique_id: "free_grilly_probe_6_temp"
+  <<: *probe_temp_defaults
+  value_template: "{{ value_json.probes[5].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[5].connected == true else 'offline' }}"
+- name: "Free Grilly Probe 6 Target"
+  unique_id: "free_grilly_probe_6_target"
+  <<: *probe_target_defaults
+  value_template: "{{ value_json.probes[5].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[5].connected == true else 'offline' }}"
+
+# Probe 7
+- name: "Free Grilly Probe 7 Temperature"
+  unique_id: "free_grilly_probe_7_temp"
+  <<: *probe_temp_defaults
+  value_template: "{{ value_json.probes[6].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[6].connected == true else 'offline' }}"
+- name: "Free Grilly Probe 7 Target"
+  unique_id: "free_grilly_probe_7_target"
+  <<: *probe_target_defaults
+  value_template: "{{ value_json.probes[6].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[6].connected == true else 'offline' }}"
+
+# Probe 8
+- name: "Free Grilly Probe 8 Temperature"
+  unique_id: "free_grilly_probe_8_temp"
+  <<: *probe_temp_defaults
+  value_template: "{{ value_json.probes[7].temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[7].connected == true else 'offline' }}"
+- name: "Free Grilly Probe 8 Target"
+  unique_id: "free_grilly_probe_8_target"
+  <<: *probe_target_defaults
+  value_template: "{{ value_json.probes[7].target_temperature }}"
+  availability_template: "{{ 'online' if value_json.probes[7].connected == true else 'offline' }}"
+
+# Battery
+- name: "Free Grilly Battery"
+  unique_id: "free_grilly_battery"
+  state_topic: "free-grilly/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
+  unit_of_measurement: "%"
+  device_class: battery
+  state_class: measurement
+  payload_available: "online"
+  payload_not_available: "offline"
+  availability_template: "{{ 'online' if value_json.wifi_connected else 'offline' }}"
+  value_template: "{{ value_json.battery_percentage }}"
+  device: *device_info
+```
 
 ## Contributing
 
