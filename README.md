@@ -130,7 +130,7 @@ Apart from that you can also add your own `custom` **NTC** probes if you know th
 If you want you can use our [handy calculator spreadsheet](docs/probe_calculator.xlsx) if you want to calculate the values for your own probes. 
 
 ## Home assistant support
-You can connect your free-grilly to your current home assistant installation when using the mqtt broker. For this you will need to manually create the needed entities. @woutercoppens provided us/you with a decent starting point. This can also be seen in issue #5:
+You can connect your free-grilly to your current home assistant installation when using the mqtt broker. For this you will need to manually create the needed entities. [@woutercoppens](https://github.com/woutercoppens) provided us/you with a decent starting point. This can also be seen in issue #5:
 
 ```yaml
 # Probe 1 (Defines Anchors)
