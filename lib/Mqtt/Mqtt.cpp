@@ -111,8 +111,12 @@ bool Mqtt::reconnect(){
             }
         }
 
+        String topic_prefix = config::mqtt_topic + "/" + config::grill_uuid;
+
         Serial.print("MQTT Connected to server with client ");
         Serial.println(Mqtt::client_name);
+        Serial.print("MQTT topic prefix ");
+        Serial.println(topic_prefix);
         
         Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
         Mqtt::subscribe(Mqtt::sub_topic_probes.c_str());

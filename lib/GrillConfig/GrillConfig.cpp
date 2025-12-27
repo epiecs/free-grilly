@@ -138,7 +138,9 @@ void GrillConfig::save_settings(){
         start_local_ap();
     }
 
+    config::mqtt_client.setup(config::mqtt_broker, config::mqtt_port);
     config::mqtt_client.publish_settings();
+
     GrillConfig::print_settings();
 }
 

@@ -1,4 +1,7 @@
 # Changelog (firmware only)
+## 2025-12-27
+- Mqtt settings now get applied when changed via api/mqtt/web interface without needing a reload (Enhancement for issue #22)
+
 ## 2025-12-22
 - Added the option to set the brightness for the backlight of the screen (Enhancement for issue #10)
 - The mqtt code now first checks for retained messages from external systems in case of disconnects
