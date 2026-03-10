@@ -359,8 +359,8 @@ void GrillConfig::load_probes(){
     type = config::settings_storage.getString("p8_type");
     name = config::settings_storage.getString("p8_name", "Probe 8");
     kohm = config::settings_storage.getInt("p8_ref_kohm");
-    beta = config::settings_storage.getInt("p8_ref_temp"); 
-    temp = config::settings_storage.getInt("p8_ref_beta");
+    temp = config::settings_storage.getInt("p8_ref_temp");
+    beta = config::settings_storage.getInt("p8_ref_beta");
     grill::probe_8.target_temperature = config::settings_storage.getFloat("p8_target_temp");
     grill::probe_8.minimum_temperature = config::settings_storage.getFloat("p8_min_temp");
     grill::probe_8.set_type(type, kohm, temp, beta);
