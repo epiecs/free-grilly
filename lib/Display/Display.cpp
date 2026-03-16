@@ -110,6 +110,7 @@ bool disp::display_update(void) {
     }
     if (config::screen_timeout_minutes > 0 and millis_screen_timeout + (config::screen_timeout_minutes * 60000) < millis()) {
         screen_pwr(DISABLE);
+        is_display_updating = false;
         return true; 
     }
 
