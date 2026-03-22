@@ -1,4 +1,8 @@
 # Changelog (firmware only)
+## 2026-03-22
+- Fix display update lock on screen timeout - PR #24 - Thanks @ctrochalakis!
+- Fix typo in probe 8 calibration settings loading - PR #23 - Thanks @ctrochalakis!
+
 ## 2025-12-27
 - Mqtt settings now get applied when changed via api/mqtt/web interface without needing a reload (Enhancement for issue #22)
 
@@ -27,7 +31,6 @@
 - Fix for issue #7 where Fahrenheit was not displayed on the lcd
 
 ## 2025-06-14
-
 - Added the option to set the timeout for the backlight and/or the screen (Enhancement for issue #2)
 - Web interface
     - You can now toggle to only view connected probes in the webinterface - Thanks @Bardesss!
