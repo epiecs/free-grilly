@@ -26,6 +26,6 @@ esptool.py --chip esp32 merge_bin -o dist/free-grilly-$(date +%Y-%m-%d)-full.bin
 # - update changelog.md
 # - commit the updated src with version bump, changelog and new dist
 # - run git log to get the latest git commit hash
-# - git tag -a dd.mm.yy <git log hash>
+# - git tag -a yy.mm.dd <git log hash>
 # - git push --tags
 # - prep release on github

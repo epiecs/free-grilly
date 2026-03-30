@@ -1,4 +1,9 @@
 # Changelog (firmware only)
+
+## 2026-03-30
+- Fix settings not being able to be updated - #25
+- added easter egg in settings
+
 ## 2026-03-22
 - Fix display update lock on screen timeout - PR #24 - Thanks @ctrochalakis!
 - Fix typo in probe 8 calibration settings loading - PR #23 - Thanks @ctrochalakis!
