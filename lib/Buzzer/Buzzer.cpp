@@ -40,6 +40,22 @@ void Buzzer::play_all_notes(){
     ledcDetachPin(gpio::buzzer);
 }
 
+void Buzzer::play_cucaracha(){
+
+    ledcAttachPin(gpio::buzzer, gpio::pwm_buzzer_channel);
+
+    for(int note = 0; note < 34; note++){
+        ledcWriteTone(gpio::pwm_buzzer_channel, Buzzer::cucaracha_notes[note]);
+        ledcWrite(gpio::pwm_buzzer_channel, Buzzer::volume);
+        delay(Buzzer::cucaracha_durations[note]);  
+        ledcWriteTone(gpio::pwm_buzzer_channel, 0);
+        ledcWrite(gpio::pwm_buzzer_channel, 0);
+        delay(Buzzer::cucaracha_wait[note]);   
+    }
+
+    ledcDetachPin(gpio::buzzer);
+}
+
 void Buzzer::set_volume(int volume){
 
     if(config::beep_enabled == false){

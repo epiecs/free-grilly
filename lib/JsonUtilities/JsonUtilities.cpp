@@ -108,6 +108,8 @@ void JsonUtilities::load_json_settings(char* buffer){
     jsondoc["beep_degrees_before"]       = config::beep_degrees_before;
     jsondoc["beep_outside_target"]       = config::beep_outside_target;
     jsondoc["beep_on_ready"]             = config::beep_on_ready;
+    jsondoc["cucaracha_enabled"]         = config::cucaracha_enabled;
+
     jsondoc["screen_timeout_minutes"]    = config::screen_timeout_minutes;
     jsondoc["backlight_timeout_minutes"] = config::backlight_timeout_minutes;
     jsondoc["backlight_brightness"]      = config::backlight_brightness;
@@ -164,6 +166,8 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
     config::beep_degrees_before       = json_data["beep_degrees_before"];
     config::beep_outside_target       = json_data["beep_outside_target"];
     config::beep_on_ready             = json_data["beep_on_ready"];
+    config::cucaracha_enabled         = json_data["cucaracha_enabled"];
+
     config::screen_timeout_minutes    = json_data["screen_timeout_minutes"];
     config::backlight_timeout_minutes = json_data["backlight_timeout_minutes"];
     config::backlight_brightness      = json_data["backlight_brightness"];

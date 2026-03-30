@@ -252,7 +252,10 @@ void task_alarm(void* pvParameters) {
 
         if(alarm_beep_todo > 0){
             alarm_beep_todo--;
-            grill::buzzer.beep(1, config::alarm_beep_duration_ms);
+            if(config::cucaracha_enabled)
+                grill::buzzer.play_cucaracha();
+            else
+                grill::buzzer.beep(1, config::alarm_beep_duration_ms);
         }
 
         delay(100);

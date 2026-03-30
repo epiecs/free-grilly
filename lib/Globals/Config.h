@@ -68,6 +68,7 @@ namespace config{
     extern bool alarm_mute;
     extern int alarm_beep_amount;
     extern int alarm_beep_duration_ms;
+    extern bool cucaracha_enabled;
 
     // Screen
     extern int screen_timeout_minutes;

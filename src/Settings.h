@@ -139,6 +139,7 @@ namespace config{
     bool alarm_mute                     = false;
     int alarm_beep_amount               = 20;
     int alarm_beep_duration_ms          = 800;
+    bool cucaracha_enabled              = false;
 
     // ***********************************
     // * Screen

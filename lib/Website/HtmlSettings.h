@@ -134,6 +134,14 @@ const char HTML_SETTINGS[] = R"=====(
                     </div>
                 </div>
             </div>
+            <div class="row mt-2">
+                <label for="cucaracha_enabled" class="col-sm-2 col-form-label">La Cucaracha</label>
+                <div class="col-sm-10">
+                    <div class="form-check form-switch mt-2">
+                        <input id="cucaracha_enabled" class="form-check-input" type="checkbox">  
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="row mt-4">
@@ -350,6 +358,7 @@ const char HTML_SETTINGS[] = R"=====(
         e_beep_degrees_before       = document.getElementById("beep_degrees_before");
         e_beep_outside_target       = document.getElementById("beep_outside_target");
         e_beep_on_ready             = document.getElementById("beep_on_ready");
+        e_cucaracha_enabled         = document.getElementById("cucaracha_enabled");
         e_screen_timeout_minutes    = document.getElementById("screen_timeout_minutes");
         e_backlight_timeout_minutes = document.getElementById("backlight_timeout_minutes");
         e_backlight_brightness      = document.getElementById("backlight_brightness");
@@ -401,7 +410,8 @@ const char HTML_SETTINGS[] = R"=====(
                 e_beep_degrees_before.value       = data['beep_degrees_before'];
                 e_beep_outside_target.checked     = data['beep_outside_target'];
                 e_beep_on_ready.checked           = data['beep_on_ready'];
-                
+                e_cucaracha_enabled.checked       = data['cucaracha_enabled'];
+
                 e_screen_timeout_minutes.value    = data['screen_timeout_minutes'];
                 e_backlight_timeout_minutes.value = data['backlight_timeout_minutes'];
                 e_backlight_brightness.value      = data['backlight_brightness'];
@@ -487,6 +497,8 @@ const char HTML_SETTINGS[] = R"=====(
                 post_data["beep_degrees_before"]       = e_beep_degrees_before.value;
                 post_data["beep_outside_target"]       = e_beep_outside_target.checked;
                 post_data["beep_on_ready"]             = e_beep_on_ready.checked;
+                post_data["cucaracha_enabled"]         = e_cucaracha_enabled.checked;
+                
                 post_data['screen_timeout_minutes']    = e_screen_timeout_minutes.value;
                 post_data['backlight_timeout_minutes'] = e_backlight_timeout_minutes.value;
                 post_data['backlight_brightness']      = e_backlight_brightness.value;
