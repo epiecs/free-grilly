@@ -1,6 +1,6 @@
 # Changelog (firmware only)
 
-## 2026-04-09
+## 2026-04-18
 - Cleaned up MQTT code
 - Cleaned up network code
 - Applied tweaks and fixes to wifi init in main to drastically improve connection to wifi on cold boot

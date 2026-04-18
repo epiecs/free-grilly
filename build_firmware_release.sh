@@ -13,8 +13,8 @@ sed -i "" "s#${search}#${replace}#" src/Settings.h
 cp .pio/build/esp32dev/firmware.bin dist/free-grilly-$(date +%Y-%m-%d)-ota.bin
 
 # Build full flash firmware including partitions, bootloader,...
-esptool.py --chip esp32 merge_bin -o dist/free-grilly-$(date +%Y-%m-%d)-full.bin \
-  --flash_mode dio --flash_size 4MB \
+esptool --chip esp32 merge-bin -o dist/free-grilly-$(date +%Y-%m-%d)-full.bin \
+  --flash-mode dio --flash-size 4MB \
   0x1000 .pio/build/esp32dev/bootloader.bin \
   0x8000 .pio/build/esp32dev/partitions.bin \
   0xe000 ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin \
