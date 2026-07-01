@@ -53,6 +53,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 * **Battery Management:** Includes functional battery monitoring and management based on the device's hardware.
 * **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
+* **Opengrill Compatibility:** Free-Grilly is compatible with [Opengrill](https://github.com/epiecs/opengrill-server)
 
 ## Apps and integrations
 
@@ -128,6 +129,10 @@ Apart from that you can also add your own `custom` **NTC** probes if you know th
 -   Reference resistance in kOhm
 
 If you want you can use our [handy calculator spreadsheet](docs/probe_calculator.xlsx) if you want to calculate the values for your own probes. 
+
+## Connecting to opengrill
+
+Just navigate to the settings and enter the ip of your opengrill server :)
 
 ## Home assistant support
 You can connect your free-grilly to your current home assistant installation when using the mqtt broker. For this you will need to manually create the needed entities. [@woutercoppens](https://github.com/woutercoppens) provided us/you with a decent starting point. This can also be seen in issue #5:

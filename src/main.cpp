@@ -19,6 +19,8 @@
 #include "Web.h"
 #include "Display.h"
 
+#include "esp_heap_caps.h"
+
 // ************************************
 // * Config.h initializes variables
 // ************************************
@@ -151,7 +153,7 @@ void setup() {
     xTaskCreatePinnedToCore(task_webserver, "Webserver", task::webserverStackSize, NULL, 1, &task::webserverTask, 1);
     xTaskCreatePinnedToCore(task_mqtt, "Mqtt", task::mqttStackSize, NULL, 1, &task::mqttTask, 1);
     xTaskCreatePinnedToCore(task_opengrill, "Opengrill", task::opengrillStackSize, NULL, 1, &task::opengrillTask, 1);
-    // xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
+    xTaskCreatePinnedToCore(task_stackmonitor, "StackMonitor", task::stackmonitorStackSize, NULL, 1, &task::stackmonitorTask, 1);
 }
 
 // ***********************************
@@ -390,7 +392,7 @@ void task_powerbutton(void* pvParameters) {
         }
         else if (digitalRead(gpio::power_button) == HIGH && button_pressed)
         {
-            button_pressed = false;
+            button_pressed    = false;
             buzzed_short      = false;
             buzzed_medium     = false;
             buzzed_long       = false;
@@ -497,75 +499,60 @@ void task_screen(void* pvParameters) {
 // * Stack monitor
 // ***********************************
 
+void check_heap() {
+    multi_heap_info_t info;
+    heap_caps_get_info(&info, MALLOC_CAP_8BIT);
+
+    size_t used  = info.total_allocated_bytes;
+    size_t free  = info.total_free_bytes;
+    size_t total = used + free;
+
+    printf("Heap: used=%u free=%u total=%u min_free=%u\n",
+           used, free, total, info.minimum_free_bytes);
+}
+
+size_t get_task_stack_used(TaskHandle_t handle, size_t stackSizeBytes) {
+    size_t freeBytes = uxTaskGetStackHighWaterMark(handle) * sizeof(StackType_t);
+    return stackSizeBytes - freeBytes;
+}
+
 void task_stackmonitor(void* pvParameters) {
     Serial.println("Launching task :: STACK MONITOR");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
 
-    float stack_free = 0;
-    float stack_used = 0;
+    size_t used = 0;
 
     for (;;) {
-         // The high water mark is the maximum value of stack that is still free
         // https://www.freertos.org/Why-FreeRTOS/FAQs/Memory-usage-boot-times-context#how-big-should-the-stack-be
+
+        Serial.println("|++++++++++++++ HEAP  +++++++++++++++|");
+        check_heap();
 
         Serial.println("|++++++++++++++ STACK +++++++++++++++|");
 
+        used = get_task_stack_used(task::alarmTask, task::alarmStackSize);
+        printf("ALARM stack used: %u/%u\n", used, task::alarmStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::alarmTask);
-        stack_used = task::alarmStackSize - stack_free;
-        Serial.print("ALARM stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::alarmStackSize);
+        used = get_task_stack_used(task::batteryTask, task::batteryStackSize);
+        printf("BATTERY stack used: %u/%u\n", used, task::batteryStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::batteryTask);
-        stack_used = task::batteryStackSize - stack_free;
-        Serial.print("BATTERY stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::batteryStackSize);
+        used = get_task_stack_used(task::mqttTask, task::mqttStackSize);
+        printf("MQTT stack used: %u/%u\n", used, task::mqttStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::mqttTask);
-        stack_used = task::mqttStackSize - stack_free;
-        Serial.print("MQTT stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::mqttStackSize);
+        used = get_task_stack_used(task::powerbuttonTask, task::powerbuttonStackSize);
+        printf("POWERBUTTON stack used: %u/%u\n", used, task::powerbuttonStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::powerbuttonTask);
-        stack_used = task::powerbuttonStackSize - stack_free;
-        Serial.print("POWERBUTTON stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::powerbuttonStackSize);
+        used = get_task_stack_used(task::probesTask, task::probesStackSize);
+        printf("PROBES stack used: %u/%u\n", used, task::probesStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::probesTask);
-        stack_used = task::probesStackSize - stack_free;
-        Serial.print("PROBES stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::probesStackSize);
+        used = get_task_stack_used(task::screenTask, task::screenStackSize);
+        printf("SCREEN stack used: %u/%u\n", used, task::screenStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::screenTask);
-        stack_used = task::screenStackSize - stack_free;
-        Serial.print("SCREEN stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::screenStackSize);
+        used = get_task_stack_used(task::webserverTask, task::webserverStackSize);
+        printf("WEBSERVER stack used: %u/%u\n", used, task::webserverStackSize);
 
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::webserverTask);
-        stack_used = task::webserverStackSize - stack_free;
-        Serial.print("WEBSERVER stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::webserverStackSize);
-
-        stack_free = (float)uxTaskGetStackHighWaterMark(task::stackmonitorTask);
-        stack_used = task::stackmonitorStackSize - stack_free;
-        Serial.print("STACKMONITOR stack used: ");
-        Serial.print(stack_used);
-        Serial.print("/");
-        Serial.println(task::stackmonitorStackSize);
+        used = get_task_stack_used(task::stackmonitorTask, task::stackmonitorStackSize);
+        printf("STACKMONITOR stack used: %u/%u\n", used, task::stackmonitorStackSize);
 
         delay(5000);
     }
