@@ -1,5 +1,16 @@
 # Changelog (firmware only)
 
+## 26.09.06
+
+### Fixed: battery drain while powered off
+- Power and backlight GPIOs now retain their inactive levels during ESP32 deep sleep,
+  preventing the probe, ADC, or display circuits from being re-enabled by floating pins.
+- The backlight is explicitly switched off before entering deep sleep.
+- Shutdown waits for the active-low power button to be released, preventing an immediate
+  EXT0 wake-up while the button is still held. GPIO35 remains the power-on/wake input.
+- Corrected the battery charging flag, which was previously inverted and prevented the
+  low-battery protection from reliably detecting discharge.
+
 ## 26.07.02
 
 ### Fixed: detail screen unreachable / device reboots on button press

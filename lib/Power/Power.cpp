@@ -2,6 +2,7 @@
 #include <Power.h>
 #include <Wire.h>
 #include <esp_pm.h>
+#include <driver/gpio.h>
 
 #include "Config.h"
 #include "Grill.h"
@@ -86,7 +87,7 @@ float bat::temp(temp_unit type) {
 bool bat::chargeFlag(void) {
 	uint16_t flagState = flags();
 	bool is_charging = flagState & BAT_FLAG_CHARGE;
-	return !is_charging;
+	return is_charging;
 }
 
 bool bat::read_battery(void) {
@@ -154,6 +155,11 @@ uint16_t bat::i2cWriteBytes(uint8_t subAddress, uint8_t * src, uint8_t count) {
 pwr::pwr() {};
 
 bool pwr::init(void) {
+	// A wake from deep sleep leaves the previous output holds latched until they
+	// are explicitly released.  Do this before attaching PWM or changing rails.
+	gpio_hold_dis((gpio_num_t)gpio::power_screen_backlight);
+	gpio_hold_dis((gpio_num_t)gpio::power_probes);
+	gpio_hold_dis((gpio_num_t)gpio::power_adc_circuit);
 	ledcSetup(gpio::pwm_screen_channel, gpio::pwm_screen_frequency, gpio::pwm_screen_resolution);
 	ledcAttachPin(gpio::power_screen_backlight, gpio::pwm_screen_channel);
 	setScreenBrightness(config::backlight_brightness);
@@ -176,7 +182,7 @@ bool pwr::setPowerRail(status_type type, int GPIO) {
 		digitalWrite(GPIO, HIGH); 
 		break;
 	}
-	return false;
+	return true;
 }
 
 bool pwr::setScreenBrightness(int brightness) {
@@ -200,9 +206,35 @@ bool pwr::setScreenBrightness(int brightness) {
 }
 
 bool pwr::shutdown(void) {
-	esp_sleep_enable_ext0_wakeup(GPIO_NUM_35,0);
+	// GPIO35 is the active-low wake button.  Do not enter deep sleep while it is
+	// still pressed: EXT0 is level-triggered and would wake the ESP32 immediately.
+	// A timeout keeps a defective/stuck button from blocking the shutdown path forever.
+	unsigned long wait_started = millis();
+	while (digitalRead(gpio::power_button) == LOW && millis() - wait_started < 5000) {
+		delay(10);
+	}
+
+	// The backlight is PWM driven and is not one of the switched rails.  Force its
+	// output low before sleep so the display cannot remain powered.
+	setScreenBrightness(0);
+	pinMode(gpio::power_screen_backlight, OUTPUT);
+	digitalWrite(gpio::power_screen_backlight, LOW);
+
+	// shutdown() can also be reached from setup(), before power.startup() has
+	// initialized the rail pins.
+	pinMode(gpio::power_probes, OUTPUT);
+	pinMode(gpio::power_adc_circuit, OUTPUT);
 	setPowerRail(DISABLE,gpio::power_probes);
 	setPowerRail(DISABLE,gpio::power_adc_circuit);
+
+	// Preserve the inactive levels while the digital power domain is powered down.
+	// Without these holds the external rail-enable inputs can float and re-enable
+	// the probe/ADC circuitry during deep sleep.
+	gpio_hold_en((gpio_num_t)gpio::power_screen_backlight);
+	gpio_hold_en((gpio_num_t)gpio::power_probes);
+	gpio_hold_en((gpio_num_t)gpio::power_adc_circuit);
+
+	esp_sleep_enable_ext0_wakeup(GPIO_NUM_35,0);
 	esp_deep_sleep_start();
 	return true;
 }
