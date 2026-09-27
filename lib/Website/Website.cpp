@@ -7,6 +7,7 @@
 
 void setup_web_routes() {
     web::webserver.on("/", HTTP_GET, get_index);
+    web::webserver.on("/apple-touch-icon.png", HTTP_GET, get_touch_icon);
 
     // Old page urls, kept so bookmarks keep working
     web::webserver.on("/probes", [](){ redirect_to("/"); });
@@ -27,6 +28,13 @@ void get_index() {
     web::webserver.sendHeader("Cache-Control", "no-cache");
     web::webserver.sendHeader("ETag", WEB_APP_ETAG);
     web::webserver.send_P(200, "text/html", (PGM_P)WEB_APP_GZ, WEB_APP_GZ_LEN);
+}
+
+// Home screen icon for iOS, which asks for this path on its own as well. It rarely changes, so it
+// may be cached for a day.
+void get_touch_icon() {
+    web::webserver.sendHeader("Cache-Control", "max-age=86400");
+    web::webserver.send_P(200, "image/png", (PGM_P)WEB_TOUCH_ICON, WEB_TOUCH_ICON_LEN);
 }
 
 // Old page urls redirect into the web app, so bookmarks keep working
