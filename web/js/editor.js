@@ -159,6 +159,7 @@ const Editor = (() => {
     document.body.classList.remove("sheet-open");
     closeTimer = setTimeout(() => { backdrop.hidden = true; sheet.hidden = true; }, 260);
     if (returnFocus && document.contains(returnFocus)) returnFocus.focus();
+    else document.getElementById("view-grill").focus();   // the card was redrawn, e.g. the probe was unplugged
   }
 
   // Keeps Tab inside the sheet while it's open
