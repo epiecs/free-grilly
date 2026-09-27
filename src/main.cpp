@@ -65,22 +65,44 @@ void setup() {
 
     int bootup_press_time   = config::press_seconds_startup * 1000;
 
-    if(digitalRead(gpio::power_button) == LOW){
-        millis_button_start = millis();
-    }
+    // Only a power-on or a wake from deep sleep needs the button held. A restart of a running
+    // device (ota update, factory reset, crash, watchdog) boots straight back up, otherwise a crash
+    // during a cook would silently switch the thermometer off. A brownout still needs the button
+    // so an empty battery can't get stuck in a reboot loop.
+    esp_reset_reason_t reset_reason = esp_reset_reason();
+    Serial.printf("Reset reason: %d\n", reset_reason);
 
-    while(digitalRead(gpio::power_button) == LOW){
-        millis_pressed = millis() - millis_button_start;
-
-        // beep if the button is held long enough
-        if(millis_pressed > bootup_press_time){
-            grill::buzzer.beep(1, 200);
+    bool require_button_press = true;
+    switch (reset_reason){
+        case ESP_RST_SW:
+        case ESP_RST_PANIC:
+        case ESP_RST_INT_WDT:
+        case ESP_RST_TASK_WDT:
+        case ESP_RST_WDT:
+            require_button_press = false;
             break;
-        }
+        default:
+            break;
     }
 
-    if(millis_pressed < bootup_press_time){
-        power.shutdown();
+    if(require_button_press){
+        if(digitalRead(gpio::power_button) == LOW){
+            millis_button_start = millis();
+        }
+
+        while(digitalRead(gpio::power_button) == LOW){
+            millis_pressed = millis() - millis_button_start;
+
+            // beep if the button is held long enough
+            if(millis_pressed > bootup_press_time){
+                grill::buzzer.beep(1, 200);
+                break;
+            }
+        }
+
+        if(millis_pressed < bootup_press_time){
+            power.shutdown();
+        }
     }
 
     // ***********************************
