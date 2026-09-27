@@ -95,23 +95,48 @@ float Probe::read_adc_voltage() {
 float Probe::calculate_temperature() {
     uint16_t adc_value = Probe::read_adc_value();
 
-    if (adc_value > ADC_PROBE_DISCONNECTED_VALUE) {
-        Probe::celcius    = 0;
-        Probe::fahrenheit = 32;
-        Probe::connected  = false;
-        
-        return nanf(""); // If disconnected return NaN
-    }
-
     // Calculate the voltage using linear scaling
     float voltage = (static_cast<float>(adc_value) / 65534.0) * ADC_REFERENCE_VOLTAGE;
 
-    float ref_kelvin = 1 / (reference_celcius + 273.15);
-    float ref_beta = 1 / static_cast<float>(reference_beta);
-    float ref_volt = (voltage * ADC_REFERENCE_KOHM) / (reference_kohm * (ADC_BASE_VOLTAGE - voltage));
-    float log_volt = log(ref_volt);
+    // An empty jack reads close to ADC_PROBE_DISCONNECTED_VALUE. From ADC_BASE_VOLTAGE (about 54431)
+    // up the formula below divides by zero or takes the log of a negative value, so anything at or
+    // above that voltage is treated as disconnected as well.
+    float temperature = nanf("");
+    if (adc_value <= ADC_PROBE_DISCONNECTED_VALUE && voltage < ADC_BASE_VOLTAGE) {
+        float ref_kelvin = 1 / (reference_celcius + 273.15);
+        float ref_beta = 1 / static_cast<float>(reference_beta);
+        float ref_volt = (voltage * ADC_REFERENCE_KOHM) / (reference_kohm * (ADC_BASE_VOLTAGE - voltage));
+        float log_volt = log(ref_volt);
 
-    float temperature = (1 / (ref_kelvin + ref_beta * log_volt)) - 273.15;
+        temperature = (1 / (ref_kelvin + ref_beta * log_volt)) - 273.15;
+    }
+    bool reading_connected = isfinite(temperature);
+
+    // ADC noise around the threshold made an empty jack flip between connected and disconnected.
+    // Only change state after a few readings in a row agree.
+    if (reading_connected != Probe::connected) {
+        Probe::state_change_readings++;
+        if (Probe::state_change_readings >= READINGS_TO_CHANGE_STATE) {
+            Probe::state_change_readings = 0;
+            Probe::connected = reading_connected;
+            if (Probe::connected){Probe::connected_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();}
+        }
+    } else {
+        Probe::state_change_readings = 0;
+    }
+
+    if (!Probe::connected) {
+        Probe::celcius     = 0;
+        Probe::fahrenheit  = 32;
+        Probe::temperature = 0;
+
+        return nanf(""); // If disconnected return NaN
+    }
+
+    // Still connected but this reading was invalid, keep the last temperature
+    if (!reading_connected) {
+        return Probe::celcius;
+    }
 
     // Store temp in public property
     Probe::celcius     = temperature;
@@ -126,8 +151,6 @@ float Probe::calculate_temperature() {
     if(config::temperature_unit == "fahrenheit"){
         Probe::temperature = Probe::fahrenheit;
     }
-    if (Probe::connected == false){Probe::connected_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();}
-    Probe::connected  = true;
 
     return temperature;
 }

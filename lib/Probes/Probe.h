@@ -16,6 +16,9 @@ private:
 	const int 	ADC_READ_DELAY_MS			   =     1; // Delay needed for accurate readings. If we switch to fast we get overlaps.
 
 	const int   TEMP_HYSTERISIS_OFFSET		   =     2; // The amount of degrees a probe should be seperated from a temp to be eligible again to beep
+	const int   READINGS_TO_CHANGE_STATE	   =     3; // Readings in a row needed to switch between connected and disconnected
+
+	int  state_change_readings				   =     0; // Readings in a row that disagree with the connected state
 
 	bool has_beeped           				   = false; // Has the probe beeped for the target temperature
 	bool has_beeped_before    				   = false; // Has the probe beeped for the before temperature
