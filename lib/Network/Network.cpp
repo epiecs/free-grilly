@@ -51,14 +51,23 @@ bool connect_to_wifi()
     // makes the device unreachable, so fall back to dhcp instead.
     bool static_ip_incomplete = wifi_subnet == IPAddress(0, 0, 0, 0) || wifi_gateway == IPAddress(0, 0, 0, 0);
 
+    bool use_static_ip = config::wifi_ip != "0.0.0.0" && !static_ip_incomplete;
+
     if (config::wifi_ip != "0.0.0.0" && static_ip_incomplete){
         Serial.println("Static IP set without subnet or gateway, using DHCP");
-    } else if (config::wifi_ip != "0.0.0.0"){
+    }
+
+    if (use_static_ip){
         if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns, wifi_dns2)){
             Serial.println("Failed to configure Static IP");
         } else {
             Serial.println("Static IP configured!");
         }
+    } else {
+        // Once a static ip was configured the core keeps using it on the next WiFi.begin(). An empty
+        // config restarts the dhcp client, so switching from a static ip back to dhcp works without a
+        // reboot.
+        WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
     }
 
     Serial.println("");
