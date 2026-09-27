@@ -84,7 +84,7 @@ bool Opengrill::reconnect(){
             continue;
         }
 
-        Opengrill::setServer(config::opengrill_server.c_str(), config::mqtt_port);
+        Opengrill::setServer(config::opengrill_server.c_str(), config::opengrill_port);
 
         if(config::opengrill_user != "" && config::opengrill_password != ""){
             Serial.println("Trying to connect to Opengrill using user/pass");
