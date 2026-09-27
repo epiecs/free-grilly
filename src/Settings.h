@@ -85,7 +85,7 @@ namespace config{
     // ***********************************
 
     WiFiClient WifiClient;
-    Mqtt mqtt_client                    = Mqtt(WifiClient);
+    Mqtt mqtt_client{WifiClient};
 
     String mqtt_broker                  = "";
     int    mqtt_port                    = 1883;
@@ -97,7 +97,7 @@ namespace config{
     // * Opengrill
     // ***********************************
     WiFiClient OpengrillWifiClient;
-    Opengrill opengrill_client          = Opengrill(OpengrillWifiClient);
+    Opengrill opengrill_client{OpengrillWifiClient};
 
     String opengrill_topic              = "opengrill/v1";
     String opengrill_server             = "";

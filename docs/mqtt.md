@@ -16,6 +16,7 @@ The default prefix is `grilly-plus` and the uuid is in the format of a UUIDv4 ge
     - `<prefix>/<uuid>/grill`
     - `<prefix>/<uuid>/probes`
     - `<prefix>/<uuid>/settings`
+    - `<prefix>/<uuid>/error`
 - Subscribing
     - `<prefix>/<uuid>/config/probes`
     - `<prefix>/<uuid>/config/settings`
@@ -26,7 +27,7 @@ The `grill` topic is sent every second. The `probes` and `settings` topic is onl
 
 When publishing to the `probes` and `settings` topic the messages will have their **retain** flag set to true. That way the latest known settings are always available for whoever subscribes.
 
-Messages on `/config/probes` and `/config/settings` may be partial: only the keys you send are changed, missing keys keep their current value. For probes, `probe_id` (1-8) is required in every entry. If any value has the wrong type or is out of range, the whole message is rejected and nothing is changed.
+Messages on `/config/probes` and `/config/settings` may be partial: only the keys you send are changed, missing keys keep their current value. For probes, `probe_id` (1-8) is required in every entry. If any value has the wrong type or is out of range, the whole message is rejected and nothing is changed. The reason is published (not retained) to `<prefix>/<uuid>/error` as `{"topic": "<config topic>", "error": "<reason>"}`.
 
 For the topics that Grilly+ is subscribed to (`/config/probes` and `/config/settings`), Grilly+ takes into account that there might be a message with the retain flag set. So after reading the message Grilly+ will also publish a new message with retain set to true and a 0 byte payload to clear the existing message.
 
