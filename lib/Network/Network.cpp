@@ -39,7 +39,13 @@ bool connect_to_wifi()
     IPAddress wifi_subnet;  wifi_subnet.fromString(config::wifi_subnet);
     IPAddress wifi_gateway; wifi_gateway.fromString(config::wifi_gateway);
     IPAddress wifi_dns;     wifi_dns.fromString(config::wifi_dns);
-    IPAddress wifi_dns2;    wifi_dns.fromString(config::wifi_dns);
+
+    // There is only one dns setting. Use the gateway as secondary dns, and as primary when no dns
+    // is set, so a static ip without dns can still resolve hostnames.
+    IPAddress wifi_dns2 = wifi_gateway;
+    if (wifi_dns == IPAddress(0, 0, 0, 0)){
+        wifi_dns = wifi_gateway;
+    }
 
     // Older firmware could save the dhcp ip as static ip without subnet/gateway. Such a config
     // makes the device unreachable, so fall back to dhcp instead.
