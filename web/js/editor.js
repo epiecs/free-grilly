@@ -107,7 +107,7 @@ const Editor = (() => {
     if (!Controls.isEditing(minStepper.input.parentElement.parentElement)) {
       minStepper.set(probe.minimum_temperature > 0 ? probe.minimum_temperature : Math.min(d.rangeMin, targetStepper.get() - 1));
     }
-    showMode(current);
+    showMode(mode());   // follows the radios, which keep the user's choice while they're editing it
 
     if (!Controls.isEditing(typeSelect)) typeSelect.value = TYPES[probe.probe_type] ? probe.probe_type : "custom";
     typeName.textContent = TYPES[typeSelect.value];
@@ -238,7 +238,8 @@ const Editor = (() => {
       send: (fields) => Api.post("/api/probes", [fields]),
       onStatus: (state, detail) => {
         Controls.showNote(note, state, detail);
-        if (state === "saved" && Array.isArray(detail) && probeId !== null) {
+        // While newer changes wait or are on their way, this answer is outdated: the next one refills
+        if (state === "saved" && Array.isArray(detail) && probeId !== null && !saver.hasPending()) {
           fill(detail.find((p) => p.probe_id === probeId));
         }
       },
