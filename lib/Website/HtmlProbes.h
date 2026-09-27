@@ -598,6 +598,23 @@ const char HTML_PROBES[] = R"=====(
                     }
                 });
 
+                if (!response.ok) {
+                    // Show why the grill refused the change, and keep what was typed so it can be corrected
+                    let message = "Settings could not be saved";
+                    try {
+                        const body = await response.json();
+                        if (body["error"]) { message += ": " + body["error"]; }
+                    } catch (error) {}
+
+                    e_alert.classList.add("alert-danger");
+                    e_alert.classList.remove("alert-success");
+                    e_alert_text.textContent = message;
+                    e_alert.style.display = 'block';
+
+                    e_save_settings.disabled = false;
+                    return;
+                }
+
                 e_alert.classList.remove("alert-danger");
                 e_alert.classList.add("alert-success");
                 e_alert_text.textContent = "Settings have been saved successfully";
@@ -611,6 +628,7 @@ const char HTML_PROBES[] = R"=====(
                 e_alert.classList.remove("alert-success");
                 e_alert_text.textContent = "Settings could not be saved";
                 e_alert.style.display = 'block';
+                e_save_settings.disabled = false;
 
                 console.error('Grill is unreachable:', error);
             }
