@@ -8,9 +8,11 @@
 #include "JsonUtilities.h"
 #include "Probe.h"
 
-JsonDocument jsondoc;
+// Every function uses its own JsonDocument. The api, mqtt and opengrill tasks call these at the same
+// time, a shared document got cleared and filled by one task while another was serializing it.
 
 void JsonUtilities::load_json_status(char *buffer){
+    JsonDocument jsondoc;
     jsondoc.clear();
 
     jsondoc["name"]               = config::grill_name;
@@ -95,6 +97,7 @@ void JsonUtilities::load_json_status(char *buffer){
 }
 
 void JsonUtilities::load_json_settings(char* buffer){
+    JsonDocument jsondoc;
 
     jsondoc.clear();
 
@@ -141,6 +144,7 @@ void JsonUtilities::load_json_settings(char* buffer){
 }
 
 jsonResult JsonUtilities::save_json_settings(char* raw_json){
+    JsonDocument jsondoc;
     DeserializationError err = deserializeJson(jsondoc, raw_json);
 
     if(err){ return {false, "Could not deserialize json"}; }
@@ -205,6 +209,7 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
 }
 
 void JsonUtilities::load_json_probes(char* buffer){
+    JsonDocument jsondoc;
     jsondoc.clear();
 
     JsonObject doc_0 = jsondoc.add<JsonObject>();
@@ -308,6 +313,7 @@ void JsonUtilities::load_json_probes(char* buffer){
 }
 
 jsonResult JsonUtilities::save_json_probes(char* raw_json){
+    JsonDocument jsondoc;
 
     DeserializationError err = deserializeJson(jsondoc, raw_json);
     if(err){ return {false, "Could not deserialize json"}; }
@@ -375,6 +381,7 @@ jsonResult JsonUtilities::save_json_probes(char* raw_json){
 }
 
 void JsonUtilities::load_opengrill_grill(char *buffer){
+    JsonDocument jsondoc;
     jsondoc.clear();
 
     jsondoc["name"]                 = config::grill_name;
@@ -397,6 +404,7 @@ void JsonUtilities::load_opengrill_grill(char *buffer){
 }
 
 jsonResult JsonUtilities::save_opengrill_grill(char* raw_json){
+    JsonDocument jsondoc;
     DeserializationError err = deserializeJson(jsondoc, raw_json);
 
     if(err){ return {false, "Could not deserialize json"}; }
@@ -411,6 +419,7 @@ jsonResult JsonUtilities::save_opengrill_grill(char* raw_json){
 }
 
 void JsonUtilities::load_opengrill_probes(char* buffer){
+    JsonDocument jsondoc;
     jsondoc.clear();
 
     JsonObject p1 = jsondoc["1"].to<JsonObject>();
@@ -498,6 +507,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
 }
 
 jsonResult JsonUtilities::save_opengrill_probes(char* raw_json){
+    JsonDocument jsondoc;
 
     DeserializationError err = deserializeJson(jsondoc, raw_json);
     if(err){ return {false, "Could not deserialize json"}; }
@@ -554,6 +564,7 @@ jsonResult JsonUtilities::save_opengrill_probes(char* raw_json){
 }
 
 void JsonUtilities::load_json_wifiscan(char* buffer){
+    JsonDocument jsondoc;
 
     Serial.println("Starting WIFI scan");
 
