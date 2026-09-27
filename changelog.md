@@ -1,19 +1,66 @@
 # Changelog (firmware only)
 
-## Unreleased (Grilly+)
-- New web app, built for phones and desktops alike:
-    - One dashboard with a card per probe; tap a card to edit its name, alarm (target or range) and probe type
-    - Settings save themselves, network changes are applied together with one button
-    - Battery and signal indicators with icons, dark and light theme following your device
-    - Firmware updates from the Settings view, protected by an optional admin password (replaces ElegantOTA)
-    - Changing or removing the admin password needs the current one (Basic auth, user `admin`), and it can't be changed over MQTT
-    - One compressed page of about 19 KB instead of about 311 KB, which loads much faster over the grill's hotspot
+## 2026-09-27
+First Grilly+ release, a fork of Free-Grilly 2026-04-18. Settings are kept when upgrading from Free-Grilly (same settings storage), and the first update can be installed through Free-Grilly's existing /update page.
+
+### New web app
+- New web app, built for phones and desktops alike, replacing the Bootstrap pages
+    - One dashboard with a card per connected probe: temperature, target or range, progress, "to go" / ready / in range / too low / too high, and how long the probe has been connected
+    - Tap a probe card to edit its name, alarm (off, target or range) and probe type, with large steppers; reference values are only shown for custom probes
+    - Settings save themselves; network changes (WiFi and hotspot) are collected and applied together with one button after a confirmation
+    - WiFi scan in the Network card, sorted by signal
+    - Battery (with charging) and WiFi signal indicators with icons, and a banner when the grill can't be reached
+    - Dark and light theme following your device, floating navigation bar on phones
+    - About view with firmware and connection details and credits to Free-Grilly
+    - One compressed page of about 19 KB instead of about 311 KB, cached by the browser until the next firmware update; frees about 290 KB of flash
+    - Old page urls (/probes, /settings, /about, /update) redirect into the app
+- Save errors are shown instead of "saved successfully", and the entered values are kept
+
+### Firmware updates and security
+- Firmware updates are installed from the Settings view (Firmware updates card) with upload progress; the grill restarts by itself and the page reloads. ElegantOTA is removed
+- Optional admin password protects firmware updates; changing or removing it needs the current one, and it can't be changed over MQTT
+- Only real OTA firmware files are accepted, a -full.bin is refused
+- New and factory-reset devices get a generated hotspot password, shown on the device's Info screen; upgraded devices keep their current hotspot password
+- Passwords are never returned by the api or published over MQTT
+- Web pages on other sites can no longer change settings or install firmware (json-only posts, no CORS for writes, required update header)
+
+### Fixes
+- The grill boots straight back up after an update, a factory reset or a crash instead of shutting down
+- The backlight switches off at shutdown and the power rails stay off while asleep
+- Fixed a crash when a probe is unplugged while its details page is shown on the device
+- Empty probe sockets no longer flicker between connected and disconnected or show "nan"
+- Alarms no longer replay when a probe is saved (for example after renaming it or an MQTT reconnect)
+- "Beep when ready" and "Beep outside target" are respected
+- Range alarms of 4 degrees or less re-arm again; a minimum of 0 or below means target mode
+- The overview for 5 to 8 probes on the device shows the configured unit instead of always Celsius
+- Disabling beeps no longer wipes the saved volume
+- The Cucaracha alarm setting is saved
+- The settings page no longer saves the DHCP address as a static IP; an incomplete static IP falls back to DHCP
+- Switching from a static IP back to DHCP works without a reboot
+- The gateway is used as DNS fallback for a static IP
+- Restart the display timeouts when settings are saved, so a new brightness stays visible
+- Missing keys in api and MQTT updates keep their current value instead of being stored as "null" or 0; values are validated before anything is saved
+- The api, MQTT and Opengrill tasks no longer share one json document, which could garble messages or crash the device
+- WiFi scan lists at most 20 networks so the response always fits
+
+### MQTT and Opengrill
+- Changing the MQTT broker, port, topic or credentials takes effect right away and subscribes to the new config topics
+- Reconnects back off from 5 seconds to a minute and stop when MQTT or Opengrill is disabled
+- Rejected MQTT config messages are reported on `<prefix>/<uuid>/error`
+- Saving probes publishes the probes topic
+- Opengrill connects on the Opengrill port instead of the MQTT port
+
+### Api
 - `/api/grill` returns `connected_seconds` per probe
-- Forked from Free-Grilly 2026-04-18 and renamed to Grilly+
-- New defaults for fresh installs: name `Grilly+`, mqtt prefix `grilly-plus`, AP name `GrillyPlus_xxxxxx`
-- MQTT and Opengrill client ids now start with `grilly-plus-`
-- Settings storage namespace is unchanged, so upgrading from Free-Grilly keeps all settings
-- Firmware release files are now named `grilly-plus-yyyy-mm-dd-*.bin`
+- `/api/settings` returns `<name>_password_set` instead of passwords
+- New `POST /api/update` for firmware updates
+
+### Other
+- Renamed to Grilly+: new defaults for fresh installs (name `Grilly+`, mqtt prefix `grilly-plus`, AP name `GrillyPlus_xxxxxx`), MQTT and Opengrill client ids start with `grilly-plus-`
+- Firmware release files are named `grilly-plus-yyyy-mm-dd-*.bin`
+- The build platform version is pinned so builds are reproducible
+- The release script works on Linux, macOS and Windows and stops on errors
+- Development tools: a dev server with mock data, and unit tests for the web app and the build script
 
 ## 2026-04-18
 - Cleaned up MQTT code
