@@ -56,6 +56,7 @@ void GrillConfig::load_settings(){
     config::beep_enabled              = config::settings_storage.getBool("beep_enabled");
     config::beep_on_ready             = config::settings_storage.getBool("beep_on_ready");
     config::beep_outside_target       = config::settings_storage.getBool("beep_out_targ");
+    config::cucaracha_enabled         = config::settings_storage.getBool("cucaracha", false);
     config::beep_volume               = config::settings_storage.getInt("beep_volume");
     config::beep_degrees_before       = config::settings_storage.getInt("beep_before");
 
@@ -108,6 +109,7 @@ void GrillConfig::save_settings(){
     config::settings_storage.putBool("beep_enabled", config::beep_enabled);
     config::settings_storage.putBool("beep_on_ready", config::beep_on_ready);
     config::settings_storage.putBool("beep_out_targ", config::beep_outside_target);
+    config::settings_storage.putBool("cucaracha", config::cucaracha_enabled);
     config::settings_storage.putInt("beep_volume", config::beep_volume);
     config::settings_storage.putInt("beep_before", config::beep_degrees_before);
     config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
@@ -203,6 +205,7 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putBool("beep_enabled", config::beep_enabled);
     config::settings_storage.putBool("beep_on_ready", config::beep_on_ready);
     config::settings_storage.putBool("beep_out_targ", config::beep_outside_target);
+    config::settings_storage.putBool("cucaracha", config::cucaracha_enabled);
     config::settings_storage.putInt("beep_volume", config::beep_volume);
     config::settings_storage.putInt("beep_before", config::beep_degrees_before);
     config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
@@ -258,6 +261,8 @@ void GrillConfig::print_settings(){
     Serial.println(config::beep_on_ready);
     Serial.print("-- beep_outside_target: ");
     Serial.println(config::beep_outside_target);
+    Serial.print("-- cucaracha_enabled: ");
+    Serial.println(config::cucaracha_enabled);
     Serial.print("-- beep_volume: ");
     Serial.println(config::beep_volume);
     Serial.print("-- beep_degrees_before: ");

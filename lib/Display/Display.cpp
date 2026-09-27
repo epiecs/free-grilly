@@ -171,7 +171,8 @@ bool disp::display_update(void) {
     // ***********************************
     // * Volume Elements
     // ***********************************
-    if (config::beep_volume == 5)       { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_5);}
+    if (!config::beep_enabled)          { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_mute);}
+    else if (config::beep_volume == 5)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_5);}
     else if (config::beep_volume == 4)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_4);}
     else if (config::beep_volume == 3)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_3);}
     else if (config::beep_volume == 2)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_2);}
@@ -345,26 +346,29 @@ bool disp::draw_screen_temp(void){
         screen.drawStr(67, 46, "7:");
         screen.drawStr(67, 59, "8:");
 
-        // Probe values
+        // Probe values in the configured unit, disconnected probes show "-"
         screen.setFont(u8g2_font_profont12_tr);
-        screen.setCursor(15, 21); screen.print(grill::probe_1.celcius);
-        screen.setCursor(15, 34); screen.print(grill::probe_2.celcius);
-        screen.setCursor(15, 47); screen.print(grill::probe_3.celcius);
-        screen.setCursor(15, 60); screen.print(grill::probe_4.celcius);
-        screen.setCursor(80, 21); screen.print(grill::probe_5.celcius);
-        screen.setCursor(80, 34); screen.print(grill::probe_6.celcius);
-        screen.setCursor(80, 47); screen.print(grill::probe_7.celcius);
-        screen.setCursor(80, 60); screen.print(grill::probe_8.celcius);
+        {
+            Probe* probes[] = {&grill::probe_1, &grill::probe_2, &grill::probe_3, &grill::probe_4,
+                               &grill::probe_5, &grill::probe_6, &grill::probe_7, &grill::probe_8};
 
-        // Thermometer
-        if(grill::probe_1.target_temperature > 0) { draw_thermometer(54,11, grill::probe_1.celcius,grill::probe_1.target_temperature); }
-        if(grill::probe_2.target_temperature > 0) { draw_thermometer(54,24, grill::probe_2.celcius,grill::probe_2.target_temperature); }
-        if(grill::probe_3.target_temperature > 0) { draw_thermometer(54,37, grill::probe_3.celcius,grill::probe_3.target_temperature); }
-        if(grill::probe_4.target_temperature > 0) { draw_thermometer(54,50, grill::probe_4.celcius,grill::probe_4.target_temperature); }
-        if(grill::probe_5.target_temperature > 0) { draw_thermometer(119,11,grill::probe_5.celcius,grill::probe_5.target_temperature); }
-        if(grill::probe_6.target_temperature > 0) { draw_thermometer(119,24,grill::probe_6.celcius,grill::probe_6.target_temperature); }
-        if(grill::probe_7.target_temperature > 0) { draw_thermometer(119,37,grill::probe_7.celcius,grill::probe_7.target_temperature); }
-        if(grill::probe_8.target_temperature > 0) { draw_thermometer(119,50,grill::probe_8.celcius,grill::probe_8.target_temperature); }
+            for (int i = 0; i < 8; i++) {
+                int y = 21 + (i % 4) * 13;
+                screen.setCursor(i < 4 ? 15 : 80, y);
+
+                if (!probes[i]->connected) {
+                    screen.print("-");
+                    continue;
+                }
+
+                screen.print(get_temp(i + 1));
+
+                // Thermometer
+                if (probes[i]->target_temperature > 0) {
+                    draw_thermometer(i < 4 ? 54 : 119, y - 10, get_temp(i + 1), probes[i]->target_temperature);
+                }
+            }
+        }
         break;
         }
 
