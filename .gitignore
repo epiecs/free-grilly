@@ -71,3 +71,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+
+# Local specs and plans (not tracked)
+docs/specs/
+docs/plans/
