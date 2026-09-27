@@ -1,4 +1,5 @@
 """Mock grill API for tools/dev_server.py --mock: realistic data for development and screenshots."""
+import base64
 import json
 import time
 
@@ -60,6 +61,21 @@ def probes():
     return [dict(p, temperature=temperature(p)) for p in PROBES]
 
 
+# Kept here because SETTINGS only says whether it is set, like the firmware
+ADMIN_PASSWORD = ""
+
+# Same limits as the firmware (lib/JsonUtilities)
+NUMBER_LIMITS = {"beep_volume": (0, 5), "backlight_brightness": (0, 5), "mqtt_port": (1, 65535)}
+
+
+def admin_authorized(headers):
+    """True when no admin password is set, or the request has it as Basic auth with user admin."""
+    if ADMIN_PASSWORD == "":
+        return True
+    expected = "Basic " + base64.b64encode(("admin:" + ADMIN_PASSWORD).encode("utf-8")).decode("ascii")
+    return (headers or {}).get("Authorization") == expected
+
+
 WIFI_SCAN = [
     {"ssid": "HomeNet", "signal_strength": -52, "auth_method": "wpa2_psk"},
     {"ssid": "HomeNet-Guest", "signal_strength": -61, "auth_method": "wpa2_psk"},
@@ -68,8 +84,10 @@ WIFI_SCAN = [
 ]
 
 
-def handle(method, path, body):
+def handle(method, path, body, headers=None):
     """Returns (status, json_body) for an /api request."""
+    global ADMIN_PASSWORD
+    headers = headers or {}
     if method == "GET" and path == "/api/grill":
         return 200, grill()
     if method == "GET" and path == "/api/probes":
@@ -88,7 +106,14 @@ def handle(method, path, body):
         password = update.get("local_ap_password")
         if password and len(password) < 8:
             return 400, {"error": "local_ap_password should be empty or at least 8 characters"}
+        for key, (low, high) in NUMBER_LIMITS.items():
+            if key in update and not low <= int(update[key] or 0) <= high:
+                return 400, {"error": "%s should be between %d and %d" % (key, low, high)}
+        if "admin_password" in update and not admin_authorized(headers):
+            return 401, {"error": "The current admin password is needed to change it"}
         for key, value in update.items():
+            if key == "admin_password":
+                ADMIN_PASSWORD = value
             if key.endswith("_password"):
                 SETTINGS[key + "_set"] = value != ""
             else:
@@ -98,6 +123,10 @@ def handle(method, path, body):
         time.sleep(1.5)
         return 200, WIFI_SCAN
     if method == "POST" and path == "/api/update":
+        if headers.get("X-Grilly-Update") != "1":
+            return 403, {"error": "Missing X-Grilly-Update header"}
+        if not admin_authorized(headers):
+            return 401, {"error": "Wrong admin password"}
         time.sleep(2)
         return 200, {"success": True}
     return 404, {"error": "Not found"}

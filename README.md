@@ -8,7 +8,21 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 
 Grilly+ is a fork of [Free-Grilly](https://github.com/epiecs/free-grilly) by [Epiecs](https://github.com/epiecs) and [Questum](https://questum.be/), who did the reverse engineering and wrote the original firmware. This fork adds my own improvements on top. Fixes that are useful for everyone will be offered back upstream where possible.
 
-**Upgrading from Free-Grilly:** Grilly+ keeps using the same settings storage, so an OTA upgrade keeps your WiFi, probe and MQTT settings, including your existing MQTT topic prefix. Only fresh installs and factory resets use the new defaults (`Grilly+` as name, `grilly-plus` as MQTT prefix, `GrillyPlus_xxxxxx` as AP name).
+**Upgrading from Free-Grilly:** Grilly+ keeps using the same settings storage (the NVS namespace is unchanged), so an OTA upgrade keeps your WiFi, probe and MQTT settings, including your existing MQTT topic prefix. Only fresh installs and factory resets use the new defaults (`Grilly+` as name, `grilly-plus` as MQTT prefix, `GrillyPlus_xxxxxx` as AP name). Since your device is still running Free-Grilly the first time, flash it the normal way, through Free-Grilly's own `/update` page.
+
+---
+
+## What's new in Grilly+
+
+Grilly+ is the same firmware Free-Grilly users already know, with a new web app and a round of reliability fixes on top:
+
+* **New web app.** A dashboard with a card per connected probe; tap one to set its name, target temperature or range with steppers. Settings save themselves, and it works just as well on a phone as on a desktop, in dark or light theme depending on the device.
+* **Firmware updates moved into the app.** They now happen from the Settings view instead of the old ElegantOTA `/update` page, and can be protected with an admin password.
+* **A generated hotspot password** on new or factory-reset devices, shown on the device's Info screen, so the local access point isn't open to anyone in range by default.
+* **Tighter security around settings and updates:** passwords are never returned by the API, and cross-site pages can no longer change your settings or push a firmware update.
+* **A round of reliability fixes:** the grill boots back up on its own after an update, a crash or a factory reset; a saved static IP that's missing a gateway now falls back to DHCP instead of going unreachable; empty probe sockets no longer flicker; and muted alarms stay muted when you save a probe.
+
+See the [Features](#features) list below for the full picture, and [changelog.md](changelog.md) for the detailed history.
 
 ---
 
@@ -26,49 +40,60 @@ Grilly+ is a fork of [Free-Grilly](https://github.com/epiecs/free-grilly) by [Ep
 ---
 
 - [Grilly+: Community Firmware for Grilleye Max](#grilly-community-firmware-for-grilleye-max)
+  - [What's new in Grilly+](#whats-new-in-grilly)
   - [Features](#features)
+  - [Web interface](#web-interface)
   - [API documentation](#api-documentation)
-  - [Todo](#todo)
   - [Installation](#installation)
   - [First Use \& WiFi Setup](#first-use--wifi-setup)
   - [Usage](#usage)
     - [Button](#button)
   - [Updating Firmware (OTA)](#updating-firmware-ota)
   - [Supported probes](#supported-probes)
+  - [Connecting to Opengrill (experimental)](#connecting-to-opengrill-experimental)
   - [Home assistant support](#home-assistant-support)
+  - [Development](#development)
   - [Contributing](#contributing)
 
 ## Features
 
 * **On-Device Temperature Display:** Shows current probe temperatures directly on the Grilleye Max screen.
-* **Audible Alerts:** The device beeps to notify you when temperatures go outside a set range or when food is nearing its target temperature.
-* **Web Interface Control:** All device management and configuration is handled through an easy-to-use web interface.
+* **Audible Alerts:** The device beeps to notify you when temperatures go outside a set range or when food is nearing its target temperature, following the "Beep when ready" and "Beep outside target" settings, and it won't replay an alarm you already muted just because you renamed a probe or saved a setting.
+* **New web app:** a dashboard with a card per connected probe. Tap one to set its name, target temperature or a min/max range, with large steppers for quick adjustments. Settings save themselves, network changes are applied together with one button, and the app works equally well on a phone or a desktop, in a dark or light theme that follows the device.
 * **Dual Web Access:** Access the web interface via:
     * A local Access Point (AP) mode (`http://192.168.200.10`) for initial setup.
     * Your home WiFi network (once configured) using the device's local IP address.
+* **Generated hotspot password:** new and factory-reset devices get a random hotspot password, shown on the device's Info screen, instead of an open access point. Devices upgraded from an earlier version keep whatever hotspot password (or lack of one) they already had.
 * **Probe Flexibility:**
     * **Custom Probe Configuration:** Manually configure support for various NTC thermistor probes by entering their specific resistance (kΩ at reference temperature), reference temperature (°C), and Beta coefficient value.
     * **Pre-configured Probes:** Includes ready-to-use settings for popular probes like the Ikea Fantast.
-* **Over-the-Air (OTA) Updates:** Easily update the firmware wirelessly through the web interface once the initial flashing is done.
-* **Local REST API:** Provides a RESTful API endpoint on the device for integration with custom scripts, home automation systems, or other applications.
-* * **MQTT support:** All data (grill status/probes/settings) are sent to a mqtt topic. You can also configure probes and settings via mqtt.
+    * Empty probe sockets no longer flicker between connected and disconnected.
+* **Firmware updates from the web app:** install a new `-ota.bin` from the Settings view. An optional admin password can protect updates; changing or removing it requires the current one, and it can't be changed over MQTT.
+* **Local REST API:** Provides a RESTful API endpoint on the device for integration with custom scripts, home automation systems, or other applications. Passwords are never returned by the API, and cross-site pages can't change your settings or push a firmware update.
+* **MQTT support:** All data (grill status/probes/settings/`connected_seconds`) is sent to an mqtt topic. You can also configure probes and settings via mqtt, including partial updates that only change the keys you send.
   * [Mqtt documentation](docs/mqtt.md)
 * **Battery Management:** Includes functional battery monitoring and management based on the device's hardware.
 * **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
+* **Reliability:** the grill boots straight back up after a firmware update, a factory reset, or an unexpected crash, instead of needing the button held; a saved static IP with a missing gateway falls back to DHCP instead of leaving the device unreachable.
 * **Opengrill (experimental):** Support for the upcoming Opengrill server by [epiecs](https://github.com/epiecs). The server is not public yet, so leave the Opengrill setting empty.
+
+## Web interface
+
+Open the grill's address in a browser on your phone or computer. The dashboard shows every connected probe; tap one to set its name, a target temperature or a range. Settings save themselves.
+
+<p>
+  <img src="docs/screenshots/app_grill_phone_dark.png" alt="Grill view on a phone, dark theme" width="260">
+  <img src="docs/screenshots/app_editor_phone_dark.png" alt="Probe editor on a phone" width="260">
+  <img src="docs/screenshots/app_settings_phone_dark.png" alt="Settings on a phone" width="260">
+</p>
+
+<img src="docs/screenshots/app_grill_desktop_dark.png" alt="Grill view on a desktop" width="800">
 
 ## API documentation
 
 - Api documentation is include in the [openapi.yaml file](docs/openapi.yaml)
 - You can also view this [online](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/bardesss/grilly-plus/refs/heads/master/docs/openapi.yaml)
-
-## Todo
-
-- Fully work out guide and readme
-  - add documentation for the home assistant integration
-- source code
-  - clean up of existing code and classes
 
 ## Installation
 
@@ -106,10 +131,10 @@ Once Grilly+ is installed, you can update to newer versions wirelessly:
 
   1. Download the latest `grilly-plus-yyyy-mm-dd-ota.bin` from Releases.
   2. Open the web interface and go to **Settings**, then **Firmware updates**.
-  3. Choose the downloaded `-ota.bin` file and press **Update**. If you set an admin password, enter it for the update.
+  3. Choose the downloaded `-ota.bin` file and press **Update**. If you set an admin password, enter it under **Current admin password** first.
   4. Wait while it uploads and installs. The grill restarts on its own and the page reloads.
 
-Set an admin password in the same card so only you can install firmware.
+Set an admin password in the same card so only you can install firmware. Once it is set, changing or removing it needs the current one (the web app asks for it, the API takes it as Basic auth with user `admin`). It can't be changed over MQTT.
 
 ## Supported probes
 
@@ -267,6 +292,23 @@ The example uses the new default topic prefix `grilly-plus`. If you upgraded fro
   value_template: "{{ value_json.battery_percentage }}"
   device: *device_info
 ```
+
+## Development
+
+The web app lives in `web/` (plain HTML, CSS and JavaScript, no build step while developing).
+
+1. Edit the files in `web/`.
+2. Run `python tools/dev_server.py --mock` for mock data, or `python tools/dev_server.py <grill-ip>` to use a real grill.
+3. Open http://localhost:8000 and reload after each change.
+
+Tests:
+
+```
+node --test "web/tests/*.test.js"
+python -m unittest discover -s tools -p "test_*.py"
+```
+
+`pio run` builds `web/` into the firmware automatically.
 
 ## Contributing
 

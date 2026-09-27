@@ -1,28 +1,18 @@
 #include <Website.h>
 
 #include <WebServer.h>
-#include <ArduinoJson.h>
 
 #include "Web.h"
-
 #include "WebApp.h"
-#include "HtmlAbout.h"
-
-#include "AssetCss.h"
-#include "AssetJs.h"
-
-extern WebServer webserver;
 
 void setup_web_routes() {
+    web::webserver.on("/", HTTP_GET, get_index);
+
+    // Old page urls, kept so bookmarks keep working
     web::webserver.on("/probes", [](){ redirect_to("/"); });
     web::webserver.on("/settings", [](){ redirect_to("/#settings"); });
+    web::webserver.on("/about", [](){ redirect_to("/#about"); });
     web::webserver.on("/update", [](){ redirect_to("/#settings"); });
-    web::webserver.on("/about", get_about);
-    
-    web::webserver.on("/custom-boostrap.min.css", get_css);
-    web::webserver.on("/bootstrap.min.js", get_js);
-    
-    web::webserver.on("/", get_index);
 }
 
 // The web app is one gzipped page generated from web/ by tools/build_web.py. The ETag changes with
@@ -44,19 +34,6 @@ void redirect_to(const char* location) {
     web::webserver.sendHeader("Location", location);
     web::webserver.send(302, "text/plain", "");
 }
-
-void get_about() {
-    web::webserver.send(200, "text/html", HTML_ABOUT);
-}
-
-void get_css() {
-    web::webserver.send_P(200, "text/css", ASSET_CSS);
-}
-
-void get_js() {
-    web::webserver.send_P(200, "text/javascript", ASSET_JS);
-}
-
 
 void not_found() {
     Serial.println("404 - Not Found");

@@ -34,7 +34,7 @@ const Settings = (() => {
     ] },
   ];
 
-  const controls = [];      // { set(settings) } for every auto-saved field
+  const controls = [];      // { set(settings), saver } for every auto-saved field
   const extraCards = [];    // cards added by other scripts
   const savers = [];
   let settings = null;
@@ -45,7 +45,8 @@ const Settings = (() => {
 
   function fill(newSettings) {
     settings = newSettings;
-    controls.forEach((control) => control.set(settings));
+    // A field whose card still has unsaved changes keeps what the user entered
+    controls.forEach((control) => { if (!control.saver.hasPending()) control.set(settings); });
     extraCards.forEach((card) => card.fill(settings));
   }
 
@@ -101,7 +102,7 @@ const Settings = (() => {
       controls.push({ set: (s) => {
         if (document.activeElement !== input) input.value = s[field.key] ?? "";
         if (hint) hint.textContent = "Topics: " + (s.mqtt_topic || "grilly-plus") + "/" + s.uuid + "/…";
-      } });
+      }, saver });
       return wrapper;
     }
 
@@ -124,7 +125,7 @@ const Settings = (() => {
         input.placeholder = isSet ? "Saved, type to change" : "Not set";
         if (document.activeElement !== input) input.value = "";
         remove.hidden = !isSet;
-      } });
+      }, saver });
       return wrapper;
     }
 
@@ -134,7 +135,7 @@ const Settings = (() => {
       input.className = "switch";
       input.setAttribute("role", "switch");
       input.addEventListener("change", () => send(input.checked));
-      controls.push({ set: (s) => { if (document.activeElement !== input) input.checked = !!s[field.key]; } });
+      controls.push({ set: (s) => { if (document.activeElement !== input) input.checked = !!s[field.key]; }, saver });
       return row(field, input);
     }
 
@@ -143,7 +144,7 @@ const Settings = (() => {
       const stepper = Controls.stepper(holder, {
         min: field.min, max: field.max, label: field.label, suffix: field.suffix || "", onChange: (value) => send(value),
       });
-      controls.push({ set: (s) => { if (!Controls.isEditing(holder)) stepper.set(s[field.key]); } });
+      controls.push({ set: (s) => { if (!Controls.isEditing(holder)) stepper.set(s[field.key]); }, saver });
       return row(field, holder);
     }
 
@@ -170,7 +171,7 @@ const Settings = (() => {
     controls.push({ set: (s) => {
       if (Controls.isEditing(group)) return;
       group.querySelectorAll("input").forEach((input) => { input.checked = input.value === s[field.key]; });
-    } });
+    }, saver });
     return group;
   }
 

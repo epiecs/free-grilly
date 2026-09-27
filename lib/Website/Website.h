@@ -4,10 +4,5 @@ void not_found();
 
 void get_index();
 void redirect_to(const char* location);
-void get_about();
-
-void get_css();
-void get_js();
-
 
 void setup_web_routes();

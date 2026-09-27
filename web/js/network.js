@@ -28,7 +28,8 @@
     const input = inputs[key];
     if (input.type === "password") {
       if (input.value !== "") dirty[key] = input.value;
-      else if (!clears[key].checked) delete dirty[key];
+      else if (clears[key].checked) dirty[key] = "";
+      else delete dirty[key];
     } else if (DHCP_FIELDS.includes(key)) {
       dirty[key] = input.value.trim() === "" ? "0.0.0.0" : input.value.trim();
     } else {

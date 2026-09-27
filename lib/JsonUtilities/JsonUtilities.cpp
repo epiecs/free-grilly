@@ -297,7 +297,7 @@ void JsonUtilities::load_json_settings(char* buffer){
     serializeJson(jsondoc, buffer, config::json_buffer_size);
 }
 
-jsonResult JsonUtilities::save_json_settings(char* raw_json){
+jsonResult JsonUtilities::save_json_settings(char* raw_json, bool admin_authorized, bool from_mqtt){
     JsonDocument jsondoc;
     DeserializationError err = deserializeJson(jsondoc, raw_json);
 
@@ -305,6 +305,15 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
 
     if(!jsondoc.is<JsonObject>()){ return {false, "Settings should be a json object"}; }
     JsonObjectConst json_data = jsondoc.as<JsonObjectConst>();
+
+    // The admin password protects firmware updates, so changing or removing it needs the current
+    // one. The whole payload is rejected before anything is stored.
+    if(!json_data["admin_password"].isNull()){
+        if(from_mqtt){ return {false, "admin_password can't be changed over MQTT"}; }
+        if(!config::admin_password.isEmpty() && !admin_authorized){
+            return {false, "The current admin password is needed to change it", true};
+        }
+    }
 
     // Missing keys keep their current value. The list is run twice: first to check every value,
     // then to store them, so a payload with one bad value changes nothing.

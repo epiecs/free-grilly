@@ -304,3 +304,10 @@ details.advanced summary { display: flex; align-items: center; min-height: 44px;
 .settings-card [data-update] { margin-top: 12px; width: 100%; }
 .progress.upload i { background: var(--accent); }
 .settings-card input[type="file"] { padding: 10px 12px; }
+
+/* About view */
+.about { max-width: 520px; margin: 0 auto; padding-top: 12px; text-align: center; }
+.about-wordmark { font-size: 44px; margin: 8px 0 16px; }
+.about-list { display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; margin: 0 0 16px; text-align: left; }
+.about-list dt { color: var(--muted); }
+.about-list dd { margin: 0; overflow-wrap: anywhere; }

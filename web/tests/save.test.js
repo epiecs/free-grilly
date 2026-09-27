@@ -87,3 +87,32 @@ test("flush without changes does not send", async () => {
   await saver.flush();
   assert.equal(sends, 0);
 });
+
+test("hasPending covers waiting changes and queued requests, but not the one being reported", async () => {
+  const timer = fakeTimer();
+  const releases = [];
+  const seen = [];
+  const saver = createSaver({
+    timer,
+    send: (fields) => new Promise((resolve) => { releases.push(() => resolve(fields)); }),
+    onStatus: (state, detail) => { if (state === "saved") seen.push([detail.v, saver.hasPending()]); },
+  });
+
+  assert.equal(saver.hasPending(), false);
+  saver.change({ v: 75 });
+  assert.equal(saver.hasPending(), true);         // waiting for the pause
+  timer.run();
+  await Promise.resolve();
+  assert.equal(saver.hasPending(), true);         // 75 in flight
+  saver.change({ v: 77 });
+  releases[0]();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(seen, [[75, true]]);           // 77 still waiting, so the 75 answer must not refill
+
+  timer.run();
+  await new Promise((resolve) => setImmediate(resolve));
+  releases[1]();
+  await saver.flush();
+  assert.deepEqual(seen, [[75, true], [77, false]]);
+  assert.equal(saver.hasPending(), false);
+});

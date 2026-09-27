@@ -93,10 +93,13 @@ void post_api_settings(){
     if(web::webserver.hasArg("plain") == false) { web::webserver.send(400, "application/json", "{\"error\": \"empty body\"}"); return;}
 
     web::webserver.arg("plain").toCharArray(api_json_buffer, config::json_buffer_size);
-    jsonResult result = config::json_handler.save_json_settings(api_json_buffer);
-    
+    // Basic auth with user admin. No WWW-Authenticate header is sent, so browsers show no login popup.
+    bool admin_authorized = config::admin_password.isEmpty()
+                         || web::webserver.authenticate("admin", config::admin_password.c_str());
+    jsonResult result = config::json_handler.save_json_settings(api_json_buffer, admin_authorized);
+
     if(!result.success){
-        web::webserver.send(400, "application/json", "{\"error\": \"" + result.message + "\"}");
+        web::webserver.send(result.unauthorized ? 401 : 400, "application/json", "{\"error\": \"" + result.message + "\"}");
         return;
     }
 
@@ -139,6 +142,7 @@ void upload_api_update(){
     HTTPUpload& upload = web::webserver.upload();
 
     if(upload.status == UPLOAD_FILE_START){
+        if(Update.isRunning()){ Update.abort(); }   // A stale update from an earlier, broken off upload
         update_rejected = false;
         update_installed = false;
         update_status = 400;

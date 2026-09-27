@@ -1,6 +1,14 @@
 # Changelog (firmware only)
 
 ## Unreleased (Grilly+)
+- New web app, built for phones and desktops alike:
+    - One dashboard with a card per probe; tap a card to edit its name, alarm (target or range) and probe type
+    - Settings save themselves, network changes are applied together with one button
+    - Battery and signal indicators with icons, dark and light theme following your device
+    - Firmware updates from the Settings view, protected by an optional admin password (replaces ElegantOTA)
+    - Changing or removing the admin password needs the current one (Basic auth, user `admin`), and it can't be changed over MQTT
+    - One compressed page of about 19 KB instead of about 311 KB, which loads much faster over the grill's hotspot
+- `/api/grill` returns `connected_seconds` per probe
 - Forked from Free-Grilly 2026-04-18 and renamed to Grilly+
 - New defaults for fresh installs: name `Grilly+`, mqtt prefix `grilly-plus`, AP name `GrillyPlus_xxxxxx`
 - MQTT and Opengrill client ids now start with `grilly-plus-`
