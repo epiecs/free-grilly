@@ -299,3 +299,8 @@ details.probe-type[open] summary .icon { transform: rotate(90deg); }
 .check input { width: 20px; height: 20px; accent-color: var(--accent); }
 details.advanced summary { display: flex; align-items: center; min-height: 44px; font-size: 14px; color: var(--accent-text); cursor: pointer; }
 .settings-card [data-apply] { margin-top: 12px; width: 100%; }
+
+/* Firmware updates card */
+.settings-card [data-update] { margin-top: 12px; width: 100%; }
+.progress.upload i { background: var(--accent); }
+.settings-card input[type="file"] { padding: 10px 12px; }

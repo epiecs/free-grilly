@@ -3,7 +3,6 @@
 #include <SPI.h>
 #include <WebServer.h>
 #include <Wire.h>
-#include <ElegantOTA.h>
 #include <string>
 
 #include "Api.h"
@@ -194,29 +193,13 @@ void task_webserver(void* pvParameters) {
     setup_web_routes();
 
     // CORS headers are set per endpoint in Api.cpp, reads are allowed cross-origin but writes are not
-    const char* collected_headers[] = {"Content-Type", "If-None-Match"};
-    web::webserver.collectHeaders(collected_headers, 2);
+    const char* collected_headers[] = {"Content-Type", "If-None-Match", "X-Grilly-Update"};
+    web::webserver.collectHeaders(collected_headers, 3);
     web::webserver.onNotFound(not_found);
     web::webserver.begin();
 
-    ElegantOTA.begin(&web::webserver); // OTA webserver
-
-    // OTA updates need the admin password when one is set. Applied here instead of on save so
-    // ElegantOTA is only touched from this task, settings can also be saved from mqtt/opengrill.
-    String ota_password = "";
-
     while (true){
-        if(ota_password != config::admin_password){
-            ota_password = config::admin_password;
-            if(ota_password.isEmpty()){
-                ElegantOTA.clearAuth();
-            } else {
-                ElegantOTA.setAuth("admin", ota_password.c_str());
-            }
-        }
-
         web::webserver.handleClient();
-        ElegantOTA.loop();
         delay(1);
     }
 }

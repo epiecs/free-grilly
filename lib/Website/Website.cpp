@@ -6,7 +6,6 @@
 #include "Web.h"
 
 #include "WebApp.h"
-#include "HtmlSettings.h"
 #include "HtmlAbout.h"
 
 #include "AssetCss.h"
@@ -16,7 +15,8 @@ extern WebServer webserver;
 
 void setup_web_routes() {
     web::webserver.on("/probes", [](){ redirect_to("/"); });
-    web::webserver.on("/settings", get_settings);
+    web::webserver.on("/settings", [](){ redirect_to("/#settings"); });
+    web::webserver.on("/update", [](){ redirect_to("/#settings"); });
     web::webserver.on("/about", get_about);
     
     web::webserver.on("/custom-boostrap.min.css", get_css);
@@ -43,10 +43,6 @@ void get_index() {
 void redirect_to(const char* location) {
     web::webserver.sendHeader("Location", location);
     web::webserver.send(302, "text/plain", "");
-}
-
-void get_settings() {
-    web::webserver.send(200, "text/html", HTML_SETTINGS);
 }
 
 void get_about() {

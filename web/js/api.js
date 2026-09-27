@@ -41,5 +41,29 @@ const Api = (() => {
     }, timeoutMs);
   }
 
-  return { get, post };
+  // Firmware upload with progress. XMLHttpRequest because fetch can't report upload progress.
+  function upload(path, file, password, onProgress) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", path);
+      xhr.setRequestHeader("X-Grilly-Update", "1");
+      if (password) {
+        const credentials = new TextEncoder().encode("admin:" + password);
+        xhr.setRequestHeader("Authorization", "Basic " + btoa(String.fromCharCode(...credentials)));
+      }
+      xhr.upload.onprogress = (event) => { if (event.lengthComputable) onProgress(event.loaded / event.total); };
+      xhr.onload = () => {
+        let body = null;
+        try { body = JSON.parse(xhr.responseText); } catch (error) { body = null; }
+        if (xhr.status === 200) resolve(body);
+        else reject(new Error(body && body.error ? body.error : "The update failed (" + xhr.status + ")"));
+      };
+      xhr.onerror = () => reject(new Error("The upload was interrupted"));
+      const form = new FormData();
+      form.append("firmware", file, file.name);
+      xhr.send(form);
+    });
+  }
+
+  return { get, post, upload };
 })();
