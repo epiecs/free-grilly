@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Grilly+</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-flame" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.7 2.3-5 .2 1.6.9 2.7 2 3.2C11 8 11.4 4.8 12 2z"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-hotspot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="wordmark">Grilly<b>+</b></span>
+    <span class="subtitle" id="grill-subtitle"></span>
+  </div>
+  <nav class="tabs" aria-label="Main">
+    <a href="#grill" data-view="grill"><span class="tab-icon"><svg class="icon"><use href="#i-flame"/></svg></span>Grill</a>
+    <a href="#settings" data-view="settings"><span class="tab-icon"><svg class="icon"><use href="#i-sliders"/></svg></span>Settings</a>
+    <a href="#about" data-view="about"><span class="tab-icon"><svg class="icon"><use href="#i-info"/></svg></span>About</a>
+  </nav>
+  <div class="pills">
+    <span class="pill" id="battery-pill" role="img" hidden>
+      <svg class="battery" viewBox="0 0 28 14" aria-hidden="true">
+        <rect class="battery-outline" x="1" y="1" width="22" height="12" rx="3"/>
+        <rect class="battery-nub" x="24" y="4.5" width="3" height="5" rx="1"/>
+        <rect class="battery-fill" id="battery-fill" x="3" y="3" width="18" height="8" rx="1.5"/>
+        <path class="battery-bolt" id="battery-bolt" d="M13.5 2 8.5 7.6h3.4L10.5 12l5-5.6h-3.4z"/>
+      </svg>
+      <span class="pill-text" id="battery-text"></span>
+    </span>
+    <span class="pill" id="signal-pill" role="img" hidden>
+      <svg class="signal" id="signal-bars" viewBox="0 0 20 14" aria-hidden="true">
+        <rect class="signal-bar" x="1" y="10" width="3" height="4" rx="1"/>
+        <rect class="signal-bar" x="6" y="7" width="3" height="7" rx="1"/>
+        <rect class="signal-bar" x="11" y="4" width="3" height="10" rx="1"/>
+        <rect class="signal-bar" x="16" y="1" width="3" height="13" rx="1"/>
+      </svg>
+      <svg class="icon hotspot" id="signal-hotspot" aria-hidden="true" hidden><use href="#i-hotspot"/></svg>
+      <span class="pill-text" id="signal-text"></span>
+    </span>
+  </div>
+</header>
+
+<div class="banner" id="offline-banner" role="alert" hidden>Can't reach the grill</div>
+
+<main>
+  <section class="view" id="view-grill" data-view="grill" aria-label="Grill"></section>
+  <section class="view" id="view-settings" data-view="settings" aria-label="Settings" hidden></section>
+  <section class="view" id="view-about" data-view="about" aria-label="About" hidden></section>
+</main>
+
+<script src="js/format.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

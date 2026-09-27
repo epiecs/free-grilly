@@ -5,7 +5,7 @@
 
 #include "Web.h"
 
-#include "HtmlIndex.h"
+#include "WebApp.h"
 #include "HtmlProbes.h"
 #include "HtmlSettings.h"
 #include "HtmlAbout.h"
@@ -26,8 +26,24 @@ void setup_web_routes() {
     web::webserver.on("/", get_index);
 }
 
+// The web app is one gzipped page generated from web/ by tools/build_web.py. The ETag changes with
+// every page change, so browsers keep their copy until a firmware update brings a new one.
 void get_index() {
-    web::webserver.send(200, "text/html", HTML_INDEX);
+    if (web::webserver.header("If-None-Match") == WEB_APP_ETAG) {
+        web::webserver.sendHeader("ETag", WEB_APP_ETAG);
+        web::webserver.send(304);
+        return;
+    }
+    web::webserver.sendHeader("Content-Encoding", "gzip");
+    web::webserver.sendHeader("Cache-Control", "no-cache");
+    web::webserver.sendHeader("ETag", WEB_APP_ETAG);
+    web::webserver.send_P(200, "text/html", (PGM_P)WEB_APP_GZ, WEB_APP_GZ_LEN);
+}
+
+// Old page urls redirect into the web app, so bookmarks keep working
+void redirect_to(const char* location) {
+    web::webserver.sendHeader("Location", location);
+    web::webserver.send(302, "text/plain", "");
 }
 
 void get_probes() {
