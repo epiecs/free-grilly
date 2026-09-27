@@ -11,6 +11,139 @@
 // Every function uses its own JsonDocument. The api, mqtt and opengrill tasks call these at the same
 // time, a shared document got cleared and filled by one task while another was serializing it.
 
+namespace {
+
+// Reads fields from a json object into variables. A key that is missing or null keeps the current
+// value, so partial updates (mqtt, opengrill) only change what they contain. Values are only written
+// when apply is true, so the same field list can be checked first and applied after.
+// Numbers may arrive as json numbers or as strings, the web pages send input values as strings. An
+// empty string counts as 0.
+class FieldReader {
+    public:
+        FieldReader(JsonObjectConst object, bool apply) : object(object), apply(apply) {}
+
+        String error;
+
+        bool present(const char* key){
+            return !object[key].isNull();
+        }
+
+        void text(const char* key, String& target){
+            if(!present(key) || !error.isEmpty()){ return; }
+            if(!object[key].is<const char*>()){ error = String(key) + " should be a string"; return; }
+            if(apply){ target = object[key].as<String>(); }
+        }
+
+        void boolean(const char* key, bool& target){
+            if(!present(key) || !error.isEmpty()){ return; }
+            if(!object[key].is<bool>()){ error = String(key) + " should be true or false"; return; }
+            if(apply){ target = object[key].as<bool>(); }
+        }
+
+        void number(const char* key, float& target){
+            float value;
+            if(!read_number(key, value)){ return; }
+            if(apply){ target = value; }
+        }
+
+        void number(const char* key, int& target, long min, long max){
+            float value;
+            if(!read_number(key, value)){ return; }
+            if(value < min || value > max){
+                error = String(key) + " should be between " + String(min) + " and " + String(max);
+                return;
+            }
+            if(apply){ target = static_cast<int>(value); }
+        }
+
+    private:
+        JsonObjectConst object;
+        bool apply;
+
+        bool read_number(const char* key, float& value){
+            if(!present(key) || !error.isEmpty()){ return false; }
+
+            JsonVariantConst field = object[key];
+            if(field.is<float>()){
+                value = field.as<float>();
+                return true;
+            }
+            if(field.is<const char*>()){
+                const char* raw = field.as<const char*>();
+                if(raw[0] == '\0'){ value = 0; return true; }
+                char* end;
+                value = strtof(raw, &end);
+                if(*end == '\0'){ return true; }
+            }
+
+            error = String(key) + " should be a number";
+            return false;
+        }
+};
+
+Probe* probe_by_id(int probe_id){
+    switch (probe_id){
+        case 1: return &grill::probe_1;
+        case 2: return &grill::probe_2;
+        case 3: return &grill::probe_3;
+        case 4: return &grill::probe_4;
+        case 5: return &grill::probe_5;
+        case 6: return &grill::probe_6;
+        case 7: return &grill::probe_7;
+        case 8: return &grill::probe_8;
+        default: return nullptr;
+    }
+}
+
+// Checks one probe entry and, when apply is true, stores it on the probe. Missing keys keep the
+// current value. Opengrill sends null for "no temperature", so null_is_zero turns an explicit null
+// temperature into 0 instead of keeping the current value.
+String update_probe(Probe& probe, JsonObjectConst item, bool apply, bool null_is_zero){
+    FieldReader fields(item, true);     // Reads into the local copies below, the probe is only set at the end
+
+    String name     = probe.name;
+    float  target   = probe.target_temperature;
+    float  minimum  = probe.minimum_temperature;
+    String type     = probe.type;
+    int    kohm     = probe.reference_kohm;
+    int    celcius  = probe.reference_celcius;
+    int    beta     = probe.reference_beta;
+
+    // A missing key is unbound, an explicit null is bound but null
+    bool target_null   = null_is_zero && !item["target_temperature"].isUnbound()  && item["target_temperature"].isNull();
+    bool minimum_null  = null_is_zero && !item["minimum_temperature"].isUnbound() && item["minimum_temperature"].isNull();
+    bool target_given  = fields.present("target_temperature")  || target_null;
+    bool minimum_given = fields.present("minimum_temperature") || minimum_null;
+    if(target_null)  { target  = 0; }
+    if(minimum_null) { minimum = 0; }
+
+    fields.text("name", name);
+    fields.number("target_temperature", target);
+    fields.number("minimum_temperature", minimum);
+    fields.text("probe_type", type);
+    fields.number("reference_kohm", kohm, 0, 100000);
+    fields.number("reference_celcius", celcius, -100, 500);
+    fields.number("reference_beta", beta, 0, 100000);
+    if(!fields.error.isEmpty()){ return fields.error; }
+
+    bool type_given = fields.present("probe_type") || fields.present("reference_kohm")
+                   || fields.present("reference_celcius") || fields.present("reference_beta");
+
+    bool known_type = type == "grilleye_iris" || type == "ikea_fantast" || type == "maverick_et733" || type == "weber_igrill";
+    if(type_given && !known_type && (kohm <= 0 || beta <= 0)){
+        return "reference_kohm and reference_beta should be > 0 for a custom probe";
+    }
+
+    if(apply){
+        if(target_given || minimum_given){ probe.set_temperature(target, minimum); }
+        if(type_given){ probe.set_type(type, kohm, celcius, beta); }
+        if(fields.present("name")){ probe.set_name(name); }
+    }
+    return "";
+}
+
+}
+
 void JsonUtilities::load_json_status(char *buffer){
     JsonDocument jsondoc;
     jsondoc.clear();
@@ -149,55 +282,68 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
 
     if(err){ return {false, "Could not deserialize json"}; }
 
-    JsonObject json_data = jsondoc.as<JsonObject>();
+    if(!jsondoc.is<JsonObject>()){ return {false, "Settings should be a json object"}; }
+    JsonObjectConst json_data = jsondoc.as<JsonObjectConst>();
 
-    if(json_data["local_ap_password"].as<String>().length() > 0 && json_data["local_ap_password"].as<String>().length() < 8){
-        return {false, "local_ap_password should be empty or at least 8 characters"};
+    // Missing keys keep their current value. The list is run twice: first to check every value,
+    // then to store them, so a payload with one bad value changes nothing.
+    auto read_settings = [](FieldReader& fields){
+        fields.text("name",                         config::grill_name);
+
+        fields.text("temperature_unit",             config::temperature_unit);
+        fields.boolean("beep_enabled",              config::beep_enabled);
+        fields.number("beep_volume",                config::beep_volume, 0, 5);
+        fields.number("beep_degrees_before",        config::beep_degrees_before, 0, 100);
+        fields.boolean("beep_outside_target",       config::beep_outside_target);
+        fields.boolean("beep_on_ready",             config::beep_on_ready);
+        fields.boolean("cucaracha_enabled",         config::cucaracha_enabled);
+
+        fields.number("screen_timeout_minutes",     config::screen_timeout_minutes, 0, 10000);
+        fields.number("backlight_timeout_minutes",  config::backlight_timeout_minutes, 0, 10000);
+        fields.number("backlight_brightness",       config::backlight_brightness, 0, 255);
+
+        fields.text("opengrill_server",             config::opengrill_server);
+
+        fields.text("mqtt_broker",                  config::mqtt_broker);
+        fields.number("mqtt_port",                  config::mqtt_port, 1, 65535);
+        fields.text("mqtt_topic",                   config::mqtt_topic);
+        fields.text("mqtt_user",                    config::mqtt_user);
+        fields.text("mqtt_password",                config::mqtt_password);
+
+        fields.text("wifi_ssid",                    config::wifi_ssid);
+        fields.text("wifi_password",                config::wifi_password);
+        fields.text("wifi_ip",                      config::wifi_ip);
+        fields.text("wifi_subnet",                  config::wifi_subnet);
+        fields.text("wifi_gateway",                 config::wifi_gateway);
+        fields.text("wifi_dns",                     config::wifi_dns);
+
+        fields.text("local_ap_ssid",                config::local_ap_ssid);
+        fields.text("local_ap_password",            config::local_ap_password);
+        fields.text("local_ap_ip",                  config::local_ap_ip);
+        fields.text("local_ap_subnet",              config::local_ap_subnet);
+        fields.text("local_ap_gateway",             config::local_ap_gateway);
+    };
+
+    FieldReader check(json_data, false);
+    read_settings(check);
+    if(!check.error.isEmpty()){ return {false, check.error}; }
+
+    if(check.present("local_ap_password")){
+        size_t length = json_data["local_ap_password"].as<String>().length();
+        if(length > 0 && length < 8){
+            return {false, "local_ap_password should be empty or at least 8 characters"};
+        }
     }
 
-    if(json_data["screen_timeout_minutes"].as<int>() < 0){
-        return {false, "screen_timeout_minutes should be > 0"};
+    if(check.present("temperature_unit")){
+        String unit = json_data["temperature_unit"].as<String>();
+        if(unit != "celcius" && unit != "fahrenheit"){
+            return {false, "temperature_unit should be celcius or fahrenheit"};
+        }
     }
 
-    if(json_data["backlight_timeout_minutes"].as<int>() < 0){
-        return {false, "backlight_timeout_minutes should be > 0"};
-    }
-
-    // Data ingress
-    config::grill_name                = json_data["name"].as<String>();
-
-    config::temperature_unit          = json_data["temperature_unit"].as<String>();
-    config::beep_enabled              = json_data["beep_enabled"];
-    config::beep_volume               = json_data["beep_volume"];
-    config::beep_degrees_before       = json_data["beep_degrees_before"];
-    config::beep_outside_target       = json_data["beep_outside_target"];
-    config::beep_on_ready             = json_data["beep_on_ready"];
-    config::cucaracha_enabled         = json_data["cucaracha_enabled"];
-
-    config::screen_timeout_minutes    = json_data["screen_timeout_minutes"];
-    config::backlight_timeout_minutes = json_data["backlight_timeout_minutes"];
-    config::backlight_brightness      = json_data["backlight_brightness"];
-
-    config::opengrill_server          = json_data["opengrill_server"].as<String>();
-
-    config::mqtt_broker               = json_data["mqtt_broker"].as<String>();
-    config::mqtt_port                 = json_data["mqtt_port"];
-    config::mqtt_topic                = json_data["mqtt_topic"].as<String>();
-    config::mqtt_user                 = json_data["mqtt_user"].as<String>();
-    config::mqtt_password             = json_data["mqtt_password"].as<String>();
-
-    config::wifi_ssid                 = json_data["wifi_ssid"].as<String>();
-    config::wifi_password             = json_data["wifi_password"].as<String>();
-    config::wifi_ip                   = json_data["wifi_ip"].as<String>();
-    config::wifi_subnet               = json_data["wifi_subnet"].as<String>();
-    config::wifi_gateway              = json_data["wifi_gateway"].as<String>();
-    config::wifi_dns                  = json_data["wifi_dns"].as<String>();
-
-    config::local_ap_ssid             = json_data["local_ap_ssid"].as<String>();
-    config::local_ap_password         = json_data["local_ap_password"].as<String>();
-    config::local_ap_ip               = json_data["local_ap_ip"].as<String>();
-    config::local_ap_subnet           = json_data["local_ap_subnet"].as<String>();
-    config::local_ap_gateway          = json_data["local_ap_gateway"].as<String>();
+    FieldReader store(json_data, true);
+    read_settings(store);
 
     // Set default value for empty topics
     if(config::mqtt_topic.length() == 0){
@@ -317,61 +463,18 @@ jsonResult JsonUtilities::save_json_probes(char* raw_json){
 
     DeserializationError err = deserializeJson(jsondoc, raw_json);
     if(err){ return {false, "Could not deserialize json"}; }
+    if(!jsondoc.is<JsonArray>()){ return {false, "Probes should be a json array"}; }
 
-    for (JsonObject item : jsondoc.as<JsonArray>()) {
+    // Check every probe first so a payload with one bad entry changes nothing, then store them
+    for (int pass = 0; pass < 2; pass++){
+        bool apply = pass == 1;
 
-        int    probe_id            = item["probe_id"];
-        String name                = item["name"];
-        float  minimum_temperature = item["minimum_temperature"];
-        float  target_temperature  = item["target_temperature"];
-        String probe_type          = item["probe_type"].as<String>();
-        int    reference_kohm      = item["reference_kohm"];
-        int    reference_celcius   = item["reference_celcius"];
-        int    reference_beta      = item["reference_beta"];
+        for (JsonObjectConst item : jsondoc.as<JsonArrayConst>()) {
+            Probe* probe = probe_by_id(item["probe_id"].as<int>());
+            if(probe == nullptr){ return {false, "probe_id should be between 1 and 8"}; }
 
-        switch (probe_id){
-            case 1:
-                grill::probe_1.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_1.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_1.set_name(name);
-                break;
-            case 2:
-                grill::probe_2.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_2.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_2.set_name(name);
-                break;
-            case 3:
-                grill::probe_3.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_3.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_3.set_name(name);
-                break;
-            case 4:
-                grill::probe_4.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_4.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_4.set_name(name);
-                break;
-            case 5:
-                grill::probe_5.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_5.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_5.set_name(name);
-                break;
-            case 6:
-                grill::probe_6.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_6.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_6.set_name(name);
-                break;
-            case 7:
-                grill::probe_7.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_7.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_7.set_name(name);
-                break;
-            case 8:
-                grill::probe_8.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_8.set_type(probe_type, reference_kohm, reference_celcius, reference_beta);
-                grill::probe_8.set_name(name);
-                break;
-            default:
-                break;
+            String error = update_probe(*probe, item, apply, false);
+            if(!error.isEmpty()){ return {false, "Probe " + item["probe_id"].as<String>() + ": " + error}; }
         }
     }
 
@@ -408,11 +511,15 @@ jsonResult JsonUtilities::save_opengrill_grill(char* raw_json){
     DeserializationError err = deserializeJson(jsondoc, raw_json);
 
     if(err){ return {false, "Could not deserialize json"}; }
+    if(!jsondoc.is<JsonObject>()){ return {false, "Grill should be a json object"}; }
 
-    JsonObject json_data = jsondoc.as<JsonObject>();
+    FieldReader check(jsondoc.as<JsonObjectConst>(), false);
+    check.text("name", config::grill_name);
+    if(!check.error.isEmpty()){ return {false, check.error}; }
+    if(!check.present("name")){ return {true, "Ok"}; }
 
-    // Data ingress
-    config::grill_name                = json_data["name"].as<String>();
+    FieldReader store(jsondoc.as<JsonObjectConst>(), true);
+    store.text("name", config::grill_name);
 
     config::config_helper.save_settings();
     return {true, "Ok"};
@@ -511,50 +618,19 @@ jsonResult JsonUtilities::save_opengrill_probes(char* raw_json){
 
     DeserializationError err = deserializeJson(jsondoc, raw_json);
     if(err){ return {false, "Could not deserialize json"}; }
+    if(!jsondoc.is<JsonObject>()){ return {false, "Probes should be a json object"}; }
 
-    for (JsonPair item : jsondoc.as<JsonObject>()) {
+    // Opengrill sends {"<probe_id>": {...}}. Check every probe first, then store them.
+    for (int pass = 0; pass < 2; pass++){
+        bool apply = pass == 1;
 
-        int    probe_id            = atoi(item.key().c_str());
+        for (JsonPairConst item : jsondoc.as<JsonObjectConst>()) {
+            Probe* probe = probe_by_id(atoi(item.key().c_str()));
+            if(probe == nullptr){ return {false, "probe_id should be between 1 and 8"}; }
+            if(!item.value().is<JsonObjectConst>()){ return {false, "Probe " + String(item.key().c_str()) + " should be a json object"}; }
 
-        String name                = item.value()["name"];
-        float  minimum_temperature = item.value()["minimum_temperature"];
-        float  target_temperature  = item.value()["target_temperature"];
-
-        switch (probe_id){
-            case 1:
-                grill::probe_1.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_1.set_name(name);
-                break;
-            case 2:
-                grill::probe_2.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_2.set_name(name);
-                break;
-            case 3:
-                grill::probe_3.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_3.set_name(name);
-                break;
-            case 4:
-                grill::probe_4.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_4.set_name(name);
-                break;
-            case 5:
-                grill::probe_5.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_5.set_name(name);
-                break;
-            case 6:
-                grill::probe_6.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_6.set_name(name);
-                break;
-            case 7:
-                grill::probe_7.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_7.set_name(name);
-                break;
-            case 8:
-                grill::probe_8.set_temperature(target_temperature, minimum_temperature);
-                grill::probe_8.set_name(name);
-                break;
-            default:
-                break;
+            String error = update_probe(*probe, item.value().as<JsonObjectConst>(), apply, true);
+            if(!error.isEmpty()){ return {false, "Probe " + String(item.key().c_str()) + ": " + error}; }
         }
     }
 
