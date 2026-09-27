@@ -1,6 +1,7 @@
 #include <ArduinoJson.h>
 #include <Preferences.h>
 #include <WiFi.h>
+#include <chrono>
 
 #include "Config.h"
 #include "Grill.h"
@@ -95,6 +96,14 @@ Probe* probe_by_id(int probe_id){
     }
 }
 
+// Seconds since the probe was connected, 0 when it isn't. connected_time is set from the same clock
+// in Probe::calculate_temperature.
+long connected_seconds(const Probe& probe){
+    if(!probe.connected){ return 0; }
+    long now = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    return now - probe.connected_time;
+}
+
 // Checks one probe entry and, when apply is true, stores it on the probe. Missing keys keep the
 // current value. Opengrill sends null for "no temperature", so null_is_zero turns an explicit null
 // temperature into 0 instead of keeping the current value.
@@ -168,6 +177,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_0["minimum_temperature"] = grill::probe_1.minimum_temperature;
     probeData_0["target_temperature"] = grill::probe_1.target_temperature;
     probeData_0["connected"] = grill::probe_1.connected;
+    probeData_0["connected_seconds"] = connected_seconds(grill::probe_1);
 
     JsonObject probeData_1 = probeData.add<JsonObject>();
     probeData_1["probe_id"] = 2;
@@ -176,6 +186,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_1["minimum_temperature"] = grill::probe_2.minimum_temperature;
     probeData_1["target_temperature"] = grill::probe_2.target_temperature;
     probeData_1["connected"] = grill::probe_2.connected;
+    probeData_1["connected_seconds"] = connected_seconds(grill::probe_2);
 
     JsonObject probeData_2 = probeData.add<JsonObject>();
     probeData_2["probe_id"] = 3;
@@ -184,6 +195,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_2["minimum_temperature"] = grill::probe_3.minimum_temperature;
     probeData_2["target_temperature"] = grill::probe_3.target_temperature;
     probeData_2["connected"] = grill::probe_3.connected;
+    probeData_2["connected_seconds"] = connected_seconds(grill::probe_3);
 
     JsonObject probeData_3 = probeData.add<JsonObject>();
     probeData_3["probe_id"] = 4;
@@ -192,6 +204,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_3["minimum_temperature"] = grill::probe_4.minimum_temperature;
     probeData_3["target_temperature"] = grill::probe_4.target_temperature;
     probeData_3["connected"] = grill::probe_4.connected;
+    probeData_3["connected_seconds"] = connected_seconds(grill::probe_4);
 
     JsonObject probeData_4 = probeData.add<JsonObject>();
     probeData_4["probe_id"] = 5;
@@ -200,6 +213,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_4["minimum_temperature"] = grill::probe_5.minimum_temperature;
     probeData_4["target_temperature"] = grill::probe_5.target_temperature;
     probeData_4["connected"] = grill::probe_5.connected;
+    probeData_4["connected_seconds"] = connected_seconds(grill::probe_5);
 
     JsonObject probeData_5 = probeData.add<JsonObject>();
     probeData_5["probe_id"] = 6;
@@ -208,6 +222,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_5["minimum_temperature"] = grill::probe_6.minimum_temperature;
     probeData_5["target_temperature"] = grill::probe_6.target_temperature;
     probeData_5["connected"] = grill::probe_6.connected;
+    probeData_5["connected_seconds"] = connected_seconds(grill::probe_6);
 
     JsonObject probeData_6 = probeData.add<JsonObject>();
     probeData_6["probe_id"] = 7;
@@ -216,6 +231,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_6["minimum_temperature"] = grill::probe_7.minimum_temperature;
     probeData_6["target_temperature"] = grill::probe_7.target_temperature;
     probeData_6["connected"] = grill::probe_7.connected;
+    probeData_6["connected_seconds"] = connected_seconds(grill::probe_7);
 
     JsonObject probeData_7 = probeData.add<JsonObject>();
     probeData_7["probe_id"] = 8;
@@ -224,6 +240,7 @@ void JsonUtilities::load_json_status(char *buffer){
     probeData_7["minimum_temperature"] = grill::probe_8.minimum_temperature;
     probeData_7["target_temperature"] = grill::probe_8.target_temperature;
     probeData_7["connected"] = grill::probe_8.connected;
+    probeData_7["connected_seconds"] = connected_seconds(grill::probe_8);
 
     jsondoc.shrinkToFit();
     serializeJson(jsondoc, buffer, config::json_buffer_size);

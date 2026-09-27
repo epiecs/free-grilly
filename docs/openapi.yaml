@@ -130,6 +130,9 @@ components:
               connected:
                 type: boolean
                 description: Is the probe connected
+              connected_seconds:
+                type: integer
+                description: Seconds since the probe was connected, 0 when it is not connected
             example:
               probe_id: 1
               name: Ambient Probe
