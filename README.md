@@ -280,6 +280,23 @@ The example uses the new default topic prefix `grilly-plus`. If you upgraded fro
   device: *device_info
 ```
 
+## Development
+
+The web app lives in `web/` (plain HTML, CSS and JavaScript, no build step while developing).
+
+1. Edit the files in `web/`.
+2. Run `python tools/dev_server.py --mock` for mock data, or `python tools/dev_server.py <grill-ip>` to use a real grill.
+3. Open http://localhost:8000 and reload after each change.
+
+Tests:
+
+```
+node --test "web/tests/*.test.js"
+python -m unittest discover -s tools -p "test_*.py"
+```
+
+`pio run` builds `web/` into the firmware automatically.
+
 ## Contributing
 
 We welcome contributions to help improve Grilly+! Whether it's fixing bugs, adding features, improving documentation, or testing, your input is valuable.
