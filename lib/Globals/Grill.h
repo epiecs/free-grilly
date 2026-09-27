@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 class Probe;
 class Buzzer;
 
@@ -14,6 +16,7 @@ namespace grill {
 
     // Wifi
     extern bool wifi_connected;
+    extern String wifi_ip;                  // Current ip, config::wifi_ip is the static ip setting
     extern int wifi_signal;
     extern bool internet_connectivity;
 

@@ -41,7 +41,13 @@ bool connect_to_wifi()
     IPAddress wifi_dns;     wifi_dns.fromString(config::wifi_dns);
     IPAddress wifi_dns2;    wifi_dns.fromString(config::wifi_dns);
 
-    if (config::wifi_ip != "0.0.0.0"){
+    // Older firmware could save the dhcp ip as static ip without subnet/gateway. Such a config
+    // makes the device unreachable, so fall back to dhcp instead.
+    bool static_ip_incomplete = wifi_subnet == IPAddress(0, 0, 0, 0) || wifi_gateway == IPAddress(0, 0, 0, 0);
+
+    if (config::wifi_ip != "0.0.0.0" && static_ip_incomplete){
+        Serial.println("Static IP set without subnet or gateway, using DHCP");
+    } else if (config::wifi_ip != "0.0.0.0"){
         if (!WiFi.config(wifi_ip, wifi_gateway, wifi_subnet, wifi_dns, wifi_dns2)){
             Serial.println("Failed to configure Static IP");
         } else {
@@ -81,7 +87,9 @@ void event_wifi_connected(WiFiEvent_t event, WiFiEventInfo_t info)
 
 void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    config::wifi_ip = WiFi.localIP().toString();
+    // Don't write this to config::wifi_ip, that is the static ip setting and saving it would
+    // switch a dhcp setup to a static ip without subnet/gateway/dns
+    grill::wifi_ip = WiFi.localIP().toString();
 
     // Check for internet connectivity
     if (WiFi.hostByName(domainName, resolved_ip)){
@@ -99,6 +107,7 @@ void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     grill::wifi_connected        = false;
+    grill::wifi_ip               = "";
     grill::internet_connectivity = false;
 
     Serial.println("Wifi disconnected");

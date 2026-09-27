@@ -427,7 +427,7 @@ bool disp::draw_screen_info(void){
     screen.drawStr(10, 36, "SSID:");
     screen.setCursor(33, 36); screen.print(config::wifi_ssid);
     screen.drawStr(18, 44, "IP: ");
-    screen.setCursor(33, 44); screen.print(config::wifi_ip);
+    screen.setCursor(33, 44); screen.print(grill::wifi_ip);
     // local AP info
     screen.drawStr(2, 54, "L-SSID:");
     screen.setCursor(33, 54); screen.print(config::local_ap_ssid);
