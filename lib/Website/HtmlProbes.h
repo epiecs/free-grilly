@@ -4,7 +4,7 @@ const char HTML_PROBES[] = R"=====(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Free Grilly</title>
+    <title>Grilly+</title>
     <link rel="stylesheet" type="text/css" href="custom-boostrap.min.css">
     <link rel="icon" href="data:,">
   </head>

@@ -135,7 +135,7 @@ void Probe::check_temperature_status(){
 
     Probe::alarm      = false;
 
-    // If the target temperature is 0.0 we do not beep. This prevents free-grilly
+    // If the target temperature is 0.0 we do not beep. This prevents Grilly+
     // from beeping every time you boot or when you connect a new probe
     if(Probe::connected && Probe::target_temperature != 0.0){
 

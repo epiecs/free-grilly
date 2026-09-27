@@ -4,7 +4,7 @@ const char HTML_INDEX[] = R"=====(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Free Grilly</title>
+    <title>Grilly+</title>
     <link rel="stylesheet" type="text/css" href="custom-boostrap.min.css">
     
     <link rel="icon" href="data:,">
@@ -39,7 +39,7 @@ const char HTML_INDEX[] = R"=====(
     <div class="container">
         <div class="my-2 row">
             <div class="col-5 col-lg-7">
-                <h5 id="grill-name">Free Grilly</h5>
+                <h5 id="grill-name">Grilly+</h5>
             </div>
         
             <div class="col-7 col-lg-5 text-end">

@@ -1,19 +1,19 @@
 openapi: '3.1.1'
 info:
-  title: Free-Grilly
+  title: Grilly+
   version: '25.3.27'
-  description: The local Free-Grilly api
+  description: The local Grilly+ api
 
 externalDocs:
-  url: https://github.com/epiecs/free-grilly
+  url: https://github.com/bardesss/grilly-plus
   description: Git repository
 
 servers:
-  - url: http://{free-grilly-ip}/api
+  - url: http://{grilly-plus-ip}/api
     variables:
-      free-grilly-ip:
+      grilly-plus-ip:
         default: 192.168.200.10
-        description: Your Free-Grilly ip address
+        description: Your Grilly+ ip address
 
 tags:
   - name: grill
@@ -46,7 +46,7 @@ components:
       properties:
         name:
           type: string
-          example: Free-Grilly
+          example: Grilly+
           description: The chosen grill name
         unique_id:
           type: string
@@ -269,7 +269,7 @@ components:
       properties:
         name:
           type: string
-          example: Free-Grilly
+          example: Grilly+
           description: The chosen grill name
         unique_id:
           type: string
@@ -336,7 +336,7 @@ components:
           example: 1883
         mqtt_topic:
           type: string
-          example: "free-grilly"
+          example: "grilly-plus"
         mqtt_user:
           type: string
           example: ""
@@ -369,7 +369,7 @@ components:
           description: The wifi dns
         local_ap_ssid:
           type: string
-          example: FreeGrilly
+          example: GrillyPlus
           description: The name of the grill's local wifi network
         local_ap_password:
           type: string

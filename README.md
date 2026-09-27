@@ -1,10 +1,14 @@
-# Free-Grilly: Community Firmware for Grilleye Max
+# Grilly+: Community Firmware for Grilleye Max
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 **Reviving your Grilleye Max thermometer with this community-driven firmware!**
 
 This project provides alternative firmware for the Grilleye Max thermometer. After the original manufacturer discontinued software support, this firmware was developed through reverse engineering to keep these capable devices functional.
+
+Grilly+ is a fork of [Free-Grilly](https://github.com/epiecs/free-grilly) by [Epiecs](https://github.com/epiecs) and [Questum](https://questum.be/), who did the reverse engineering and wrote the original firmware. This fork adds my own improvements on top. Fixes that are useful for everyone will be offered back upstream where possible.
+
+**Upgrading from Free-Grilly:** Grilly+ keeps using the same settings storage, so an OTA upgrade keeps your WiFi, probe and MQTT settings, including your existing MQTT topic prefix. Only fresh installs and factory resets use the new defaults (`Grilly+` as name, `grilly-plus` as MQTT prefix, `GrillyPlus_xxxxxx` as AP name).
 
 ---
 
@@ -21,7 +25,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 
 ---
 
-- [Free-Grilly: Community Firmware for Grilleye Max](#free-grilly-community-firmware-for-grilleye-max)
+- [Grilly+: Community Firmware for Grilleye Max](#grilly-community-firmware-for-grilleye-max)
   - [Features](#features)
   - [Apps and integrations](#apps-and-integrations)
   - [API documentation](#api-documentation)
@@ -53,7 +57,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 * **Battery Management:** Includes functional battery monitoring and management based on the device's hardware.
 * **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
-* **Opengrill Compatibility:** Free-Grilly is compatible with [Opengrill](https://github.com/epiecs/opengrill-server)
+* **Opengrill (experimental):** Support for the upcoming Opengrill server by [epiecs](https://github.com/epiecs). The server is not public yet, so leave the Opengrill setting empty.
 
 ## Apps and integrations
 
@@ -62,7 +66,7 @@ This project provides alternative firmware for the Grilleye Max thermometer. Aft
 ## API documentation
 
 - Api documentation is include in the [openapi.yaml file](docs/openapi.yaml)
-- You can also view this [online](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/epiecs/free-grilly/refs/heads/master/docs/openapi.yaml)
+- You can also view this [online](https://editor-next.swagger.io/?url=https://raw.githubusercontent.com/bardesss/grilly-plus/refs/heads/master/docs/openapi.yaml)
 
 ## Todo
 
@@ -78,8 +82,8 @@ For installation please refer to the [Flashing guide](docs/how_to_flash.md)
 ## First Use & WiFi Setup
 
 1.  **Power On:** Turn on your Grilleye Max by pressing the side button. Once you hear the beeps you can release the button.
-2.  **AP Mode:** The device will initially boot into Access Point (AP) mode. It will create its own WiFi network. *(FreeGrilly_xxxxxx)*
-3.  If you can not see this network you can hold the side button for 2 seconds until you hear 2 beeps and then release the button. The screen will now show you the name of the wifi ap on your free-grilly
+2.  **AP Mode:** The device will initially boot into Access Point (AP) mode. It will create its own WiFi network. *(GrillyPlus_xxxxxx)*
+3.  If you can not see this network you can hold the side button for 2 seconds until you hear 2 beeps and then release the button. The screen will now show you the name of the wifi ap on your grilly-plus
 4.  **Connect to AP:** Using your phone or computer, connect to this new WiFi network.
 5.  **Access Web Interface:** Open a web browser and navigate to `http://192.168.200.10`.
 6.  **Configure WiFi:** Find the "Settings" or "WiFi Configuration" page in the web interface. Select your home WiFi network (SSID), enter the password, and save.
@@ -103,9 +107,9 @@ For installation please refer to the [Flashing guide](docs/how_to_flash.md)
 
 ## Updating Firmware (OTA)
 
-Once Free-Grilly is installed, you can update to newer versions wirelessly:
+Once Grilly+ is installed, you can update to newer versions wirelessly:
 
-  1. Download the latest `free-grilly-yyyy-mm-dd.bin` from Releases.
+  1. Download the latest `grilly-plus-yyyy-mm-dd.bin` from Releases.
   2. Access the web interface.
   3. Go to the 'Update' page.
   4. Upload the downloaded `.bin` file.
@@ -114,7 +118,7 @@ Once Free-Grilly is installed, you can update to newer versions wirelessly:
 
 ## Supported probes
 
-Free-Grilly supports more probes that the included Grilleye Iris probes. Support for the following probes is built-in:
+Grilly+ supports more probes that the included Grilleye Iris probes. Support for the following probes is built-in:
 
 | Probe type     | ref C | ref kOhm | ref beta | notes                                          |
 |----------------|-------|----------|----------|------------------------------------------------|
@@ -130,36 +134,38 @@ Apart from that you can also add your own `custom` **NTC** probes if you know th
 
 If you want you can use our [handy calculator spreadsheet](docs/probe_calculator.xlsx) if you want to calculate the values for your own probes. 
 
-## Connecting to opengrill
+## Connecting to Opengrill (experimental)
 
-Just navigate to the settings and enter the ip of your opengrill server :)
+The Opengrill server is not publicly available yet. Once it is, enter its ip in the Opengrill field on the settings page. As long as the field is empty, Grilly+ does not try to reach an Opengrill server.
 
 ## Home assistant support
-You can connect your free-grilly to your current home assistant installation when using the mqtt broker. For this you will need to manually create the needed entities. [@woutercoppens](https://github.com/woutercoppens) provided us/you with a decent starting point. This can also be seen in issue #5:
+You can connect your Grilly+ to your current home assistant installation when using the mqtt broker. For this you will need to manually create the needed entities. [@woutercoppens](https://github.com/woutercoppens) provided us/you with a decent starting point. This can also be seen in [Free-Grilly issue #5](https://github.com/epiecs/free-grilly/issues/5).
+
+The example uses the new default topic prefix `grilly-plus`. If you upgraded from Free-Grilly, your device keeps its old `free-grilly` prefix, so either use that in the `state_topic` lines or change the prefix in the settings.
 
 ```yaml
 # Probe 1 (Defines Anchors)
-- name: "Free Grilly Probe 1 Temperature"
-  unique_id: "free_grilly_probe_1_temp"
+- name: "Grilly+ Probe 1 Temperature"
+  unique_id: "grilly_plus_probe_1_temp"
   <<: &probe_temp_defaults
-    state_topic: "free-grilly/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
+    state_topic: "grilly-plus/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
     payload_available: "online"
     payload_not_available: "offline"
     device: &device_info
-      identifiers: "free_grilly_7107d787" #Adjust
-      name: "Free Grilly Thermometer"
-      manufacturer: "Free-Grilly"
+      identifiers: "grilly_plus_7107d787" #Adjust
+      name: "Grilly+ Thermometer"
+      manufacturer: "Grilly+"
       sw_version: "25.08.27"
   value_template: "{{ value_json.probes[0].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[0].connected == true else 'offline' }}"
 
-- name: "Free Grilly Probe 1 Target"
-  unique_id: "free_grilly_probe_1_target"
+- name: "Grilly+ Probe 1 Target"
+  unique_id: "grilly_plus_probe_1_target"
   <<: &probe_target_defaults
-    state_topic: "free-grilly/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
+    state_topic: "grilly-plus/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
     unit_of_measurement: "°C"
     device_class: temperature
     icon: mdi:target
@@ -170,93 +176,93 @@ You can connect your free-grilly to your current home assistant installation whe
   availability_template: "{{ 'online' if value_json.probes[0].connected == true else 'offline' }}"
 
 # Probe 2
-- name: "Free Grilly Probe 2 Temperature"
-  unique_id: "free_grilly_probe_2_temp"
+- name: "Grilly+ Probe 2 Temperature"
+  unique_id: "grilly_plus_probe_2_temp"
   <<: *probe_temp_defaults
   value_template: "{{ value_json.probes[1].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[1].connected == true else 'offline' }}"
-- name: "Free Grilly Probe 2 Target"
-  unique_id: "free_grilly_probe_2_target"
+- name: "Grilly+ Probe 2 Target"
+  unique_id: "grilly_plus_probe_2_target"
   <<: *probe_target_defaults
   value_template: "{{ value_json.probes[1].target_temperature }}"
   availability_template: "{{ 'online' if value_json.probes[1].connected == true else 'offline' }}"
 
 # Probe 3
-- name: "Free Grilly Probe 3 Temperature"
-  unique_id: "free_grilly_probe_3_temp"
+- name: "Grilly+ Probe 3 Temperature"
+  unique_id: "grilly_plus_probe_3_temp"
   <<: *probe_temp_defaults
   value_template: "{{ value_json.probes[2].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[2].connected == true else 'offline' }}"
-- name: "Free Grilly Probe 3 Target"
-  unique_id: "free_grilly_probe_3_target"
+- name: "Grilly+ Probe 3 Target"
+  unique_id: "grilly_plus_probe_3_target"
   <<: *probe_target_defaults
   value_template: "{{ value_json.probes[2].target_temperature }}"
   availability_template: "{{ 'online' if value_json.probes[2].connected == true else 'offline' }}"
 
 # Probe 4
-- name: "Free Grilly Probe 4 Temperature"
-  unique_id: "free_grilly_probe_4_temp"
+- name: "Grilly+ Probe 4 Temperature"
+  unique_id: "grilly_plus_probe_4_temp"
   <<: *probe_temp_defaults
   value_template: "{{ value_json.probes[3].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[3].connected == true else 'offline' }}"
-- name: "Free Grilly Probe 4 Target"
-  unique_id: "free_grilly_probe_4_target"
+- name: "Grilly+ Probe 4 Target"
+  unique_id: "grilly_plus_probe_4_target"
   <<: *probe_target_defaults
   value_template: "{{ value_json.probes[3].target_temperature }}"
   availability_template: "{{ 'online' if value_json.probes[3].connected == true else 'offline' }}"
 
 # Probe 5
-- name: "Free Grilly Probe 5 Temperature"
-  unique_id: "free_grilly_probe_5_temp"
+- name: "Grilly+ Probe 5 Temperature"
+  unique_id: "grilly_plus_probe_5_temp"
   <<: *probe_temp_defaults
   value_template: "{{ value_json.probes[4].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[4].connected == true else 'offline' }}"
-- name: "Free Grilly Probe 5 Target"
-  unique_id: "free_grilly_probe_5_target"
+- name: "Grilly+ Probe 5 Target"
+  unique_id: "grilly_plus_probe_5_target"
   <<: *probe_target_defaults
   value_template: "{{ value_json.probes[4].target_temperature }}"
   availability_template: "{{ 'online' if value_json.probes[4].connected == true else 'offline' }}"
 
 # Probe 6
-- name: "Free Grilly Probe 6 Temperature"
-  unique_id: "free_grilly_probe_6_temp"
+- name: "Grilly+ Probe 6 Temperature"
+  unique_id: "grilly_plus_probe_6_temp"
   <<: *probe_temp_defaults
   value_template: "{{ value_json.probes[5].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[5].connected == true else 'offline' }}"
-- name: "Free Grilly Probe 6 Target"
-  unique_id: "free_grilly_probe_6_target"
+- name: "Grilly+ Probe 6 Target"
+  unique_id: "grilly_plus_probe_6_target"
   <<: *probe_target_defaults
   value_template: "{{ value_json.probes[5].target_temperature }}"
   availability_template: "{{ 'online' if value_json.probes[5].connected == true else 'offline' }}"
 
 # Probe 7
-- name: "Free Grilly Probe 7 Temperature"
-  unique_id: "free_grilly_probe_7_temp"
+- name: "Grilly+ Probe 7 Temperature"
+  unique_id: "grilly_plus_probe_7_temp"
   <<: *probe_temp_defaults
   value_template: "{{ value_json.probes[6].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[6].connected == true else 'offline' }}"
-- name: "Free Grilly Probe 7 Target"
-  unique_id: "free_grilly_probe_7_target"
+- name: "Grilly+ Probe 7 Target"
+  unique_id: "grilly_plus_probe_7_target"
   <<: *probe_target_defaults
   value_template: "{{ value_json.probes[6].target_temperature }}"
   availability_template: "{{ 'online' if value_json.probes[6].connected == true else 'offline' }}"
 
 # Probe 8
-- name: "Free Grilly Probe 8 Temperature"
-  unique_id: "free_grilly_probe_8_temp"
+- name: "Grilly+ Probe 8 Temperature"
+  unique_id: "grilly_plus_probe_8_temp"
   <<: *probe_temp_defaults
   value_template: "{{ value_json.probes[7].temperature }}"
   availability_template: "{{ 'online' if value_json.probes[7].connected == true else 'offline' }}"
-- name: "Free Grilly Probe 8 Target"
-  unique_id: "free_grilly_probe_8_target"
+- name: "Grilly+ Probe 8 Target"
+  unique_id: "grilly_plus_probe_8_target"
   <<: *probe_target_defaults
   value_template: "{{ value_json.probes[7].target_temperature }}"
   availability_template: "{{ 'online' if value_json.probes[7].connected == true else 'offline' }}"
 
 # Battery
-- name: "Free Grilly Battery"
-  unique_id: "free_grilly_battery"
-  state_topic: "free-grilly/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
+- name: "Grilly+ Battery"
+  unique_id: "grilly_plus_battery"
+  state_topic: "grilly-plus/7107d787-30c7-4d20-9b1b-db4cfd14fca4/grill" #Adjust
   unit_of_measurement: "%"
   device_class: battery
   state_class: measurement
@@ -269,16 +275,16 @@ You can connect your free-grilly to your current home assistant installation whe
 
 ## Contributing
 
-We welcome contributions to help improve Free-Grilly! Whether it's fixing bugs, adding features, improving documentation, or testing, your input is valuable.
+We welcome contributions to help improve Grilly+! Whether it's fixing bugs, adding features, improving documentation, or testing, your input is valuable.
 
 Here's how you can contribute:
 
-* **Reporting Issues:** If you find a bug or have an idea for a new feature, please check the existing [Issues](https://github.com/epiecs/free-grilly/issues) first. If it hasn't been reported, please open a new issue, providing as much detail as possible.
+* **Reporting Issues:** If you find a bug or have an idea for a new feature, please check the existing [Issues](https://github.com/bardesss/grilly-plus/issues) first. If it hasn't been reported, please open a new issue, providing as much detail as possible.
   **Submitting Changes (Pull Requests):** If you'd like to contribute code or documentation changes:
     1.  Fork the repository.
     2.  Create a new branch for your changes (`git checkout -b feature/your-feature-name`).
     3.  Make your changes and commit them with clear messages.
     4.  Push your branch to your fork (`git push origin feature/your-feature-name`).
-    5.  Open a [Pull Request](https://github.com/epiecs/free-grilly/pulls) against the main branch of this repository.
+    5.  Open a [Pull Request](https://github.com/bardesss/grilly-plus/pulls) against the main branch of this repository.
 
-Thank you for considering contributing to Free-Grilly!
+Thank you for considering contributing to Grilly+!

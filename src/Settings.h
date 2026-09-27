@@ -89,7 +89,7 @@ namespace config{
 
     String mqtt_broker                  = "";
     int    mqtt_port                    = 1883;
-    String mqtt_topic                   = "free-grilly";
+    String mqtt_topic                   = "grilly-plus";
     String mqtt_user                    = "";
     String mqtt_password                = "";
 
@@ -133,7 +133,7 @@ namespace config{
     String wifi_dns                     = "";
 
     // Local AP
-    String local_ap_ssid_prefix         = "FreeGrilly";
+    String local_ap_ssid_prefix         = "GrillyPlus";
     String local_ap_ssid                = "";
     String local_ap_password            = "";
 
