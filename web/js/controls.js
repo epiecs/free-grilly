@@ -72,6 +72,12 @@ const Controls = (() => {
       get: () => value,
       setLimits(newMin, newMax) { min = newMin; max = newMax; set(value); },
       setSuffix(newSuffix) { describe = typeof newSuffix === "function" ? newSuffix : () => newSuffix; render(); },
+      setLabel(newLabel) {
+        label = newLabel;
+        input.setAttribute("aria-label", label);
+        down.setAttribute("aria-label", "Lower " + label.toLowerCase());
+        up.setAttribute("aria-label", "Raise " + label.toLowerCase());
+      },
       input,
     };
   }

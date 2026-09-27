@@ -219,7 +219,7 @@ fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 .segmented label { flex: 1; position: relative; }
 .segmented input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .segmented label span {
-  display: flex; align-items: center; justify-content: center; min-height: 40px;
+  display: flex; align-items: center; justify-content: center; min-height: 44px;
   border-radius: 9px; font-size: 14px; color: var(--muted); cursor: pointer;
 }
 .segmented input:checked + span { background: var(--accent); color: var(--on-accent); font-weight: 700; }

@@ -41,6 +41,7 @@ const Editor = (() => {
     targetGroup.hidden = current === "off";
     minGroup.hidden = current !== "range";
     targetLabel.textContent = current === "range" ? "Maximum temperature" : "Target temperature";
+    targetStepper.setLabel(current === "range" ? "Maximum temperature" : "Target temperature");
   }
 
   function onModeChange() {
