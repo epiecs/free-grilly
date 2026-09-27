@@ -342,15 +342,28 @@ components:
           example: ""
         mqtt_password:
           type: string
-          example: ""
+          writeOnly: true
+          example: "********"
+          description: The mqtt password. Write-only, never returned. Leave it out to keep the saved password, send "" to remove it.
+        mqtt_password_set:
+          type: boolean
+          readOnly: true
+          example: true
+          description: Whether a mqtt password is saved.
         wifi_ssid:
           type: string
           example: my-home-wifi
           description: The name of the wifi network that the grill is connected to
         wifi_password:
           type: string
+          writeOnly: true
           example: "********"
-          description: The wifi password.
+          description: The wifi password. Write-only, never returned. Leave it out to keep the saved password, send "" to remove it.
+        wifi_password_set:
+          type: boolean
+          readOnly: true
+          example: true
+          description: Whether a wifi password is saved.
         wifi_ip:
           type: string
           example: 192.168.0.10
@@ -373,8 +386,14 @@ components:
           description: The name of the grill's local wifi network
         local_ap_password:
           type: string
+          writeOnly: true
           example: "********"
-          description: The local wifi password
+          description: The local wifi password. Write-only, never returned. Leave it out to keep the saved password, send "" to remove it.
+        local_ap_password_set:
+          type: boolean
+          readOnly: true
+          example: true
+          description: Whether a local wifi password is saved.
         local_ap_ip:
           type: string
           example: 192.168.200.10

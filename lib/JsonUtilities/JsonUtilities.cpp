@@ -229,6 +229,8 @@ void JsonUtilities::load_json_status(char *buffer){
     serializeJson(jsondoc, buffer, config::json_buffer_size);
 }
 
+// Passwords are never sent out, this json is served without authentication and published to the
+// mqtt broker. Only whether a password is set is included.
 void JsonUtilities::load_json_settings(char* buffer){
     JsonDocument jsondoc;
 
@@ -256,20 +258,20 @@ void JsonUtilities::load_json_settings(char* buffer){
     jsondoc["mqtt_port"]                 = config::mqtt_port;
     jsondoc["mqtt_topic"]                = config::mqtt_topic;
     jsondoc["mqtt_user"]                 = config::mqtt_user;
-    jsondoc["mqtt_password"]             = config::mqtt_password;
+    jsondoc["mqtt_password_set"]         = config::mqtt_password.length() > 0;
 
     jsondoc["wifi_ssid"]                 = config::wifi_ssid;
     jsondoc["wifi_ip"]                   = config::wifi_ip;
     jsondoc["wifi_subnet"]               = config::wifi_subnet;
     jsondoc["wifi_gateway"]              = config::wifi_gateway;
     jsondoc["wifi_dns"]                  = config::wifi_dns;
-    jsondoc["wifi_password"]             = config::wifi_password;
+    jsondoc["wifi_password_set"]         = config::wifi_password.length() > 0;
 
     jsondoc["local_ap_ssid"]             = config::local_ap_ssid;
     jsondoc["local_ap_ip"]               = config::local_ap_ip;
     jsondoc["local_ap_subnet"]           = config::local_ap_subnet;
     jsondoc["local_ap_gateway"]          = config::local_ap_gateway;
-    jsondoc["local_ap_password"]         = config::local_ap_password;
+    jsondoc["local_ap_password_set"]     = config::local_ap_password.length() > 0;
 
     jsondoc.shrinkToFit();
 

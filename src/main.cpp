@@ -193,7 +193,9 @@ void task_webserver(void* pvParameters) {
     setup_api_routes();
     setup_web_routes();
 
-    web::webserver.enableCORS();
+    // CORS headers are set per endpoint in Api.cpp, reads are allowed cross-origin but writes are not
+    const char* collected_headers[] = {"Content-Type"};
+    web::webserver.collectHeaders(collected_headers, 1);
     web::webserver.onNotFound(not_found);
     web::webserver.begin();
 

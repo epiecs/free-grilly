@@ -207,7 +207,11 @@
         <div class="row mt-2">
             <label for="wifi_password" class="col-sm-2 col-form-label">Wifi password</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="wifi_password">
+                <input type="password" class="form-control" id="wifi_password" autocomplete="new-password">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="wifi_password_clear">
+                    <label class="form-check-label" for="wifi_password_clear">Remove saved password</label>
+                </div>
             </div>
         </div>
 
@@ -253,7 +257,11 @@
         <div class="row mt-2">
             <label for="local_ap_password" class="col-sm-2 col-form-label">Local AP password</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="local_ap_password">
+                <input type="password" class="form-control" id="local_ap_password" autocomplete="new-password">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="local_ap_password_clear">
+                    <label class="form-check-label" for="local_ap_password_clear">Remove saved password</label>
+                </div>
             </div>
         </div>
 
@@ -331,7 +339,11 @@
         <div class="row mt-2">
             <label for="mqtt_password" class="col-sm-2 col-form-label">Mqtt password</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="mqtt_password">
+                <input type="password" class="form-control" id="mqtt_password" autocomplete="new-password">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="mqtt_password_clear">
+                    <label class="form-check-label" for="mqtt_password_clear">Remove saved password</label>
+                </div>
             </div>
         </div>
 
@@ -417,14 +429,14 @@
                 e_backlight_brightness.value      = data['backlight_brightness'];
 
                 e_wifi_ssid.value                 = data['wifi_ssid'];
-                e_wifi_password.value             = data['wifi_password'];
+                showPassword(e_wifi_password, data['wifi_password_set']);
                 e_wifi_ip.value                   = data['wifi_ip'];
                 e_wifi_subnet.value               = data['wifi_subnet'];
                 e_wifi_gateway.value              = data['wifi_gateway'];
                 e_wifi_dns.value                  = data['wifi_dns'];
 
                 e_local_ap_ssid.value             = data['local_ap_ssid'];
-                e_local_ap_password.value         = data['local_ap_password'];
+                showPassword(e_local_ap_password, data['local_ap_password_set']);
                 e_local_ap_ip.value               = data['local_ap_ip'];
                 e_local_ap_subnet.value           = data['local_ap_subnet'];
                 e_local_ap_gateway.value          = data['local_ap_gateway'];
@@ -435,7 +447,7 @@
                 e_mqtt_port.value                 = data['mqtt_port'];
                 e_mqtt_topic.value                = data['mqtt_topic'];
                 e_mqtt_user.value                 = data['mqtt_user'];
-                e_mqtt_password.value             = data['mqtt_password'];
+                showPassword(e_mqtt_password, data['mqtt_password_set']);
 
                 // Allow saving/scan once data is loaded
                 e_save_settings.disabled = false;
@@ -484,6 +496,23 @@
             }
         }
 
+        // Saved passwords are never sent to the page. The field stays empty and is only posted when a
+        // new password is typed, or as "" when "Remove saved password" is checked.
+        function showPassword(element, is_set) {
+            element.value = "";
+            element.placeholder = is_set ? "Saved, leave empty to keep" : "Not set";
+            document.getElementById(element.id + "_clear").checked = false;
+        }
+
+        function addPassword(post_data, key) {
+            const element = document.getElementById(key);
+            if (document.getElementById(key + "_clear").checked) {
+                post_data[key] = "";
+            } else if (element.value !== "") {
+                post_data[key] = element.value;
+            }
+        }
+
         async function postSettings() {
             try {
                 e_save_settings.disabled = true;
@@ -504,14 +533,14 @@
                 post_data['backlight_brightness']      = e_backlight_brightness.value;
 
                 post_data["wifi_ssid"]                 = e_wifi_ssid.value;
-                post_data["wifi_password"]             = e_wifi_password.value;
+                addPassword(post_data, "wifi_password");
                 post_data["wifi_ip"]                   = e_wifi_ip.value;
                 post_data["wifi_subnet"]               = e_wifi_subnet.value;
                 post_data["wifi_gateway"]              = e_wifi_gateway.value;
                 post_data["wifi_dns"]                  = e_wifi_dns.value;
 
                 post_data["local_ap_ssid"]             = e_local_ap_ssid.value;
-                post_data["local_ap_password"]         = e_local_ap_password.value;
+                addPassword(post_data, "local_ap_password");
                 post_data["local_ap_ip"]               = e_local_ap_ip.value;
                 post_data["local_ap_subnet"]           = e_local_ap_subnet.value;
                 post_data["local_ap_gateway"]          = e_local_ap_gateway.value;
@@ -522,7 +551,7 @@
                 post_data["mqtt_port"]                 = e_mqtt_port.value;
                 post_data["mqtt_topic"]                = e_mqtt_topic.value;
                 post_data["mqtt_user"]                 = e_mqtt_user.value;
-                post_data["mqtt_password"]             = e_mqtt_password.value;
+                addPassword(post_data, "mqtt_password");
 
                 console.log(post_data)
 
