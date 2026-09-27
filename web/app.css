@@ -282,3 +282,20 @@ details.probe-type[open] summary .icon { transform: rotate(90deg); }
 .warning { margin: 10px 0 0; font-size: 13px; color: var(--warn); }
 .notice { margin: 10px 0 0; font-size: 14px; }
 .subheading { margin: 18px 0 0; font-size: 15px; }
+
+/* Network card */
+.field .field-with-button { display: flex; gap: 8px; }
+.field-with-button input { flex: 1; min-width: 0; }
+.scan-results { margin: 8px 0 0; padding: 0; list-style: none; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.scan-results li.hint { padding: 12px; margin: 0; }
+.scan-results button {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
+  min-height: 44px; padding: 0 12px; border: 0; border-top: 1px solid var(--border);
+  background: none; text-align: left; cursor: pointer;
+}
+.scan-results li:first-child button { border-top: 0; }
+.scan-results .hint { margin: 0; }
+.check { display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px; }
+.check input { width: 20px; height: 20px; accent-color: var(--accent); }
+details.advanced summary { display: flex; align-items: center; min-height: 44px; font-size: 14px; color: var(--accent-text); cursor: pointer; }
+.settings-card [data-apply] { margin-top: 12px; width: 100%; }
