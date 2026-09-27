@@ -200,13 +200,35 @@ bool pwr::setScreenBrightness(int brightness) {
 
 bool pwr::shutdown(void) {
 	esp_sleep_enable_ext0_wakeup(GPIO_NUM_35,0);
+
+	// The backlight pwm stops in deep sleep and the pin floats, which can leave the backlight on.
+	// Drive it low instead and hold it, and the power rails, at their off level while asleep.
+	ledcWrite(gpio::pwm_screen_channel, 0);
+	ledcDetachPin(gpio::power_screen_backlight);
+	pinMode(gpio::power_screen_backlight, OUTPUT);
+	digitalWrite(gpio::power_screen_backlight, LOW);
+
+	pinMode(gpio::power_probes, OUTPUT);
+	pinMode(gpio::power_adc_circuit, OUTPUT);
 	setPowerRail(DISABLE,gpio::power_probes);
 	setPowerRail(DISABLE,gpio::power_adc_circuit);
+
+	gpio_hold_en((gpio_num_t)gpio::power_screen_backlight);
+	gpio_hold_en((gpio_num_t)gpio::power_probes);
+	gpio_hold_en((gpio_num_t)gpio::power_adc_circuit);
+	gpio_deep_sleep_hold_en();
+
 	esp_deep_sleep_start();
 	return true;
 }
 
 bool pwr::startup(void) {
+	// Release the pins held during deep sleep before they are configured again
+	gpio_deep_sleep_hold_dis();
+	gpio_hold_dis((gpio_num_t)gpio::power_screen_backlight);
+	gpio_hold_dis((gpio_num_t)gpio::power_probes);
+	gpio_hold_dis((gpio_num_t)gpio::power_adc_circuit);
+
 	init();
 	setPowerRail(ENABLE,gpio::power_adc_circuit);
 	setPowerRail(ENABLE,gpio::power_probes);
