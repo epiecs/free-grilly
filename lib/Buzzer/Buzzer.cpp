@@ -56,10 +56,11 @@ void Buzzer::play_cucaracha(){
     ledcDetachPin(gpio::buzzer);
 }
 
+// Only sets the buzzer's own volume. config::beep_volume is the user's setting and stays as it is
+// when beeps are disabled, so it is still there when they are enabled again.
 void Buzzer::set_volume(int volume){
 
     if(config::beep_enabled == false){
-        config::beep_volume = 0;
         volume = 0;
     }
 
@@ -73,6 +74,5 @@ void Buzzer::set_volume(int volume){
         return;
     }
 
-    config::beep_volume = volume;
     Buzzer::volume = volume * 50;   
 }
