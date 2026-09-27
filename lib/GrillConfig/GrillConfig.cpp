@@ -8,6 +8,7 @@
 #include <nvs_flash.h>
 
 #include "Buzzer.h"
+#include "Display.h"
 #include "Network.h"
 
 #include "Config.h"
@@ -134,7 +135,9 @@ void GrillConfig::save_settings(){
     config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
 
     grill::buzzer.set_volume(config::beep_volume);
-    power.setScreenBrightness(config::backlight_brightness);
+    // Wake the display with the new brightness and restart the backlight/screen timeouts, otherwise
+    // a timed out backlight is switched off again within a second
+    display.wake();
 
     if(reload_wifi){
         connect_to_wifi();
