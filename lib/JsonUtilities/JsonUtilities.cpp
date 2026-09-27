@@ -321,7 +321,7 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
 
         fields.number("screen_timeout_minutes",     config::screen_timeout_minutes, 0, 10000);
         fields.number("backlight_timeout_minutes",  config::backlight_timeout_minutes, 0, 10000);
-        fields.number("backlight_brightness",       config::backlight_brightness, 0, 255);
+        fields.number("backlight_brightness",       config::backlight_brightness, 0, 5);
 
         fields.text("opengrill_server",             config::opengrill_server);
 

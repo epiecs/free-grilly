@@ -246,3 +246,39 @@ details.probe-type summary {
 details.probe-type summary::-webkit-details-marker { display: none; }
 details.probe-type[open] summary .icon { transform: rotate(90deg); }
 .summary-value { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
+
+/* Settings view */
+.settings-grid { display: grid; gap: 12px; }
+@media (min-width: 768px) { .settings-grid { grid-template-columns: repeat(2, 1fr); align-items: start; } }
+.settings-card .banner { margin: 0 0 12px; }
+.card-title {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 4px;
+  font-size: 13px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--muted);
+}
+.card-title .save-note { font-weight: 400; letter-spacing: 0; text-transform: none; }
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 52px; padding: 6px 0; border-top: 1px solid var(--border);
+}
+.card-title + .setting-row { border-top: 0; }
+.setting-row .field-label { margin: 0; font-size: 15px; color: var(--text); }
+.setting-row .stepper { flex: 0 0 auto; padding: 3px; gap: 4px; }
+.setting-row .step-btn { width: 44px; height: 44px; }
+.setting-row .step-value input { width: 5ch; font-size: 18px; }
+.setting-row .step-suffix { font-size: 13px; min-width: 3.5em; }
+.switch {
+  position: relative; flex: 0 0 auto; width: 64px; height: 44px; margin: 0;
+  border-radius: 22px; background: var(--surface-2); cursor: pointer; transition: background .2s;
+  appearance: none; -webkit-appearance: none;
+}
+.switch::after {
+  content: ""; position: absolute; top: 4px; left: 4px; width: 36px; height: 36px; border-radius: 50%;
+  background: #ffffff; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); transition: transform .2s;
+}
+.switch:checked { background: var(--accent); }
+.switch:checked::after { transform: translateX(20px); }
+.link-button { min-height: 44px; padding: 8px 0; border: 0; background: none; color: var(--accent-text); font-size: 14px; cursor: pointer; }
+.hint { margin: 6px 0 0; }
+.warning { margin: 10px 0 0; font-size: 13px; color: var(--warn); }
+.notice { margin: 10px 0 0; font-size: 14px; }
+.subheading { margin: 18px 0 0; font-size: 15px; }
