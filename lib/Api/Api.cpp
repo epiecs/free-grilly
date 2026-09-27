@@ -1,6 +1,7 @@
 #include <ArduinoJson.h>
 #include <string>
 #include <WiFi.h>
+#include <Update.h>
 
 #include "Probe.h"
 #include "Buzzer.h"
@@ -28,6 +29,8 @@ void setup_api_routes()
     web::webserver.on("/api/settings", HTTP_OPTIONS, cors_api_settings);
     
     web::webserver.on("/api/wifiscan", HTTP_GET, get_api_wifiscan);
+
+    web::webserver.on("/api/update", HTTP_POST, post_api_update, upload_api_update);
 }
 
 // Read-only endpoints may be read from other origins. Write endpoints get no CORS headers, and
@@ -110,4 +113,113 @@ void get_api_wifiscan(){
     allow_cross_origin_read();
     web::webserver.send(200, "application/json", api_json_buffer);
     return;
+}
+
+// Firmware updates, replaces ElegantOTA. upload_api_update runs for every chunk while the file comes
+// in, post_api_update once the upload is done. The new firmware goes to the other app slot, so a
+// failed or rejected update leaves the running firmware untouched.
+namespace {
+    bool update_rejected = false;
+    bool update_installed = false;
+    int update_status = 400;
+    String update_error = "";
+
+    void reject_update(int status, const String& error){
+        if(!update_rejected){
+            update_rejected = true;
+            update_status = status;
+            update_error = error;
+            Serial.printf("Firmware update rejected: %s\n", error.c_str());
+        }
+        if(Update.isRunning()){ Update.abort(); }
+    }
+}
+
+void upload_api_update(){
+    HTTPUpload& upload = web::webserver.upload();
+
+    if(upload.status == UPLOAD_FILE_START){
+        update_rejected = false;
+        update_installed = false;
+        update_status = 400;
+        update_error = "";
+
+        // A custom header forces a CORS preflight, so a web page on another site can't post a firmware
+        if(web::webserver.header("X-Grilly-Update") != "1"){
+            reject_update(403, "Missing X-Grilly-Update header");
+            return;
+        }
+        if(!config::admin_password.isEmpty() && !web::webserver.authenticate("admin", config::admin_password.c_str())){
+            reject_update(401, "Wrong admin password");
+            return;
+        }
+        Serial.printf("Firmware update: %s\n", upload.filename.c_str());
+        return;     // Update.begin waits for the first chunk, so the image can be checked first
+    }
+
+    if(update_rejected){ return; }
+
+    if(upload.status == UPLOAD_FILE_WRITE){
+        if(!Update.isRunning()){
+            // An app image starts with 0xE9. The -full.bin for usb flashing starts with 0xFF padding.
+            if(upload.currentSize == 0 || upload.buf[0] != 0xE9){
+                reject_update(400, "This is not an OTA firmware file. Use the -ota.bin file.");
+                return;
+            }
+            if(!Update.begin(UPDATE_SIZE_UNKNOWN)){
+                reject_update(400, Update.errorString());
+                return;
+            }
+        }
+        if(Update.write(upload.buf, upload.currentSize) != upload.currentSize){
+            reject_update(400, Update.errorString());
+        }
+        return;
+    }
+
+    if(upload.status == UPLOAD_FILE_END){
+        if(!Update.isRunning()){
+            reject_update(400, "The file is empty");
+            return;
+        }
+        if(Update.end(true)){
+            update_installed = true;
+        } else {
+            reject_update(400, Update.errorString());
+        }
+        return;
+    }
+
+    if(upload.status == UPLOAD_FILE_ABORTED){
+        reject_update(400, "The upload was interrupted");
+    }
+}
+
+void post_api_update(){
+    bool installed = !update_rejected && update_installed;
+    int status = update_status;
+    String error = update_error.isEmpty() ? String("No firmware file received") : update_error;
+
+    // Ready for the next attempt
+    update_rejected = false;
+    update_installed = false;
+    update_status = 400;
+    update_error = "";
+
+    // A request with no (or a rejected) file part never reaches upload_api_update's header check,
+    // so it must be repeated here or a header-less POST would be treated as "nothing to report".
+    if(web::webserver.header("X-Grilly-Update") != "1"){
+        web::webserver.send(403, "application/json", "{\"error\": \"Missing X-Grilly-Update header\"}");
+        return;
+    }
+
+    if(!installed){
+        web::webserver.send(status, "application/json", "{\"error\": \"" + error + "\"}");
+        return;
+    }
+
+    web::webserver.send(200, "application/json", "{\"success\": true}");
+    Serial.println("Firmware update installed, restarting");
+    delay(1000);    // Let the response reach the browser
+    ESP.restart();
 }

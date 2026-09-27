@@ -321,7 +321,7 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
 
         fields.number("screen_timeout_minutes",     config::screen_timeout_minutes, 0, 10000);
         fields.number("backlight_timeout_minutes",  config::backlight_timeout_minutes, 0, 10000);
-        fields.number("backlight_brightness",       config::backlight_brightness, 0, 255);
+        fields.number("backlight_brightness",       config::backlight_brightness, 0, 5);
 
         fields.text("opengrill_server",             config::opengrill_server);
 
@@ -677,7 +677,9 @@ void JsonUtilities::load_json_wifiscan(char* buffer){
 
     JsonArray networks = jsondoc.to<JsonArray>();
 
-    for (int network_nr = 0; network_nr < scanned_networks; ++network_nr) {
+    // At most 20 networks, more don't fit in the api buffer and would give truncated json
+    int listed_networks = scanned_networks < 20 ? scanned_networks : 20;
+    for (int network_nr = 0; network_nr < listed_networks; ++network_nr) {
 
         JsonObject scanned_network = networks.add<JsonObject>();
 

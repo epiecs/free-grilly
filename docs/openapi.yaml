@@ -26,6 +26,11 @@ tags:
     description: Utility api calls
 
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Username "admin" with the configured admin_password. Only checked when an admin password is set.
   responses:
     '400':
       description: Malformatted body
@@ -540,3 +545,76 @@ paths:
                 minItems: 0
                 items:
                   $ref: '#/components/schemas/Wifinetwork'
+
+  /update:
+    post:
+      tags:
+        - utility
+      summary: Install a firmware update
+      description: >
+        Uploads an `-ota.bin` firmware file as `multipart/form-data` and installs it. The request
+        must include the `X-Grilly-Update: 1` header (this also forces a CORS preflight, so a page
+        on another site can't trigger an update). When an admin password is set, send it as HTTP
+        Basic auth with username `admin`. On success the grill restarts about 1 second later.
+      parameters:
+        - name: X-Grilly-Update
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: ["1"]
+          description: Must be "1". Without it the request is rejected before any auth check.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        description: The firmware file
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                firmware:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK, the grill restarts shortly after this response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: The upload was empty, interrupted, not a valid OTA image, or failed to write
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "This is not an OTA firmware file. Use the -ota.bin file."
+        '401':
+          description: An admin password is set and was missing or wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Wrong admin password"
+        '403':
+          description: The X-Grilly-Update header was missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing X-Grilly-Update header"

@@ -104,12 +104,12 @@ For installation please refer to the [Flashing guide](docs/how_to_flash.md)
 
 Once Grilly+ is installed, you can update to newer versions wirelessly:
 
-  1. Download the latest `grilly-plus-yyyy-mm-dd.bin` from Releases.
-  2. Access the web interface.
-  3. Go to the 'Update' page.
-  4. Upload the downloaded `.bin` file.
-  5. Wait for the device to update.
-  6. Once the update is done you will have to boot the device by holding the button.
+  1. Download the latest `grilly-plus-yyyy-mm-dd-ota.bin` from Releases.
+  2. Open the web interface and go to **Settings**, then **Firmware updates**.
+  3. Choose the downloaded `-ota.bin` file and press **Update**. If you set an admin password, enter it for the update.
+  4. Wait while it uploads and installs. The grill restarts on its own and the page reloads.
+
+Set an admin password in the same card so only you can install firmware.
 
 ## Supported probes
 
