@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <math.h>
+#include <algorithm>
 #include <chrono>
 
 #include "Config.h"
@@ -139,13 +140,14 @@ void Probe::check_temperature_status(){
     // from beeping every time you boot or when you connect a new probe
     if(Probe::connected && Probe::target_temperature != 0.0){
 
-        //* Target temperature mode
-        if(Probe::minimum_temperature == 0.0){
+        //* Target temperature mode, a minimum of 0 or below means there is no range
+        if(Probe::minimum_temperature <= 0.0){
 
-            //* Ready temperature beep + alarm
+            //* Ready temperature beep + alarm. has_beeped is also set when the alarm is switched off,
+            //* so switching it on later doesn't sound an alarm for a target that was already reached.
             if(Probe::temperature >= Probe::target_temperature && Probe::has_beeped == false){
                 Probe::has_beeped = true;
-                Probe::alarm      = true;
+                Probe::alarm      = config::beep_on_ready;
             }
 
             //* Reset the alarm and beep if the temperature drops way too low
@@ -175,11 +177,13 @@ void Probe::check_temperature_status(){
             //* Alarm and Beep if outside
             if((Probe::temperature < Probe::minimum_temperature || Probe::temperature > Probe::target_temperature ) && Probe::has_beeped_outside == false){
                 Probe::has_beeped_outside = true;
-                Probe::alarm              = true;
+                Probe::alarm              = config::beep_outside_target;
             }
 
-            //* Reset the beep and alarm if inside
-            if((Probe::temperature > (Probe::minimum_temperature + Probe::TEMP_HYSTERISIS_OFFSET) && Probe::temperature < (Probe::target_temperature - Probe::TEMP_HYSTERISIS_OFFSET) ) && Probe::has_beeped_outside == true){
+            //* Reset the beep and alarm if inside. The hysteresis is capped at a quarter of the range,
+            //* with a full offset on both sides a narrow range (4 degrees or less) could never re-arm.
+            float hysteresis = std::min(static_cast<float>(Probe::TEMP_HYSTERISIS_OFFSET), (Probe::target_temperature - Probe::minimum_temperature) / 4);
+            if((Probe::temperature > (Probe::minimum_temperature + hysteresis) && Probe::temperature < (Probe::target_temperature - hysteresis) ) && Probe::has_beeped_outside == true){
                 Probe::has_beeped_outside = false;
             }
         }
@@ -233,12 +237,18 @@ void Probe::set_type(String probe_type, int reference_kohm, int reference_celciu
 }
 
 void Probe::set_temperature(float target_temperature, float minimum_temperature){
-    
+
+    bool temperatures_changed = target_temperature != Probe::target_temperature || minimum_temperature != Probe::minimum_temperature;
+
     Probe::target_temperature = target_temperature;
     Probe::minimum_temperature = minimum_temperature;
 
-    // If we switch mode from target to range we re-enable the beeps
-    if(minimum_temperature == 0.0){
+    // Only re-enable the beeps when the temperatures change. Saving a probe without changing them
+    // (renaming it, or a retained mqtt message after a reconnect) would otherwise replay an alarm
+    // that already went off.
+    if(!temperatures_changed){ return; }
+
+    if(minimum_temperature <= 0.0){
         Probe::has_beeped        = false;
         Probe::has_beeped_before = false;
     } else {

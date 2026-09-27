@@ -539,7 +539,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p1["name"] = grill::probe_1.name;
     p1["target_temperature"] = grill::probe_1.target_temperature;
 
-    if(grill::probe_1.minimum_temperature != 0.00f){
+    if(grill::probe_1.minimum_temperature > 0.00f){
         p1["minimum_temperature"] = grill::probe_1.minimum_temperature;
     } else {
         p1["minimum_temperature"] = nullptr;
@@ -549,7 +549,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p2["name"] = grill::probe_2.name;
     p2["target_temperature"] = grill::probe_2.target_temperature;
 
-    if(grill::probe_2.minimum_temperature != 0.00f){
+    if(grill::probe_2.minimum_temperature > 0.00f){
         p2["minimum_temperature"] = grill::probe_2.minimum_temperature;
     } else {
         p2["minimum_temperature"] = nullptr;
@@ -559,7 +559,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p3["name"] = grill::probe_3.name;
     p3["target_temperature"] = grill::probe_3.target_temperature;
 
-    if(grill::probe_3.minimum_temperature != 0.00f){
+    if(grill::probe_3.minimum_temperature > 0.00f){
         p3["minimum_temperature"] = grill::probe_3.minimum_temperature;
     } else {
         p3["minimum_temperature"] = nullptr;
@@ -569,7 +569,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p4["name"] = grill::probe_4.name;
     p4["target_temperature"] = grill::probe_4.target_temperature;
 
-    if(grill::probe_4.minimum_temperature != 0.00f){
+    if(grill::probe_4.minimum_temperature > 0.00f){
         p4["minimum_temperature"] = grill::probe_4.minimum_temperature;
     } else {
         p4["minimum_temperature"] = nullptr;
@@ -579,7 +579,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p5["name"] = grill::probe_5.name;
     p5["target_temperature"] = grill::probe_5.target_temperature;
 
-    if(grill::probe_5.minimum_temperature != 0.00f){
+    if(grill::probe_5.minimum_temperature > 0.00f){
         p5["minimum_temperature"] = grill::probe_5.minimum_temperature;
     } else {
         p5["minimum_temperature"] = nullptr;
@@ -589,7 +589,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p6["name"] = grill::probe_6.name;
     p6["target_temperature"] = grill::probe_6.target_temperature;
 
-    if(grill::probe_6.minimum_temperature != 0.00f){
+    if(grill::probe_6.minimum_temperature > 0.00f){
         p6["minimum_temperature"] = grill::probe_6.minimum_temperature;
     } else {
         p6["minimum_temperature"] = nullptr;
@@ -599,7 +599,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p7["name"] = grill::probe_7.name;
     p7["target_temperature"] = grill::probe_7.target_temperature;
 
-    if(grill::probe_7.minimum_temperature != 0.00f){
+    if(grill::probe_7.minimum_temperature > 0.00f){
         p7["minimum_temperature"] = grill::probe_7.minimum_temperature;
     } else {
         p7["minimum_temperature"] = nullptr;
@@ -609,7 +609,7 @@ void JsonUtilities::load_opengrill_probes(char* buffer){
     p8["name"] = grill::probe_8.name;
     p8["target_temperature"] = grill::probe_8.target_temperature;
 
-    if(grill::probe_8.minimum_temperature != 0.00f){
+    if(grill::probe_8.minimum_temperature > 0.00f){
         p8["minimum_temperature"] = grill::probe_8.minimum_temperature;
     } else {
         p8["minimum_temperature"] = nullptr;

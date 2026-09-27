@@ -114,7 +114,7 @@ components:
                   - "number"
                   - "null"
                 format: float
-                description: The minimum temperature in Celcius/Fahrenheit according to the settings. Used for temperature ranges.
+                description: The minimum temperature in Celcius/Fahrenheit according to the settings. Used for temperature ranges. Above 0 the probe is in range mode and alarms when the temperature leaves minimum..target. 0 or below means target mode, which alarms once when the target is reached.
                 examples:
                   - 30.00
                   - 25.5
@@ -176,7 +176,7 @@ components:
             - "number"
             - "null"
           format: float
-          description: The minimum temperature in Celcius/Fahrenheit according to the settings. Used for temperature ranges.
+          description: The minimum temperature in Celcius/Fahrenheit according to the settings. Used for temperature ranges. Above 0 the probe is in range mode and alarms when the temperature leaves minimum..target. 0 or below means target mode, which alarms once when the target is reached.
           default: 0
           examples:
             - 25.50
