@@ -568,7 +568,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p1_ref_kohm");
     temp   = config::settings_storage.getInt("p1_ref_temp");
     beta   = config::settings_storage.getInt("p1_ref_beta");
-    Serial.printf("Probe 1 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 1 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     target = config::settings_storage.getFloat("p2_target_temp");
@@ -578,7 +578,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p2_ref_kohm");
     temp   = config::settings_storage.getInt("p2_ref_temp");
     beta   = config::settings_storage.getInt("p2_ref_beta");
-    Serial.printf("Probe 2 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 2 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     target = config::settings_storage.getFloat("p3_target_temp");
@@ -588,7 +588,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p3_ref_kohm");
     temp   = config::settings_storage.getInt("p3_ref_temp");
     beta   = config::settings_storage.getInt("p3_ref_beta");
-    Serial.printf("Probe 3 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 3 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     target = config::settings_storage.getFloat("p4_target_temp");
@@ -598,7 +598,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p4_ref_kohm");
     temp   = config::settings_storage.getInt("p4_ref_temp");
     beta   = config::settings_storage.getInt("p4_ref_beta");
-    Serial.printf("Probe 4 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 4 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     target = config::settings_storage.getFloat("p5_target_temp");
@@ -608,7 +608,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p5_ref_kohm");
     temp   = config::settings_storage.getInt("p5_ref_temp");
     beta   = config::settings_storage.getInt("p5_ref_beta");
-    Serial.printf("Probe 5 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 5 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     target = config::settings_storage.getFloat("p6_target_temp");
@@ -618,7 +618,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p6_ref_kohm");
     temp   = config::settings_storage.getInt("p6_ref_temp");
     beta   = config::settings_storage.getInt("p6_ref_beta");
-    Serial.printf("Probe 6 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 6 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     target = config::settings_storage.getFloat("p7_target_temp");
@@ -628,7 +628,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p7_ref_kohm");
     temp   = config::settings_storage.getInt("p7_ref_temp");
     beta   = config::settings_storage.getInt("p7_ref_beta");
-    Serial.printf("Probe 7 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 7 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     target = config::settings_storage.getFloat("p8_target_temp");
@@ -638,7 +638,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p8_ref_kohm");
     temp   = config::settings_storage.getInt("p8_ref_temp");
     beta   = config::settings_storage.getInt("p8_ref_beta");
-    Serial.printf("Probe 8 :: %s :: %f %f - %s %d %d %d", name, target, min, type, kohm, temp, beta);
+    Serial.printf("Probe 8 :: %s :: %f %f - %s %d %d %d\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta);
     Serial.println("");
 
     Serial.println("|++++++++++ PROBE Settings ++++++++++|");
