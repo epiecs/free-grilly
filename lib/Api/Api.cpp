@@ -120,6 +120,7 @@ void get_api_wifiscan(){
 // failed or rejected update leaves the running firmware untouched.
 namespace {
     bool update_rejected = false;
+    bool update_installed = false;
     int update_status = 400;
     String update_error = "";
 
@@ -139,6 +140,7 @@ void upload_api_update(){
 
     if(upload.status == UPLOAD_FILE_START){
         update_rejected = false;
+        update_installed = false;
         update_status = 400;
         update_error = "";
 
@@ -180,7 +182,9 @@ void upload_api_update(){
             reject_update(400, "The file is empty");
             return;
         }
-        if(!Update.end(true)){
+        if(Update.end(true)){
+            update_installed = true;
+        } else {
             reject_update(400, Update.errorString());
         }
         return;
@@ -192,14 +196,22 @@ void upload_api_update(){
 }
 
 void post_api_update(){
-    bool installed = !update_rejected && Update.isFinished();
+    bool installed = !update_rejected && update_installed;
     int status = update_status;
     String error = update_error.isEmpty() ? String("No firmware file received") : update_error;
 
     // Ready for the next attempt
     update_rejected = false;
+    update_installed = false;
     update_status = 400;
     update_error = "";
+
+    // A request with no (or a rejected) file part never reaches upload_api_update's header check,
+    // so it must be repeated here or a header-less POST would be treated as "nothing to report".
+    if(web::webserver.header("X-Grilly-Update") != "1"){
+        web::webserver.send(403, "application/json", "{\"error\": \"Missing X-Grilly-Update header\"}");
+        return;
+    }
 
     if(!installed){
         web::webserver.send(status, "application/json", "{\"error\": \"" + error + "\"}");

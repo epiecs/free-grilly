@@ -46,6 +46,7 @@ const Api = (() => {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open("POST", path);
+      xhr.timeout = 180000;
       xhr.setRequestHeader("X-Grilly-Update", "1");
       if (password) {
         const credentials = new TextEncoder().encode("admin:" + password);
@@ -59,6 +60,7 @@ const Api = (() => {
         else reject(new Error(body && body.error ? body.error : "The update failed (" + xhr.status + ")"));
       };
       xhr.onerror = () => reject(new Error("The upload was interrupted"));
+      xhr.ontimeout = () => reject(new Error("The upload took too long"));
       const form = new FormData();
       form.append("firmware", file, file.name);
       xhr.send(form);
