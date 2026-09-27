@@ -75,3 +75,6 @@ $RECYCLE.BIN/
 # Local specs and plans (not tracked)
 docs/specs/
 docs/plans/
+
+# Generated from web/ by tools/build_web.py
+lib/Website/WebApp.h
