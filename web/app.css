@@ -160,7 +160,8 @@ body.offline .live { opacity: .4; }
 
 /* Grill view */
 .probe-list { display: grid; gap: 12px; }
-@media (min-width: 768px) { .probe-list { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); } }
+/* Two per row on wider screens: up to 8 probes always fill whole rows (a fitting grid gave 3 + 3 + 2) */
+@media (min-width: 768px) { .probe-list { grid-template-columns: repeat(2, 1fr); } }
 .probe-card { display: block; width: 100%; min-height: 44px; border: 0; text-align: left; cursor: pointer; }
 .probe-card:active { transform: scale(.99); }
 .card-head { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); }
