@@ -201,7 +201,20 @@ void task_webserver(void* pvParameters) {
 
     ElegantOTA.begin(&web::webserver); // OTA webserver
 
+    // OTA updates need the admin password when one is set. Applied here instead of on save so
+    // ElegantOTA is only touched from this task, settings can also be saved from mqtt/opengrill.
+    String ota_password = "";
+
     while (true){
+        if(ota_password != config::admin_password){
+            ota_password = config::admin_password;
+            if(ota_password.isEmpty()){
+                ElegantOTA.clearAuth();
+            } else {
+                ElegantOTA.setAuth("admin", ota_password.c_str());
+            }
+        }
+
         web::webserver.handleClient();
         ElegantOTA.loop();
         delay(1);
