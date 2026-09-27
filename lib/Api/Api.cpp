@@ -139,6 +139,7 @@ void upload_api_update(){
     HTTPUpload& upload = web::webserver.upload();
 
     if(upload.status == UPLOAD_FILE_START){
+        if(Update.isRunning()){ Update.abort(); }   // A stale update from an earlier, broken off upload
         update_rejected = false;
         update_installed = false;
         update_status = 400;
