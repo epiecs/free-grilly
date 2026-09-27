@@ -42,12 +42,18 @@ class InlinePageTest(unittest.TestCase):
 
 class HeaderTest(unittest.TestCase):
     def test_writes_bytes_length_and_quoted_etag(self):
-        text = build_web.header(bytes([0x1f, 0x8b, 0x00]), "abc123")
+        text = build_web.header(bytes([0x1f, 0x8b, 0x00]), "abc123", bytes([0x89, 0x50]))
 
         self.assertIn('const char WEB_APP_ETAG[] = "\\"abc123\\"";', text)
         self.assertIn("const size_t WEB_APP_GZ_LEN = 3;", text)
         self.assertIn("0x1f, 0x8b, 0x00,", text)
         self.assertIn("PROGMEM", text)
+
+    def test_writes_touch_icon(self):
+        text = build_web.header(bytes([0x1f]), "abc123", bytes([0x89, 0x50, 0x4e]))
+
+        self.assertIn("const size_t WEB_TOUCH_ICON_LEN = 3;", text)
+        self.assertIn("const uint8_t WEB_TOUCH_ICON[] PROGMEM = {\n    0x89, 0x50, 0x4e,\n};", text)
 
 
 if __name__ == "__main__":
