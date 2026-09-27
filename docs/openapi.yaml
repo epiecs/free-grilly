@@ -394,6 +394,16 @@ components:
           readOnly: true
           example: true
           description: Whether a local wifi password is saved.
+        admin_password:
+          type: string
+          writeOnly: true
+          example: "********"
+          description: Password for firmware updates on /update (username admin). Firmware updates are open to anyone while it is empty. Write-only, never returned. Leave it out to keep the saved password, send "" to remove it.
+        admin_password_set:
+          type: boolean
+          readOnly: true
+          example: false
+          description: Whether an admin password is saved.
         local_ap_ip:
           type: string
           example: 192.168.200.10

@@ -287,6 +287,24 @@ const char HTML_SETTINGS[] = R"=====(
             </div>
         </div>
 
+        <div class="row mt-4">
+            <h5>Firmware updates</h5>
+        </div>
+        <div class="row mt-2">
+            <label for="admin_password" class="col-sm-2 col-form-label">Admin password</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="admin_password" autocomplete="new-password">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="admin_password_clear">
+                    <label class="form-check-label" for="admin_password_clear">Remove saved password</label>
+                </div>
+                <div id="admin_password_warning" class="form-text text-danger" style="display: none">
+                    No admin password is set, anyone on your network can install firmware on this grill.
+                </div>
+                <div class="form-text">Username for firmware updates is <code>admin</code>.</div>
+            </div>
+        </div>
+
 
         <div class="row mt-4">
             <h5>Opengrill</h5>
@@ -398,6 +416,8 @@ const char HTML_SETTINGS[] = R"=====(
         e_mqtt_topic                = document.getElementById("mqtt_topic");
         e_mqtt_user                 = document.getElementById("mqtt_user");
         e_mqtt_password             = document.getElementById("mqtt_password");
+        e_admin_password            = document.getElementById("admin_password");
+        e_admin_password_warning    = document.getElementById("admin_password_warning");
 
         e_save_settings             = document.getElementById("save_settings");
         e_wifi_scan                 = document.getElementById("wifi_scan");
@@ -449,6 +469,9 @@ const char HTML_SETTINGS[] = R"=====(
                 e_mqtt_topic.value                = data['mqtt_topic'];
                 e_mqtt_user.value                 = data['mqtt_user'];
                 showPassword(e_mqtt_password, data['mqtt_password_set']);
+
+                showPassword(e_admin_password, data['admin_password_set']);
+                e_admin_password_warning.style.display = data['admin_password_set'] ? 'none' : 'block';
 
                 // Allow saving/scan once data is loaded
                 e_save_settings.disabled = false;
@@ -553,6 +576,8 @@ const char HTML_SETTINGS[] = R"=====(
                 post_data["mqtt_topic"]                = e_mqtt_topic.value;
                 post_data["mqtt_user"]                 = e_mqtt_user.value;
                 addPassword(post_data, "mqtt_password");
+
+                addPassword(post_data, "admin_password");
 
                 console.log(post_data)
 

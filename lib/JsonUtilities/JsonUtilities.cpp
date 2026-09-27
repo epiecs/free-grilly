@@ -273,6 +273,8 @@ void JsonUtilities::load_json_settings(char* buffer){
     jsondoc["local_ap_gateway"]          = config::local_ap_gateway;
     jsondoc["local_ap_password_set"]     = config::local_ap_password.length() > 0;
 
+    jsondoc["admin_password_set"]        = config::admin_password.length() > 0;
+
     jsondoc.shrinkToFit();
 
     serializeJson(jsondoc, buffer, config::json_buffer_size);
@@ -324,6 +326,8 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json){
         fields.text("local_ap_ip",                  config::local_ap_ip);
         fields.text("local_ap_subnet",              config::local_ap_subnet);
         fields.text("local_ap_gateway",             config::local_ap_gateway);
+
+        fields.text("admin_password",               config::admin_password);
     };
 
     FieldReader check(json_data, false);

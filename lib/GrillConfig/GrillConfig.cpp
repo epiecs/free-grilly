@@ -84,6 +84,7 @@ void GrillConfig::load_settings(){
     // shorter keys since keys should max be 15 chars
     config::local_ap_ssid             = config::settings_storage.getString("l_ap_ssid", "");
     config::local_ap_password         = config::settings_storage.getString("l_ap_password", "");
+    config::admin_password            = config::settings_storage.getString("admin_pw", "");
 
     config::local_ap_ip               = config::settings_storage.getString("l_ap_ip", local_ap_ip_default);
     config::local_ap_subnet           = config::settings_storage.getString("l_ap_subnet", local_ap_subnet_default);
@@ -130,6 +131,7 @@ void GrillConfig::save_settings(){
 
     config::settings_storage.putString("l_ap_ssid", config::local_ap_ssid);
     config::settings_storage.putString("l_ap_password", config::local_ap_password);
+    config::settings_storage.putString("admin_pw", config::admin_password);
     config::settings_storage.putString("l_ap_ip", config::local_ap_ip);
     config::settings_storage.putString("l_ap_subnet", config::local_ap_subnet);
     config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
@@ -157,6 +159,16 @@ void GrillConfig::save_settings(){
     }
 
     GrillConfig::print_settings();
+}
+
+// Random password without characters that are easy to mix up on the screen (0/O, 1/l/I)
+String generate_password(int length){
+    const char characters[] = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    String password = "";
+    for(int i = 0; i < length; i++){
+        password += characters[esp_random() % (sizeof(characters) - 1)];
+    }
+    return password;
 }
 
 void GrillConfig::initialize_settings(){
@@ -213,7 +225,11 @@ void GrillConfig::initialize_settings(){
     config::settings_storage.putString("wifi_dns", wifi_dns_default);
 
     config::settings_storage.putString("l_ap_ssid", config::local_ap_ssid);
-    config::settings_storage.putString("l_ap_password", "");
+    // New and factory reset devices get a generated local ap password instead of an open ap, it is
+    // shown on the info screen. Devices that are upgraded never run this and keep their password.
+    config::local_ap_password = generate_password(8);
+    config::settings_storage.putString("l_ap_password", config::local_ap_password);
+    config::settings_storage.putString("admin_pw", "");
     config::settings_storage.putString("l_ap_ip", local_ap_ip_default);
     config::settings_storage.putString("l_ap_subnet", local_ap_subnet_default);
     config::settings_storage.putString("l_ap_gateway", local_ap_gateway_default);

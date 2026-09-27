@@ -69,6 +69,7 @@ namespace config{
     extern String local_ap_ssid_prefix;
     extern String local_ap_ssid;
     extern String local_ap_password;
+    extern String admin_password;
 
     extern String local_ap_ip;
     extern String local_ap_subnet;
