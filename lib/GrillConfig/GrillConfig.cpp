@@ -150,15 +150,10 @@ void GrillConfig::save_settings(){
         start_local_ap();
     }
 
-    if(config::mqtt_broker != ""){
-        config::mqtt_client.setup(config::mqtt_broker, config::mqtt_port);
-        config::mqtt_client.publish_settings();
-    }
-
-    if(config::opengrill_server != ""){
-        config::opengrill_client.setup(config::opengrill_server, config::opengrill_port);
-        config::opengrill_client.publish_grill();
-    }
+    // The mqtt and opengrill tasks own their clients, they pick up changed connection settings and
+    // publish on their next loop. This can run from the web task or inside an mqtt callback.
+    config::mqtt_client.request_publish_settings();
+    config::opengrill_client.request_publish_grill();
 
     GrillConfig::print_settings();
 }
@@ -478,13 +473,9 @@ void GrillConfig::save_probes(){
     config::settings_storage.putFloat("p8_target_temp", grill::probe_8.target_temperature);
     config::settings_storage.putFloat("p8_min_temp", grill::probe_8.minimum_temperature);
 
-    if(config::mqtt_broker != ""){
-        config::mqtt_client.publish_grill();
-    }
-
-    if(config::opengrill_server != ""){
-        config::opengrill_client.publish_probes();
-    }
+    // Published by the mqtt and opengrill tasks on their next loop
+    config::mqtt_client.request_publish_probes();
+    config::opengrill_client.request_publish_probes();
 
     GrillConfig::print_probes();
 }

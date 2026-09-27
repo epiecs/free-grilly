@@ -225,49 +225,72 @@ void task_webserver(void* pvParameters) {
 // * Opengrill
 // ***********************************
 
+// Connection attempts back off from 5 seconds up to a minute while the server can't be reached
+constexpr unsigned long RECONNECT_DELAY_MIN_MS = 5000;
+constexpr unsigned long RECONNECT_DELAY_MAX_MS = 60000;
+
 void task_opengrill(void* pvParameters) {
     Serial.println("Launching task :: Opengrill");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
 
     String opengrill_server = "";
     int opengrill_port = 1883;
+    String opengrill_user = "";
+    String opengrill_password = "";
+    bool first_run = true;
 
     unsigned long last_publish_time = 0;
     const unsigned long publish_interval_ms = 1000;
 
+    bool connect_now = true;
+    unsigned long last_connect_attempt = 0;
+    unsigned long reconnect_delay_ms = RECONNECT_DELAY_MIN_MS;
+
     while (true){
 
-        if(opengrill_server != config::opengrill_server || opengrill_port != config::opengrill_port){
+        if(first_run || opengrill_server != config::opengrill_server || opengrill_port != config::opengrill_port
+           || opengrill_user != config::opengrill_user || opengrill_password != config::opengrill_password){
             Serial.println("(Re)loaded Opengrill Settings");
-            // Settings have changed. We have to update our vars and set a new client
-            // This can also be used for launching since we initialize empty vars - also i'm lazy
+            // Settings have changed. Drop the current connection so the new settings are used.
+            first_run = false;
             opengrill_server = config::opengrill_server;
             opengrill_port = config::opengrill_port;
+            opengrill_user = config::opengrill_user;
+            opengrill_password = config::opengrill_password;
 
+            if(config::opengrill_client.connected()){
+                config::opengrill_client.disconnect();
+            }
             config::opengrill_client.setup(opengrill_server, opengrill_port);
 
-            // Only loop/reconnect if we have a broker filled in
-            if(opengrill_server != ""){
-                Serial.println("Opengrill server set, initializing connection");
-                config::opengrill_client.reconnect();
-            } else {
+            connect_now = true;
+            reconnect_delay_ms = RECONNECT_DELAY_MIN_MS;
+
+            if(opengrill_server == ""){
                 Serial.println("Opengrill server not set, skipping Opengrill connection");
             }
         }
 
         if(opengrill_server != "" && config::opengrill_client.connected()){
             config::opengrill_client.loop();
+            config::opengrill_client.publish_requested();
 
             unsigned long now = millis();
             if (now - last_publish_time >= publish_interval_ms) {
                 last_publish_time = now;
                 config::opengrill_client.publish_grill();
             }
-        }
+        } else if(opengrill_server != "" && grill::wifi_connected
+                  && (connect_now || millis() - last_connect_attempt >= reconnect_delay_ms)){
+            connect_now = false;
+            last_connect_attempt = millis();
 
-        if(opengrill_server != "" && !config::opengrill_client.connected() && grill::wifi_connected){
-            Serial.println("Opengrill client disconnected, trying to reconnect");
-            config::opengrill_client.reconnect();
+            if(config::opengrill_client.connect_once()){
+                reconnect_delay_ms = RECONNECT_DELAY_MIN_MS;
+            } else {
+                reconnect_delay_ms = std::min(reconnect_delay_ms * 2, RECONNECT_DELAY_MAX_MS);
+                Serial.printf("Opengrill retrying in %lu seconds\n", reconnect_delay_ms / 1000);
+            }
         }
 
         delay(50);
@@ -284,43 +307,65 @@ void task_mqtt(void* pvParameters) {
 
     String mqtt_broker = "";
     int mqtt_port = 1883;
+    String mqtt_topic = "";
+    String mqtt_user = "";
+    String mqtt_password = "";
+    bool first_run = true;
 
     unsigned long last_mqtt_publish_time = 0;
     const unsigned long mqtt_publish_interval_ms = 1000;
 
+    bool connect_now = true;
+    unsigned long last_connect_attempt = 0;
+    unsigned long reconnect_delay_ms = RECONNECT_DELAY_MIN_MS;
+
     while (true){
 
-        if(mqtt_broker != config::mqtt_broker || mqtt_port != config::mqtt_port){
+        if(first_run || mqtt_broker != config::mqtt_broker || mqtt_port != config::mqtt_port || mqtt_topic != config::mqtt_topic
+           || mqtt_user != config::mqtt_user || mqtt_password != config::mqtt_password){
             Serial.println("(Re)loaded MQTT Settings");
-            // Settings have changed. We have to update our vars and set a new client
-            // This can also be used for launching since we initialize empty vars - also i'm lazy
+            // Settings have changed. Drop the current connection so the new broker, credentials and
+            // topics are used, reconnecting also subscribes to the new config topics.
+            first_run = false;
             mqtt_broker = config::mqtt_broker;
             mqtt_port = config::mqtt_port;
+            mqtt_topic = config::mqtt_topic;
+            mqtt_user = config::mqtt_user;
+            mqtt_password = config::mqtt_password;
 
+            if(config::mqtt_client.connected()){
+                config::mqtt_client.disconnect();
+            }
             config::mqtt_client.setup(mqtt_broker, mqtt_port);
 
-            // Only loop/reconnect if we have a broker filled in
-            if(mqtt_broker != ""){
-                Serial.println("MQTT broker set, initializing connection");
-                config::mqtt_client.reconnect();
-            } else {
+            connect_now = true;
+            reconnect_delay_ms = RECONNECT_DELAY_MIN_MS;
+
+            if(mqtt_broker == ""){
                 Serial.println("MQTT broker not set, skipping MQTT connection");
             }
         }
 
         if(mqtt_broker != "" && config::mqtt_client.connected()){
             config::mqtt_client.loop();
+            config::mqtt_client.publish_requested();
 
             unsigned long now = millis();
             if (now - last_mqtt_publish_time >= mqtt_publish_interval_ms) {
                 last_mqtt_publish_time = now;
                 config::mqtt_client.publish_grill();
             }
-        }
+        } else if(mqtt_broker != "" && grill::wifi_connected
+                  && (connect_now || millis() - last_connect_attempt >= reconnect_delay_ms)){
+            connect_now = false;
+            last_connect_attempt = millis();
 
-        if(mqtt_broker != "" && !config::mqtt_client.connected() && grill::wifi_connected){
-            Serial.println("MQTT client disconnected, trying to reconnect");
-            config::mqtt_client.reconnect();
+            if(config::mqtt_client.connect_once()){
+                reconnect_delay_ms = RECONNECT_DELAY_MIN_MS;
+            } else {
+                reconnect_delay_ms = std::min(reconnect_delay_ms * 2, RECONNECT_DELAY_MAX_MS);
+                Serial.printf("MQTT retrying in %lu seconds\n", reconnect_delay_ms / 1000);
+            }
         }
 
         delay(50);
