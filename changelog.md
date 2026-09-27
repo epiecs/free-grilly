@@ -1,5 +1,12 @@
 # Changelog (firmware only)
 
+## Unreleased (Grilly+)
+- Forked from Free-Grilly 2026-04-18 and renamed to Grilly+
+- New defaults for fresh installs: name `Grilly+`, mqtt prefix `grilly-plus`, AP name `GrillyPlus_xxxxxx`
+- MQTT and Opengrill client ids now start with `grilly-plus-`
+- Settings storage namespace is unchanged, so upgrading from Free-Grilly keeps all settings
+- Firmware release files are now named `grilly-plus-yyyy-mm-dd-*.bin`
+
 ## 2026-04-18
 - Cleaned up MQTT code
 - Cleaned up network code

@@ -10,10 +10,10 @@ sed -i "" "s#${search}#${replace}#" src/Settings.h
 ~/.platformio/penv/bin/platformio run
 
 # Copy ota update
-cp .pio/build/esp32dev/firmware.bin dist/free-grilly-$(date +%Y-%m-%d)-ota.bin
+cp .pio/build/esp32dev/firmware.bin dist/grilly-plus-$(date +%Y-%m-%d)-ota.bin
 
 # Build full flash firmware including partitions, bootloader,...
-esptool --chip esp32 merge-bin -o dist/free-grilly-$(date +%Y-%m-%d)-full.bin \
+esptool --chip esp32 merge-bin -o dist/grilly-plus-$(date +%Y-%m-%d)-full.bin \
   --flash-mode dio --flash-size 4MB \
   0x1000 .pio/build/esp32dev/bootloader.bin \
   0x8000 .pio/build/esp32dev/partitions.bin \

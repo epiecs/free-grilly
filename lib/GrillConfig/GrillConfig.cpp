@@ -48,7 +48,7 @@ void GrillConfig::load_settings(){
     // * Read from nvs
     // ***********************************
     // Grill
-    config::grill_name                = config::settings_storage.getString("grill_name", "Free-Grilly");
+    config::grill_name                = config::settings_storage.getString("grill_name", "Grilly+");
     config::grill_uuid                = config::settings_storage.getString("grill_uuid", "");
 
     config::temperature_unit          = config::settings_storage.getString("temp_unit");
@@ -67,7 +67,7 @@ void GrillConfig::load_settings(){
 
     config::mqtt_broker               = config::settings_storage.getString("mqtt_broker");
     config::mqtt_port                 = config::settings_storage.getInt("mqtt_port", 1883);
-    config::mqtt_topic                = config::settings_storage.getString("mqtt_topic", "free-grilly");
+    config::mqtt_topic                = config::settings_storage.getString("mqtt_topic", "grilly-plus");
     config::mqtt_user                 = config::settings_storage.getString("mqtt_user");
     config::mqtt_password             = config::settings_storage.getString("mqtt_password");
 
@@ -181,7 +181,7 @@ void GrillConfig::initialize_settings(){
     // * Store initial values
     // ***********************************
 
-    config::settings_storage.putString("grill_name", "Free-Grilly");
+    config::settings_storage.putString("grill_name", "Grilly+");
     config::settings_storage.putString("grill_uuid", config::grill_uuid);
 
     config::settings_storage.putString("temp_unit", config::temperature_unit);

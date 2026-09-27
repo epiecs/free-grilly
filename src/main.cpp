@@ -49,7 +49,7 @@ void setup() {
     // ***********************************
     // * Load nvram settings and init
     // ***********************************
-    config::settings_storage.begin("free-grilly", false);
+    config::settings_storage.begin("free-grilly", false); // Kept from Free-Grilly so settings survive an upgrade
     config::config_helper.load_settings();
     config::config_helper.load_probes();
 

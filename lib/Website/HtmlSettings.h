@@ -4,7 +4,7 @@ const char HTML_SETTINGS[] = R"=====(
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Free Grilly</title>
+        <title>Grilly+</title>
 
         <link rel="stylesheet" type="text/css" href="custom-boostrap.min.css">
 
@@ -296,13 +296,13 @@ const char HTML_SETTINGS[] = R"=====(
         <div class="row mt-2">
             <div class="col-sm-12">
             <dl>
-                <dt>Topics free-grilly publishes to</dt>
+                <dt>Topics Grilly+ publishes to</dt>
                     <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/grill</small></dd>
                     <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/probes</small></dd>
                     <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/settings</small></dd>
                     <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/# (wildcard that receives all messages)</small></dd>
 
-                <dt>Topics free-grilly subscribes to</dt>
+                <dt>Topics Grilly+ subscribes to</dt>
                     <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/config/probes</small></dd>
                     <dd class="font-monospace"><small><span class="prefix">prefix</span>/<span class="uuid">uuid</span>/config/settings</small></dd>
             </dl>

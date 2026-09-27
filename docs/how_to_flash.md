@@ -11,7 +11,7 @@ Before you begin, ensure you have the following:
     * A computer running Windows, macOS, or Linux.
     * [CP210x USB to UART Bridge Drivers](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers) installed. Download and install the drivers appropriate for your operating system.
 * **Firmware File:**
-    * Download the latest `free-grilly-xxxx-xx-xx-full.bin` file from the [Releases page](https://github.com/epiecs/free-grilly/releases) of this repository. Make sure to use the `full` variant.
+    * Download the latest `grilly-plus-xxxx-xx-xx-full.bin` file from the [Releases page](https://github.com/bardesss/grilly-plus/releases) of this repository. Make sure to use the `full` variant.
 
 ## Flash via the expressif web interface - short version without screenshots
 
@@ -25,7 +25,7 @@ Before you begin, ensure you have the following:
 8. Select your correct device again
 9. Click the reset button
 10. You should now see output in the console
-11. Boot your free grilly by holding the side button until you hear beaping
+11. Boot your Grilly+ by holding the side button until you hear beaping
 
 ## Flash via the expressif web interface - long version with screenshots
 
@@ -57,7 +57,7 @@ Before you begin, ensure you have the following:
     ![console reset and output](screenshots/console_reset.png "Console reset and output")
 
 10. You should now see output in the console
-11. Boot your free grilly by holding the side button until you hear beaping
+11. Boot your Grilly+ by holding the side button until you hear beaping
 
 ## Manual Flashing via USB if the web browser does not work
 
@@ -77,15 +77,15 @@ This process will replace the original firmware on your Grilleye Max.
     - **Linux:** Open Terminal and run `ls /dev/ttyUSB*`. Look for something like `/dev/ttyUSB0`.
 3.  **Flash the Firmware:**
     - Open your Terminal or Command Prompt.
-    - Navigate to the directory where you downloaded the `free-grilly.bin` file.
+    - Navigate to the directory where you downloaded the `grilly-plus.bin` file.
     - Run the `esptool.py` command, replacing `<YOUR_SERIAL_PORT>` with the port name you found in step 2:
 
         ```bash
-        esptool.py --port <YOUR_SERIAL_PORT> write_flash 0x0 free-grilly.bin
+        esptool.py --port <YOUR_SERIAL_PORT> write_flash 0x0 grilly-plus.bin
         ```
-        *Example for Linux:* `esptool.py --port /dev/ttyUSB0 write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
-        *Example for Windows:* `esptool.py --port COM3 write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
-        *Example for macOS:* `esptool.py --port /dev/cu.SLAB_USBtoUART write_flash 0x0 free-grilly-merged-yyyy-mm-dd.bin`
+        *Example for Linux:* `esptool.py --port /dev/ttyUSB0 write_flash 0x0 grilly-plus-merged-yyyy-mm-dd.bin`
+        *Example for Windows:* `esptool.py --port COM3 write_flash 0x0 grilly-plus-merged-yyyy-mm-dd.bin`
+        *Example for macOS:* `esptool.py --port /dev/cu.SLAB_USBtoUART write_flash 0x0 grilly-plus-merged-yyyy-mm-dd.bin`
 
 4.  **Wait:** The flashing process will take a minute or two. Do not disconnect the device. `esptool.py` will indicate when it's complete.
 5.  **Reboot:** Once flashing is successful, disconnect and reconnect the USB cable, or power cycle the device. To start the device hold the power button until the Grilleye beeps.

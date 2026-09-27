@@ -16,7 +16,7 @@ char mqtt_json_buffer[3000];
 
 void Mqtt::setup(String mqtt_broker, int mqtt_port){
 
-    Mqtt::client_name            = "free-grilly-" + config::grill_uuid;
+    Mqtt::client_name            = "grilly-plus-" + config::grill_uuid;
     String topic_prefix          = config::mqtt_topic + "/" + config::grill_uuid;
 
     Mqtt::pub_topic_grill        = topic_prefix + "/grill" ;

@@ -16,7 +16,7 @@ char mqtt_opengrill_buffer[3000];
 
 void Opengrill::setup(String opengrill_server, int mqtt_port){
 
-    Opengrill::client_name            = "free-grilly-opengrill-" + config::grill_uuid;
+    Opengrill::client_name            = "grilly-plus-opengrill-" + config::grill_uuid;
     String topic_prefix               = config::opengrill_topic + "/" + config::grill_uuid;
 
     Opengrill::pub_topic_grill        = topic_prefix + "/grill" ;
