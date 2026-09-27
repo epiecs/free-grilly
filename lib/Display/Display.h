@@ -32,6 +32,11 @@ public:
     *	@return true if screen page was switched
     */
    bool show_settings_page(void);
+    /**
+    *	@brief Turns the screen and backlight on with the current brightness and restarts their timeouts
+    *	@return true
+    */
+    bool wake(void);
 
 
 

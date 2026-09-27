@@ -75,6 +75,12 @@ bool disp::show_settings_page(void){
     return true;
 }
 
+bool disp::wake(void){
+    screen_background_pwr(ENABLE);
+    screen_pwr(ENABLE);
+    return true;
+}
+
 bool disp::screen_background_pwr(status_type type){
     switch (type) {
 	case ENABLE:
