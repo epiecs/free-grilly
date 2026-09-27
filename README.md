@@ -27,7 +27,6 @@ Grilly+ is a fork of [Free-Grilly](https://github.com/epiecs/free-grilly) by [Ep
 
 - [Grilly+: Community Firmware for Grilleye Max](#grilly-community-firmware-for-grilleye-max)
   - [Features](#features)
-  - [Apps and integrations](#apps-and-integrations)
   - [API documentation](#api-documentation)
   - [Todo](#todo)
   - [Installation](#installation)
@@ -58,10 +57,6 @@ Grilly+ is a fork of [Free-Grilly](https://github.com/epiecs/free-grilly) by [Ep
 * **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
 * **Opengrill (experimental):** Support for the upcoming Opengrill server by [epiecs](https://github.com/epiecs). The server is not public yet, so leave the Opengrill setting empty.
-
-## Apps and integrations
-
-- An Iphone app created by @rogiernl: https://testflight.apple.com/join/wYTte6sP
 
 ## API documentation
 
