@@ -20,7 +20,7 @@ void JsonUtilities::load_json_status(char *buffer){
     jsondoc["battery_charging"]   = grill::battery_charging;
     jsondoc["wifi_connected"]     = grill::wifi_connected;
     jsondoc["wifi_ssid"]          = config::wifi_ssid;
-    jsondoc["wifi_ip"]            = config::wifi_ip;
+    jsondoc["wifi_ip"]            = grill::wifi_ip;
     jsondoc["wifi_signal"]        = WiFi.RSSI();
     jsondoc["temperature_unit"]   = config::temperature_unit;
 
