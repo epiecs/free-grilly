@@ -20,19 +20,19 @@ First, you'll connect directly to the device to access its settings.
 > Your phone or PC might warn you that this network has "no internet connection." This is normal. If prompted, choose the option to **"Stay Connected"** or  **"Use this network anyway."**
 
 3.  Open a web browser and navigate to the IP address shown on the `L-IP` line (the default is `192.168.200.10`). You should now see the device's web interface.
-![Homescreen](screenshots/interface_home.png "Homescreen")
+![Homescreen](screenshots/app_grill_phone_light.png "Homescreen")
 
 
 ### Part 2: Connecting the Device to Your Home Wi-Fi
 
 Now that you are in the web interface, you can configure the device to join your home network.
 
-1.  In the menu bar, select **Settings** and scroll down to the **Wi-Fi** section.
-2.  Click the **Scan** button and wait for the list of available networks to appear.
-![Settings](screenshots/interface_settings.png "Settings")
+1.  Open **Settings** and find the **Network** card.
+2.  Press **Scan** and wait for the list of available networks to appear, or type your network's name directly.
+![Settings](screenshots/app_settings_desktop_light.png "Settings")
 
 3.  Select your home network from the list and enter your Wi-Fi password.
-4.  Scroll to the bottom of the page and click **Save**.
+4.  Press **Apply network changes** and confirm.
 5.  The device will then connect to your network. You can verify this by bringing up the Info Screen again; it should now display a new IP address assigned by your home router.
 ![device infoscreen](screenshots/device_infoscreen_connected.png "device infoscreen")
 

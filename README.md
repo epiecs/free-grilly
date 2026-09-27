@@ -58,6 +58,18 @@ Grilly+ is a fork of [Free-Grilly](https://github.com/epiecs/free-grilly) by [Ep
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
 * **Opengrill (experimental):** Support for the upcoming Opengrill server by [epiecs](https://github.com/epiecs). The server is not public yet, so leave the Opengrill setting empty.
 
+## Web interface
+
+Open the grill's address in a browser on your phone or computer. The dashboard shows every connected probe; tap one to set its name, a target temperature or a range. Settings save themselves.
+
+<p>
+  <img src="docs/screenshots/app_grill_phone_dark.png" alt="Grill view on a phone, dark theme" width="260">
+  <img src="docs/screenshots/app_editor_phone_dark.png" alt="Probe editor on a phone" width="260">
+  <img src="docs/screenshots/app_settings_phone_dark.png" alt="Settings on a phone" width="260">
+</p>
+
+<img src="docs/screenshots/app_grill_desktop_dark.png" alt="Grill view on a desktop" width="800">
+
 ## API documentation
 
 - Api documentation is include in the [openapi.yaml file](docs/openapi.yaml)
