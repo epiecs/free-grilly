@@ -178,11 +178,17 @@ bool disp::display_update(void) {
     else if (config::beep_volume == 1)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_1);}
     else if (config::beep_volume == 0)  { screen.drawXBMP(88 - notification_offset, 0, 8, 6, volume_mute);}
     
+    // A details page for a probe that was unplugged since the page was selected no longer exists,
+    // fall back to the overview instead of reading past the end of the connected probes
+    std::pair<int, std::vector<int>> connectedProbeInfo = get_connected_probes();
+    if (current_screen_page > 0 and current_screen_page < 9 and current_screen_page > (int)connectedProbeInfo.second.size()) {
+        current_screen_page = 0;
+    }
+
     if(current_screen_page == 0) {draw_screen_temp();}
     else if (current_screen_page > 0 and current_screen_page < 9) {
         screen.setFont(u8g2_font_4x6_tr);
         screen.drawStr(2, 6, "Details");
-        std::pair<int, std::vector<int>> connectedProbeInfo = get_connected_probes();
         draw_screen_details(connectedProbeInfo.second[current_screen_page-1]);
     }
     else if (current_screen_page == 10) {draw_screen_info();}
