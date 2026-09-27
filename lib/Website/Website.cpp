@@ -6,7 +6,6 @@
 #include "Web.h"
 
 #include "WebApp.h"
-#include "HtmlProbes.h"
 #include "HtmlSettings.h"
 #include "HtmlAbout.h"
 
@@ -16,7 +15,7 @@
 extern WebServer webserver;
 
 void setup_web_routes() {
-    web::webserver.on("/probes", get_probes);
+    web::webserver.on("/probes", [](){ redirect_to("/"); });
     web::webserver.on("/settings", get_settings);
     web::webserver.on("/about", get_about);
     
@@ -44,10 +43,6 @@ void get_index() {
 void redirect_to(const char* location) {
     web::webserver.sendHeader("Location", location);
     web::webserver.send(302, "text/plain", "");
-}
-
-void get_probes() {
-    web::webserver.send(200, "text/html", HTML_PROBES);
 }
 
 void get_settings() {

@@ -178,3 +178,71 @@ body.offline .live { opacity: .4; }
 .probe-card[data-status="high"] .probe-status { color: var(--warn); font-weight: 600; }
 .empty-sockets { margin: 14px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
 .no-probes { padding: 32px 16px; text-align: center; color: var(--muted); }
+
+/* Probe editor: bottom sheet on phones, side panel on wide screens */
+.sheet-backdrop { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .45); opacity: 0; transition: opacity .2s; }
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 31;
+  max-height: 90vh; overflow-y: auto;
+  padding: 8px 18px calc(22px + env(safe-area-inset-bottom));
+  background: var(--surface); border-radius: 22px 22px 0 0;
+  transform: translateY(100%); transition: transform .25s ease-out;
+}
+.sheet-open .sheet-backdrop { opacity: 1; }
+.sheet-open .sheet { transform: none; }
+.sheet-grab { width: 40px; height: 4px; margin: 4px auto 10px; border-radius: 2px; background: var(--border); }
+.sheet-head { display: flex; align-items: center; gap: 10px; }
+.sheet-head h2 { margin: 0 auto 0 0; font-size: 19px; }
+.sheet-live { margin: 2px 0 4px; font-size: 14px; color: var(--muted); }
+.icon-button {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border: 0; border-radius: 12px; background: var(--surface-2); cursor: pointer;
+}
+.save-note { font-size: 13px; color: var(--muted); }
+.save-note.saved { color: var(--good); }
+.save-note.error { color: var(--bad); }
+@media (min-width: 768px) {
+  .sheet { left: auto; top: 0; width: 400px; max-height: none; border-radius: 22px 0 0 22px; padding-top: 20px; transform: translateX(100%); }
+  .sheet-grab { display: none; }
+}
+
+/* Form controls shared by the editor and the settings view */
+fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.field { display: block; margin-top: 14px; }
+.field > span, .field-label, legend { display: block; margin-bottom: 6px; padding: 0; font-size: 13px; color: var(--muted); }
+.field input, .field select {
+  width: 100%; min-height: 44px; padding: 8px 12px;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--bg);
+}
+.segmented { margin-top: 14px; }
+.segmented .options { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--bg); }
+.segmented label { flex: 1; position: relative; }
+.segmented input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.segmented label span {
+  display: flex; align-items: center; justify-content: center; min-height: 40px;
+  border-radius: 9px; font-size: 14px; color: var(--muted); cursor: pointer;
+}
+.segmented input:checked + span { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+.segmented input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+.stepper { display: flex; align-items: center; gap: 8px; padding: 6px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); }
+.step-btn {
+  display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  width: 48px; height: 48px; border: 0; border-radius: 12px; background: var(--surface-2);
+  cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none;
+}
+.step-value { flex: 1; display: flex; align-items: baseline; justify-content: center; gap: 4px; }
+.step-value input {
+  width: 4.5ch; padding: 0; border: 0; background: none; text-align: right;
+  font-size: 28px; font-weight: 700; -moz-appearance: textfield; appearance: textfield;
+}
+.step-value input::-webkit-outer-spin-button,
+.step-value input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.step-suffix { font-size: 15px; color: var(--muted); }
+details.probe-type { margin-top: 18px; padding-top: 4px; border-top: 1px solid var(--border); }
+details.probe-type summary {
+  display: flex; align-items: center; justify-content: space-between; min-height: 48px;
+  cursor: pointer; list-style: none;
+}
+details.probe-type summary::-webkit-details-marker { display: none; }
+details.probe-type[open] summary .icon { transform: rotate(90deg); }
+.summary-value { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
