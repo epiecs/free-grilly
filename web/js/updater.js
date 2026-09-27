@@ -19,6 +19,20 @@
     return null;
   }
 
+  // Changing the admin password and installing firmware both need the current admin password, when one is set
+  function currentPasswordMissing(show) {
+    const settings = Settings.current();
+    if (!settings || !settings.admin_password_set || authInput.value !== "") return false;
+    show("Enter the current admin password first.");
+    authInput.focus();
+    return true;
+  }
+
+  function changeAdmin(password) {
+    if (currentPasswordMissing((text) => Controls.showNote(note, "error", new Error(text)))) return;
+    saver.change({ admin_password: password }, { immediate: true });
+  }
+
   function setProgress(fraction) {
     progress.firstElementChild.style.width = Math.round(fraction * 100) + "%";
   }
@@ -26,6 +40,7 @@
   async function runUpdate() {
     const file = fileInput.files[0];
     if (!file) return;
+    if (currentPasswordMissing((text) => { notice.textContent = text; })) return;
     updateButton.disabled = true;
     fileInput.disabled = true;
     progress.hidden = false;
@@ -56,13 +71,13 @@
     card.innerHTML =
       '<h2 class="card-title"><span>Firmware updates</span><span class="save-note" role="status"></span></h2>' +
       '<p>Installed version: <strong data-version></strong></p>' +
+      '<label class="field" data-auth-field><span>Current admin password</span><input type="password" autocomplete="current-password" data-auth></label>' +
       '<label class="field"><span>Admin password</span><input type="password" autocomplete="new-password" data-admin></label>' +
       '<button type="button" class="link-button" data-admin-remove>Remove saved password</button>' +
       '<p class="warning" data-warning>No admin password is set. Anyone on your network can install firmware.</p>' +
       '<h3 class="subheading">Install an update</h3>' +
       '<label class="field"><span>Firmware file</span><input type="file" accept=".bin" data-file></label>' +
       '<p class="hint">Use the grilly-plus-…-ota.bin file from the releases page.</p>' +
-      '<label class="field" data-auth-field><span>Admin password for this update</span><input type="password" autocomplete="current-password" data-auth></label>' +
       '<button type="button" class="button primary" data-update disabled>Update</button>' +
       '<div class="progress upload" hidden><i></i></div>' +
       '<p class="notice" role="status"></p>';
@@ -80,16 +95,20 @@
     notice = card.querySelector(".notice");
 
     saver = createSaver({
-      send: (fields) => Api.post("/api/settings", fields),
+      send: async (fields) => {
+        const result = await Api.post("/api/settings", fields, 5000, authInput.value);
+        authInput.value = fields.admin_password;   // the new password is the current one from now on
+        return result;
+      },
       onStatus: (state, detail) => {
         Controls.showNote(note, state, detail);
         if (state === "saved" && detail) Settings.fill(detail);
       },
     });
     adminInput.addEventListener("change", () => {
-      if (adminInput.value !== "") saver.change({ admin_password: adminInput.value }, { immediate: true });
+      if (adminInput.value !== "") changeAdmin(adminInput.value);
     });
-    adminRemove.addEventListener("click", () => saver.change({ admin_password: "" }, { immediate: true }));
+    adminRemove.addEventListener("click", () => changeAdmin(""));
     fileInput.addEventListener("change", () => { updateButton.disabled = !fileInput.files[0]; notice.textContent = ""; });
     updateButton.addEventListener("click", runUpdate);
     return card;
@@ -99,7 +118,7 @@
     const isSet = !!settings.admin_password_set;
     version.textContent = settings.firmware_version;
     adminInput.placeholder = isSet ? "Saved, type to change" : "Not set";
-    if (document.activeElement !== adminInput) adminInput.value = "";
+    if (document.activeElement !== adminInput && !saver.hasPending()) adminInput.value = "";
     adminRemove.hidden = !isSet;
     warning.hidden = isSet;
     authField.hidden = !isSet;

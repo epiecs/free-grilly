@@ -118,10 +118,10 @@ Once Grilly+ is installed, you can update to newer versions wirelessly:
 
   1. Download the latest `grilly-plus-yyyy-mm-dd-ota.bin` from Releases.
   2. Open the web interface and go to **Settings**, then **Firmware updates**.
-  3. Choose the downloaded `-ota.bin` file and press **Update**. If you set an admin password, enter it for the update.
+  3. Choose the downloaded `-ota.bin` file and press **Update**. If you set an admin password, enter it under **Current admin password** first.
   4. Wait while it uploads and installs. The grill restarts on its own and the page reloads.
 
-Set an admin password in the same card so only you can install firmware.
+Set an admin password in the same card so only you can install firmware. Once it is set, changing or removing it needs the current one (the web app asks for it, the API takes it as Basic auth with user `admin`). It can't be changed over MQTT.
 
 ## Supported probes
 

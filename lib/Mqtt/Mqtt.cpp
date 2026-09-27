@@ -101,7 +101,7 @@ void Mqtt::receive_callback(char* topic, byte* payload, unsigned int length){
         if(is_probes){
             result = config::json_handler.save_json_probes(mqtt_json_buffer);
         } else {
-            result = config::json_handler.save_json_settings(mqtt_json_buffer);
+            result = config::json_handler.save_json_settings(mqtt_json_buffer, false, true);
         }
     }
 

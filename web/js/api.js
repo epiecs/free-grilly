@@ -33,10 +33,19 @@ const Api = (() => {
     return request(path, {}, timeoutMs);
   }
 
-  function post(path, data, timeoutMs = 5000) {
+  // Basic auth with user admin, the password utf-8 encoded
+  function adminAuthorization(password) {
+    const credentials = new TextEncoder().encode("admin:" + password);
+    return "Basic " + btoa(String.fromCharCode(...credentials));
+  }
+
+  // password: the current admin password, needed to change or remove it
+  function post(path, data, timeoutMs = 5000, password = "") {
+    const headers = { "Content-Type": "application/json" };
+    if (password) headers.Authorization = adminAuthorization(password);
     return request(path, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(data),
     }, timeoutMs);
   }
@@ -48,10 +57,7 @@ const Api = (() => {
       xhr.open("POST", path);
       xhr.timeout = 180000;
       xhr.setRequestHeader("X-Grilly-Update", "1");
-      if (password) {
-        const credentials = new TextEncoder().encode("admin:" + password);
-        xhr.setRequestHeader("Authorization", "Basic " + btoa(String.fromCharCode(...credentials)));
-      }
+      if (password) xhr.setRequestHeader("Authorization", adminAuthorization(password));
       xhr.upload.onprogress = (event) => { if (event.lengthComputable) onProgress(event.loaded / event.total); };
       xhr.onload = () => {
         let body = null;

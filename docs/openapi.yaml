@@ -406,7 +406,7 @@ components:
           type: string
           writeOnly: true
           example: "********"
-          description: Password for firmware updates on /update (username admin). Firmware updates are open to anyone while it is empty. Write-only, never returned. Leave it out to keep the saved password, send "" to remove it.
+          description: Password for firmware updates on /api/update (username admin). Firmware updates are open to anyone while it is empty. Write-only, never returned. Leave it out to keep the saved password, send "" to remove it. While one is set, changing or removing it needs the current one as HTTP Basic auth (username admin), otherwise the whole request is rejected with 401. It can't be changed over MQTT.
         admin_password_set:
           type: boolean
           readOnly: true
@@ -510,7 +510,11 @@ paths:
         - settings
       summary: Grill settings
       description: >
-        Endpoint to edit settings
+        Endpoint to edit settings. Changing or removing a set `admin_password` needs the current
+        admin password as HTTP Basic auth with username `admin`.
+      security:
+        - {}
+        - basicAuth: []
       requestBody:
         required: true
         description: Settings to set
@@ -527,6 +531,16 @@ paths:
                 $ref: '#/components/schemas/Settings'
         '400':
           $ref: '#/components/responses/400'
+        '401':
+          description: The body changes admin_password while one is set, without the current one as Basic auth. Nothing was changed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "The current admin password is needed to change it"
 
   /wifiscan:
     get:
