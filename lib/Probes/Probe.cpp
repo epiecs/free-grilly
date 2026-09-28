@@ -183,9 +183,11 @@ void Probe::check_temperature_status(){
 
                 //* Almost ready temperature beep
                 if(Probe::temperature >= (Probe::target_temperature - config::beep_degrees_before) && Probe::has_beeped_before == false){
-                    Probe::has_beeped_before = true;   
-                    
-                    grill::buzzer.beep(3, 400);
+                    Probe::has_beeped_before = true;
+
+                    // Played by the alarm task: beeping here blocked the probe readings for about
+                    // 2.4 seconds and could cut off a beep the alarm task was playing
+                    Probe::warn_before = true;
                 }
 
                 //* Reset the beep if the almost temperature drops way too low
