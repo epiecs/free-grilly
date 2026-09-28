@@ -21,6 +21,10 @@ Grilly+ is the same firmware Free-Grilly users already know, with a new web app 
 * **A generated hotspot password** on new or factory-reset devices, shown on the device's Info screen, so the local access point isn't open to anyone in range by default.
 * **Tighter security around settings and updates:** passwords are never returned by the API, and cross-site pages can no longer change your settings or push a firmware update.
 * **A round of reliability fixes:** the grill boots back up on its own after an update, a crash or a factory reset; a saved static IP that's missing a gateway now falls back to DHCP instead of going unreachable; empty probe sockets no longer flicker; and muted alarms stay muted when you save a probe.
+* **Reach it by name:** `http://grilly-plus-xxxxxxxx.local` instead of looking up an IP address.
+* **Mute from your phone:** a sounding alarm can be muted from the web app or over MQTT, and the card of the probe that triggered it is highlighted.
+* **Calibration offset** per probe, for probes that read a little high or low.
+* **Diagnostics:** the About page shows why the grill last restarted or switched off, and the battery voltage.
 
 See the [Features](#features) list below for the full picture, and [changelog.md](changelog.md) for the detailed history.
 
@@ -59,10 +63,10 @@ See the [Features](#features) list below for the full picture, and [changelog.md
 
 * **On-Device Temperature Display:** Shows current probe temperatures directly on the Grilleye Max screen.
 * **Audible Alerts:** The device beeps to notify you when temperatures go outside a set range or when food is nearing its target temperature, following the "Beep when ready" and "Beep outside target" settings, and it won't replay an alarm you already muted just because you renamed a probe or saved a setting. A sounding alarm can also be muted from the web app or over MQTT, not just the device's button, and the web app highlights the specific probe card(s) that triggered it.
-* **New web app:** a dashboard with a card per connected probe. Tap one to set its name, target temperature or a min/max range, with large steppers for quick adjustments. Settings save themselves, network changes are applied together with one button, and the app works equally well on a phone or a desktop, in a dark or light theme that follows the device.
+* **New web app:** a dashboard with a card per connected probe. Tap one to set its name, target temperature or a min/max range, with large steppers for quick adjustments. Settings save themselves, network changes are applied together with one button, password fields have a show/hide button, and the app works equally well on a phone or a desktop, in a dark or light theme that follows the device.
 * **Dual Web Access:** Access the web interface via:
     * A local Access Point (AP) mode (`http://192.168.200.10`) for initial setup.
-    * Your home WiFi network (once configured) using the device's local IP address.
+    * Your home WiFi network (once configured) using the device's local IP address. The About page shows both addresses.
 * **mDNS discovery:** the grill is also reachable at `http://grilly-plus-xxxxxxxx.local`, no IP lookup needed, both on your home WiFi and on its own hotspot. The exact address is shown on the device's Info screen and the web app's About page. Some Android versions don't resolve `.local` names in the browser; the IP address still works there.
 * **Diagnostics on the About page:** battery voltage plus why the grill last restarted or was switched off (crash, watchdog, update, button, factory reset, ...), so an unexpected power-off no longer needs guesswork.
 * **Generated hotspot password:** new and factory-reset devices get a random hotspot password, shown on the device's Info screen, instead of an open access point. Devices upgraded from an earlier version keep whatever hotspot password (or lack of one) they already had.
@@ -75,10 +79,10 @@ See the [Features](#features) list below for the full picture, and [changelog.md
 * **Local REST API:** Provides a RESTful API endpoint on the device for integration with custom scripts, home automation systems, or other applications. Passwords are never returned by the API, and cross-site pages can't change your settings or push a firmware update.
 * **MQTT support:** All data (grill status/probes/settings/`connected_seconds`) is sent to an mqtt topic. You can also configure probes and settings via mqtt, including partial updates that only change the keys you send.
   * [Mqtt documentation](docs/mqtt.md)
-* **Battery Management:** Includes functional battery monitoring and management based on the device's hardware.
-* **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press).
+* **Battery Management:** Includes functional battery monitoring and management based on the device's hardware. A failed fuel-gauge reading is detected and ignored instead of showing up as 65535 %.
+* **Button Functionality:** The side button works for powering the device on/off and performing a factory reset (via long 10 seconds press). It's debounced, so electrical noise can't cut a long press short or fake a press.
 * **Persistent Settings:** All your configuration settings are saved directly on the device's non-volatile memory.
-* **Reliability:** the grill boots straight back up after a firmware update, a factory reset, or an unexpected crash, instead of needing the button held; a saved static IP with a missing gateway falls back to DHCP instead of leaving the device unreachable.
+* **Reliability:** the grill boots straight back up after a firmware update, a factory reset, or an unexpected crash, instead of needing the button held; a saved static IP with a missing gateway falls back to DHCP instead of leaving the device unreachable. The early warning beep no longer pauses probe readings, and data shared between the firmware's tasks is locked so it can't be read while it's being changed.
 * **Opengrill (experimental):** Support for the upcoming Opengrill server by [epiecs](https://github.com/epiecs). The server is not public yet, so leave the Opengrill setting empty.
 
 ## Web interface
