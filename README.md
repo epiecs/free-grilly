@@ -63,6 +63,7 @@ See the [Features](#features) list below for the full picture, and [changelog.md
 * **Dual Web Access:** Access the web interface via:
     * A local Access Point (AP) mode (`http://192.168.200.10`) for initial setup.
     * Your home WiFi network (once configured) using the device's local IP address.
+* **mDNS discovery:** the grill is also reachable at `http://grilly-plus-xxxxxxxx.local`, no IP lookup needed, both on your home WiFi and on its own hotspot. The exact address is shown on the device's Info screen and the web app's About page. Some Android versions don't resolve `.local` names in the browser; the IP address still works there.
 * **Generated hotspot password:** new and factory-reset devices get a random hotspot password, shown on the device's Info screen, instead of an open access point. Devices upgraded from an earlier version keep whatever hotspot password (or lack of one) they already had.
 * **Probe Flexibility:**
     * **Custom Probe Configuration:** Manually configure support for various NTC thermistor probes by entering their specific resistance (kΩ at reference temperature), reference temperature (°C), and Beta coefficient value.
@@ -108,7 +109,7 @@ For installation please refer to the [Flashing guide](docs/how_to_flash.md)
 4.  **Connect to AP:** Using your phone or computer, connect to this new WiFi network.
 5.  **Access Web Interface:** Open a web browser and navigate to `http://192.168.200.10`.
 6.  **Configure WiFi:** Find the "Settings" or "WiFi Configuration" page in the web interface. Select your home WiFi network (SSID), enter the password, and save.
-7.  **Reconnect:** The Grilleye Max should now connect to your own WiFi network. Its IP address will now be assigned by your router  (The local ap will keep on working as well).
+7.  **Reconnect:** The Grilleye Max should now connect to your own WiFi network. Its IP address will now be assigned by your router  (The local ap will keep on working as well). You can also reach it at `http://grilly-plus-xxxxxxxx.local` instead of looking up the IP; the exact address is on the device's Info screen and the web app's About page.
 
 ## Usage
 

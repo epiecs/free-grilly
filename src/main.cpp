@@ -18,6 +18,7 @@
 #include "Web.h"
 #include "Display.h"
 #include "SharedLock.h"
+#include "Util.h"
 
 #include "esp_heap_caps.h"
 
@@ -55,6 +56,10 @@ void setup() {
     config::settings_storage.begin("free-grilly", false); // Kept from Free-Grilly so settings survive an upgrade
     config::config_helper.load_settings();
     config::config_helper.load_probes();
+
+    // Computed once here, right after the uuid is loaded from NVS and before WiFi starts, so both
+    // WiFi.setHostname() and the mDNS responder can use it.
+    strlcpy(grill::hostname, compute_grill_hostname(config::grill_uuid).c_str(), sizeof(grill::hostname));
 
     // ***********************************
     // * Power button bootup
@@ -162,8 +167,10 @@ void setup() {
     WiFi.mode(WIFI_AP_STA); // AP + STATION
     WiFi.setSleep(false);   // Disable wifi powersaving for a more
                             // stable connection and lower latency
+    WiFi.setHostname(grill::hostname); // Must precede WiFi.begin() (in connect_to_wifi) to take effect
 
     start_local_ap();
+    start_mdns(); // Works on both the AP and STA interfaces, and follows STA connects/reconnects on its own
     delay(1000);            //Needed to give the power rail time to adjust
 
     if(config::wifi_ssid != ""){

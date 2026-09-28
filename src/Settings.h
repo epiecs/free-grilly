@@ -175,6 +175,7 @@ namespace grill{
     char wifi_ip[16]                    = "";
     int wifi_signal                     = -99;
     bool internet_connectivity          = false;
+    char hostname[32]                   = "";
 
     // ***********************************
     // * Battery

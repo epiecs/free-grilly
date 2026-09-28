@@ -41,7 +41,7 @@ Now that you are in the web interface, you can configure the device to join your
 Once the device is connected to your home Wi-Fi, you can access it like any other network device.
 
 1.  Reconnect your phone or computer back to your primary home Wi-Fi network.
-2.  Open a web browser and enter the **new** IP address shown on the device's Info Screen (on the `IP` line).
+2.  Open a web browser and enter the **new** IP address shown on the device's Info Screen (on the `IP` line). You can also use the `.local` address shown on the `HOST` line (e.g. `http://grilly-plus-xxxxxxxx.local`) instead of looking up the IP each time. Some Android versions don't resolve `.local` names in the browser, so the IP address is the fallback there.
 3.  You can now interact with your device from anywhere on your local network.
 
 > [!Note]
