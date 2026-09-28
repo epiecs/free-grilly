@@ -127,27 +127,24 @@ main { max-width: 1100px; margin: 0 auto; padding: 4px 16px calc(112px + env(saf
 }
 body.offline .live { opacity: .4; }
 
-/* Alarm mute control: fixed above the floating glass nav bar on phones, near the top on wide screens */
-.alarm-mute-wrap {
-  position: fixed; z-index: 25; left: 16px; right: 16px;
-  bottom: calc(88px + env(safe-area-inset-bottom));
-  display: flex; justify-content: center;
-}
+/* Alarm mute control: a full-width bar in the normal page flow, directly under the top bar, so it
+   pushes content down instead of covering it. Same layout on phones and wide screens. */
+.alarm-mute-wrap { margin: 0 16px 10px; }
 .alarm-mute-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px;
+  display: flex; width: 100%; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 18px; border: 0; border-radius: 12px;
   background: var(--bad); color: var(--on-bad); font-weight: 700; font-size: 14px;
-  box-shadow: var(--glass-shadow); cursor: pointer;
+  cursor: pointer;
 }
 .alarm-mute-btn .icon { width: 20px; height: 20px; }
 .alarm-mute-btn:disabled { opacity: .6; cursor: default; }
 .alarm-mute-btn { animation: alarm-pulse 1.4s ease-in-out infinite; }
 @keyframes alarm-pulse {
-  0%, 100% { box-shadow: var(--glass-shadow); }
-  50% { box-shadow: var(--glass-shadow), 0 0 0 6px var(--accent-soft); }
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-soft); }
+  50% { box-shadow: 0 0 0 6px var(--accent-soft); }
 }
 @media (min-width: 768px) {
-  .alarm-mute-wrap { top: 76px; bottom: auto; }
+  .alarm-mute-wrap { max-width: 1100px; margin: 0 auto 16px; padding: 0 24px; }
 }
 
 /* Shared building blocks */
