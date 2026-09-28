@@ -419,8 +419,12 @@ void task_alarm(void* pvParameters) {
         //* Check for alarms and early warnings
         Probe* probes[] = {&grill::probe_1, &grill::probe_2, &grill::probe_3, &grill::probe_4,
                            &grill::probe_5, &grill::probe_6, &grill::probe_7, &grill::probe_8};
-        for (Probe* probe : probes){
-            if(probe->alarm){ alarm++; }
+        for (size_t i = 0; i < 8; i++){
+            Probe* probe = probes[i];
+            if(probe->alarm){
+                alarm++;
+                grill::alarm_probes |= (1 << i);
+            }
             if(probe->warn_before){
                 probe->warn_before = false;
                 warn_before = true;
@@ -457,6 +461,7 @@ void task_alarm(void* pvParameters) {
         }
 
         grill::alarm_sounding = alarm_beep_todo > 0;
+        if(!grill::alarm_sounding){ grill::alarm_probes = 0; }
 
         delay(100);
     }

@@ -58,7 +58,7 @@ See the [Features](#features) list below for the full picture, and [changelog.md
 ## Features
 
 * **On-Device Temperature Display:** Shows current probe temperatures directly on the Grilleye Max screen.
-* **Audible Alerts:** The device beeps to notify you when temperatures go outside a set range or when food is nearing its target temperature, following the "Beep when ready" and "Beep outside target" settings, and it won't replay an alarm you already muted just because you renamed a probe or saved a setting. A sounding alarm can also be muted from the web app or over MQTT, not just the device's button.
+* **Audible Alerts:** The device beeps to notify you when temperatures go outside a set range or when food is nearing its target temperature, following the "Beep when ready" and "Beep outside target" settings, and it won't replay an alarm you already muted just because you renamed a probe or saved a setting. A sounding alarm can also be muted from the web app or over MQTT, not just the device's button, and the web app highlights the specific probe card(s) that triggered it.
 * **New web app:** a dashboard with a card per connected probe. Tap one to set its name, target temperature or a min/max range, with large steppers for quick adjustments. Settings save themselves, network changes are applied together with one button, and the app works equally well on a phone or a desktop, in a dark or light theme that follows the device.
 * **Dual Web Access:** Access the web interface via:
     * A local Access Point (AP) mode (`http://192.168.200.10`) for initial setup.

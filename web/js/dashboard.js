@@ -24,6 +24,7 @@
   function fill(card, probe, unit) {
     const status = Format.probeStatus(probe);
     card.dataset.status = status.kind;
+    card.classList.toggle("alarming", !!probe.alarm);
     card.querySelector(".probe-name").textContent = probe.probe_id + " · " + probe.name;
     card.querySelector(".probe-alarm").textContent = Format.alarmLabel(probe);
     card.querySelector(".value").textContent = Format.number(probe.temperature);
@@ -31,10 +32,11 @@
     const progress = card.querySelector(".progress");
     progress.hidden = status.progress === null;
     if (status.progress !== null) progress.firstElementChild.style.width = Math.round(status.progress * 100) + "%";
-    card.querySelector(".probe-status").textContent = status.text;
+    const statusText = probe.alarm ? ("Alarm" + (status.text ? " · " + status.text : "")) : status.text;
+    card.querySelector(".probe-status").textContent = statusText;
     card.querySelector(".probe-time").textContent = Format.duration(probe.connected_seconds);
     card.setAttribute("aria-label",
-      probe.name + ", " + Format.temperature(probe.temperature, unit) + (status.text ? ", " + status.text : "") + ". Edit probe");
+      probe.name + ", " + Format.temperature(probe.temperature, unit) + (statusText ? ", " + statusText : "") + ". Edit probe");
   }
 
   function render(status) {

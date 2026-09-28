@@ -17,6 +17,9 @@ namespace grill {
     extern Buzzer buzzer;
     // True while an alarm is actively beeping, written only by task_alarm
     extern volatile bool alarm_sounding;
+    // Bitmask of probes that caused the current alarm, bit (n-1) for probe n. Written only by
+    // task_alarm, cleared with alarm_sounding once the alarm is finished or muted.
+    extern volatile uint8_t alarm_probes;
 
     // Wifi
     extern bool wifi_connected;
