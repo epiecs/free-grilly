@@ -1,5 +1,11 @@
 # Changelog (firmware only)
 
+## 2026-09-28.1
+Hotfix for 2026-09-28. Everyone who installed 2026-09-28 should update: install it from Settings > Firmware updates with the `-ota.bin` file.
+
+### Fixes
+- After upgrading to 2026-09-28 from an older version, all probes showed as unplugged. The new calibration offset was missing from the stored settings and was read as "not a number", which made every reading invalid. A missing or invalid offset now counts as 0, and the stored settings repair themselves on the next save
+
 ## 2026-09-28
 Tested on a real Grilleye Max. Install it from Settings > Firmware updates with the `-ota.bin` file.
 
