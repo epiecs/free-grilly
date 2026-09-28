@@ -269,16 +269,30 @@ You can connect your free-grilly to your current home assistant installation whe
 
 ## Contributing
 
-We welcome contributions to help improve Free-Grilly! Whether it's fixing bugs, adding features, improving documentation, or testing, your input is valuable.
+Contributions to Free-Grilly are welcome!
 
-Here's how you can contribute:
+Bug fixes, features, documentation improvements, testing, and other improvements can all help make the project better.
 
-* **Reporting Issues:** If you find a bug or have an idea for a new feature, please check the existing [Issues](https://github.com/epiecs/free-grilly/issues) first. If it hasn't been reported, please open a new issue, providing as much detail as possible.
-  **Submitting Changes (Pull Requests):** If you'd like to contribute code or documentation changes:
-    1.  Fork the repository.
-    2.  Create a new branch for your changes (`git checkout -b feature/your-feature-name`).
-    3.  Make your changes and commit them with clear messages.
-    4.  Push your branch to your fork (`git push origin feature/your-feature-name`).
-    5.  Open a [Pull Request](https://github.com/epiecs/free-grilly/pulls) against the main branch of this repository.
+Please keep in mind that submitting a contribution does not guarantee that it will be merged. Changes need to fit the goals, design, and maintainability of the upstream Free-Grilly project.
 
-Thank you for considering contributing to Free-Grilly!
+### Reporting Issues
+
+If you find a bug or have an idea for a new feature:
+
+1. Check the existing Issues first to see if it has already been reported or discussed.
+2. If it hasn't, open a new issue and provide as much detail as possible.
+3. For bugs, please include steps to reproduce the problem and any relevant logs or device behaviour.
+4. For feature requests, explain the problem you are trying to solve rather than only describing the proposed implementation.
+
+### Before Starting Larger Changes
+
+For larger changes, new features, architectural changes, or changes to existing behaviour, please open an issue first so the proposed approach can be discussed before significant implementation work is done.
+
+Some behaviour in Free-Grilly may be intentional even when another implementation would also be valid. Discussing larger changes beforehand helps avoid spending significant effort on something that may not fit the direction of the upstream project.
+
+### Submitting Pull Requests
+
+If you'd like to contribute code or documentation:
+
+1. Fork the repository.
+2. Create a new branch for your change:
