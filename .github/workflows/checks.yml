@@ -36,6 +36,10 @@ jobs:
       - name: Web app tests
         run: node --test "web/tests/*.test.js"
 
+      # Host tests for the hardware-independent libraries (lib/History)
+      - name: Firmware unit tests
+        run: pio test -e native
+
       # tools/build_web.py runs as a pre-build step and fails the build when the gzipped page
       # grows beyond its size limit
       - name: Build firmware
