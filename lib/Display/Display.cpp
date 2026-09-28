@@ -441,25 +441,25 @@ bool disp::draw_screen_info(void){
 
     screen.setFont(u8g2_font_4x6_tr);
     // Grill info
-    screen.drawStr(10, 15, "NAME:");
-    screen.setCursor(33, 15); screen.print(config::grill_name);
-    screen.drawStr(18, 22, "FW: ");
-    screen.setCursor(33, 22); screen.print(config::grill_firmware_version);
+    screen.drawStr(10, 14, "NAME:");
+    screen.setCursor(33, 14); screen.print(config::grill_name);
+    screen.drawStr(18, 21, "FW: ");
+    screen.setCursor(33, 21); screen.print(config::grill_firmware_version);
     // mDNS hostname, without ".local" (20 chars x 4px fits); also shown on the About page
-    screen.drawStr(10, 29, "HOST:");
-    screen.setCursor(33, 29); screen.print(grill::hostname);
+    screen.drawStr(10, 28, "HOST:");
+    screen.setCursor(33, 28); screen.print(grill::hostname);
     // AP info
-    screen.drawStr(10, 36, "SSID:");
-    screen.setCursor(33, 36); screen.print(config::wifi_ssid);
-    screen.drawStr(18, 43, "IP: ");
-    screen.setCursor(33, 43); screen.print(grill::wifi_ip);
+    screen.drawStr(10, 35, "SSID:");
+    screen.setCursor(33, 35); screen.print(config::wifi_ssid);
+    screen.drawStr(18, 42, "IP: ");
+    screen.setCursor(33, 42); screen.print(grill::wifi_ip);
     // local AP info, the password is shown so a generated one can be read off the device
-    screen.drawStr(2, 50, "L-SSID:");
-    screen.setCursor(33, 50); screen.print(config::local_ap_ssid);
-    screen.drawStr(10, 57, "L-PW: ");
-    screen.setCursor(33, 57); screen.print(config::local_ap_password.isEmpty() ? String("(open)") : config::local_ap_password);
-    screen.drawStr(10, 64, "L-IP: ");
-    screen.setCursor(33, 64); screen.print(config::local_ap_ip);
+    screen.drawStr(2, 49, "L-SSID:");
+    screen.setCursor(33, 49); screen.print(config::local_ap_ssid);
+    screen.drawStr(10, 56, "L-PW: ");
+    screen.setCursor(33, 56); screen.print(config::local_ap_password.isEmpty() ? String("(open)") : config::local_ap_password);
+    screen.drawStr(10, 63, "L-IP: ");
+    screen.setCursor(33, 63); screen.print(config::local_ap_ip);
 
     return true;
 }
