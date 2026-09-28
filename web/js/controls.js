@@ -103,5 +103,31 @@ const Controls = (() => {
     return el.contains(document.activeElement);
   }
 
-  return { stepper, showNote, isEditing };
+  // Adds a show/hide button to every password field under root
+  function addPasswordToggles(root) {
+    root.querySelectorAll('input[type="password"]').forEach((input) => {
+      const wrap = document.createElement("span");
+      wrap.className = "password-wrap";
+      input.parentNode.insertBefore(wrap, input);
+      wrap.append(input);
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "reveal-button";
+      button.innerHTML = '<svg class="icon"><use href="#i-eye"/></svg>';
+      button.setAttribute("aria-label", "Show password");
+      button.setAttribute("aria-pressed", "false");
+      button.addEventListener("click", (event) => {
+        event.preventDefault();   // the field sits inside a label, don't let the click reach it
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        button.setAttribute("aria-pressed", String(show));
+        button.setAttribute("aria-label", show ? "Hide password" : "Show password");
+        button.querySelector("use").setAttribute("href", show ? "#i-eye-off" : "#i-eye");
+      });
+      wrap.append(button);
+    });
+  }
+
+  return { stepper, showNote, isEditing, addPasswordToggles };
 })();

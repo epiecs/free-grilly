@@ -213,6 +213,7 @@ const Settings = (() => {
     const grid = el.querySelector(".settings-grid");
     CARDS.forEach((def) => grid.append(buildCard(def)));
     extraCards.forEach((card) => grid.append(card.build()));
+    Controls.addPasswordToggles(grid);
   }
 
   App.register("settings", { mount, show, hide });

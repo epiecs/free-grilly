@@ -26,7 +26,7 @@
 
   function onInput(key) {
     const input = inputs[key];
-    if (input.type === "password") {
+    if (key.endsWith("_password")) {
       if (input.value !== "") dirty[key] = input.value;
       else if (clears[key].checked) dirty[key] = "";
       else delete dirty[key];
@@ -161,7 +161,7 @@
   function fill(settings) {
     Object.entries(inputs).forEach(([key, input]) => {
       if (key in dirty || document.activeElement === input) return;
-      if (input.type === "password") {
+      if (key.endsWith("_password")) {
         const isSet = !!settings[key + "_set"];
         input.value = "";
         input.placeholder = isSet ? "Saved, type to change" : "Not set";

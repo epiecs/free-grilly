@@ -312,3 +312,13 @@ details.advanced summary { display: flex; align-items: center; min-height: 44px;
 .about-list { display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; margin: 0 0 16px; text-align: left; }
 .about-list dt { color: var(--muted); }
 .about-list dd { margin: 0; overflow-wrap: anywhere; }
+
+/* Show/hide button inside password fields */
+.password-wrap { position: relative; display: block; }
+.password-wrap input { padding-right: 52px; }
+.reveal-button {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 48px; min-height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 0 12px 12px 0; background: none; color: var(--muted); cursor: pointer;
+}
+.reveal-button[aria-pressed="true"] { color: var(--accent-text); }
