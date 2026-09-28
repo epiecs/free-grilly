@@ -187,6 +187,9 @@ components:
               connected_seconds:
                 type: integer
                 description: Seconds since the probe was connected, 0 when it is not connected
+              alarm:
+                type: boolean
+                description: True while this probe is one of the causes of a sounding alarm_sounding
             example:
               probe_id: 1
               name: Ambient Probe

@@ -199,6 +199,9 @@ namespace grill{
     Buzzer buzzer;
     // True while an alarm is actively beeping, written only by task_alarm
     volatile bool alarm_sounding        = false;
+    // Bitmask of probes that caused the current alarm, bit (n-1) for probe n. Written only by
+    // task_alarm, cleared with alarm_sounding once the alarm is finished or muted.
+    volatile uint8_t alarm_probes       = 0;
 
     // ***********************************
     // * Probes

@@ -8,6 +8,8 @@ START = time.time()
 # Mock-only: set True to make /api/grill report alarm_sounding, cleared by /api/alarm/mute.
 # POST /api/_mock/alarm sets it True, for testing the web app's mute control without real hardware.
 ALARM_SOUNDING = False
+# Mock-only: probe_id that /api/grill reports as the cause of the sounding alarm, cleared with it.
+ALARM_PROBE_ID = None
 
 SETTINGS = {
     "name": "Big Green Egg", "uuid": "43c62ed2-4dc0-41a5-8f71-16db60155739", "firmware_version": "26.09.27",
@@ -64,7 +66,8 @@ def grill():
             {"probe_id": p["probe_id"], "name": p["name"], "temperature": temperature(p),
              "minimum_temperature": p["minimum_temperature"], "target_temperature": p["target_temperature"],
              "connected": p["connected"],
-             "connected_seconds": int(time.time() - CONNECTED_AT[p["probe_id"]]) if p["connected"] else 0}
+             "connected_seconds": int(time.time() - CONNECTED_AT[p["probe_id"]]) if p["connected"] else 0,
+             "alarm": p["probe_id"] == ALARM_PROBE_ID}
             for p in PROBES
         ],
     }
@@ -99,7 +102,7 @@ WIFI_SCAN = [
 
 def handle(method, path, body, headers=None):
     """Returns (status, json_body) for an /api request."""
-    global ADMIN_PASSWORD, ALARM_SOUNDING
+    global ADMIN_PASSWORD, ALARM_SOUNDING, ALARM_PROBE_ID
     headers = headers or {}
     if method == "GET" and path == "/api/grill":
         return 200, grill()
@@ -107,10 +110,12 @@ def handle(method, path, body, headers=None):
         if not (headers or {}).get("Content-Type", "").startswith("application/json"):
             return 415, {"error": "Content-Type should be application/json"}
         ALARM_SOUNDING = False
+        ALARM_PROBE_ID = None
         return 200, {"success": True}
     if method == "POST" and path == "/api/_mock/alarm":
         # Mock-only helper, not part of the real firmware API: lets the web app be tested without hardware.
         ALARM_SOUNDING = True
+        ALARM_PROBE_ID = 1
         return 200, {"success": True}
     if method == "GET" and path == "/api/probes":
         return 200, probes()

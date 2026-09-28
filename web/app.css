@@ -197,6 +197,14 @@ body.offline .live { opacity: .4; }
 .probe-card[data-status="in-range"] .progress i { background: var(--good); }
 .probe-card[data-status="low"] .probe-status,
 .probe-card[data-status="high"] .probe-status { color: var(--warn); font-weight: 600; }
+/* Card for a probe currently causing a sounding alarm: a red outline that pulses, static under
+   prefers-reduced-motion via the global rule above. */
+.probe-card.alarming { outline: 2px solid var(--bad); outline-offset: -2px; animation: card-alarm-pulse 1.4s ease-in-out infinite; }
+.probe-card.alarming .probe-status { color: var(--bad); font-weight: 600; }
+@keyframes card-alarm-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--bad); }
+  50% { box-shadow: 0 0 0 6px var(--bad); }
+}
 .empty-sockets { margin: 14px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
 .no-probes { padding: 32px 16px; text-align: center; color: var(--muted); }
 
