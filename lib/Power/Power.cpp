@@ -88,9 +88,23 @@ bool bat::chargeFlag(void) {
 	return !is_charging;
 }
 
+// Keeps the last good values when the fuel gauge doesn't answer or answers nonsense. A failed read
+// used to show up as 65535%, which also hid a low battery.
 bool bat::read_battery(void) {
-	grill::battery_percentage  = soc(FILTERED);
-	grill::battery_charging 	= chargeFlag();
+	uint16_t percentage = 0;
+	uint16_t flagState  = 0;
+
+	if (!readWord(BAT_SOC_FILTERED, percentage) || !readWord(BAT_FLAGS, flagState) || percentage > 100) {
+		_readFailures++;
+		if (_readFailures == 1 || _readFailures % 60 == 0) {
+			Serial.printf("Battery: read failed (%u in a row), keeping %d%%\n", _readFailures, grill::battery_percentage);
+		}
+		return false;
+	}
+
+	_readFailures = 0;
+	grill::battery_percentage  = percentage;
+	grill::battery_charging 	= !(flagState & BAT_FLAG_CHARGE);
 	return true;
 }
 
@@ -102,9 +116,18 @@ uint16_t bat::flags(void) {
 }
 
 uint16_t bat::readWord(uint16_t subAddress) {
-	uint8_t data[2];
-	i2cReadBytes(subAddress, data, 2);
-	return ((uint16_t) data[1] << 8) | data[0];
+	uint16_t value = 0;
+	readWord(subAddress, value);
+	return value;
+}
+
+bool bat::readWord(uint16_t subAddress, uint16_t& value) {
+	uint8_t data[2] = {0, 0};
+	if (!i2cReadBytes(subAddress, data, 2)) {
+		return false;
+	}
+	value = ((uint16_t) data[1] << 8) | data[0];
+	return true;
 }
 
 uint16_t bat::readControlWord(uint16_t function) {
@@ -121,19 +144,24 @@ uint16_t bat::readControlWord(uint16_t function) {
 	return false;
 }
 
-uint16_t bat::i2cReadBytes(uint8_t subAddress, uint8_t * dest, uint8_t count) {
-	int16_t timeout = BAT_TIMEOUT;	
+// Returns false when the battery ic doesn't acknowledge or sends fewer bytes than asked. It used to
+// return a constant, so a failed read filled dest with 0xFF (Wire.read() returns -1) unnoticed.
+bool bat::i2cReadBytes(uint8_t subAddress, uint8_t * dest, uint8_t count) {
 	Wire.beginTransmission(_deviceAddress);
 	Wire.write(subAddress);
-	Wire.endTransmission(true);
-	
-	Wire.requestFrom(_deviceAddress, count);
-	
+	if (Wire.endTransmission(true) != 0) {
+		return false;
+	}
+
+	if (Wire.requestFrom(_deviceAddress, count) != count) {
+		return false;
+	}
+
 	for (int i=0; i<count; i++) {
 		dest[i] = Wire.read();
 	}
-	
-	return timeout;
+
+	return true;
 }
 
 uint16_t bat::i2cWriteBytes(uint8_t subAddress, uint8_t * src, uint8_t count) {

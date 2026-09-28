@@ -102,6 +102,7 @@ private:
 	// ***********************************
 
 	uint8_t _deviceAddress;  					  // Stores the battery ic I2C address
+	uint16_t _readFailures = 0;					  // Failed battery reads in a row, for the serial log
 	/**
 	*	@brief Read the device type - should be 0x0421
 	*	@return 16-bit value read from DEVICE_TYPE subcommand
@@ -119,6 +120,12 @@ private:
 	*/
 	uint16_t readWord(uint16_t subAddress);
 	/**
+	*	@brief Read a 16-bit command word from the battery ic, reporting whether the read worked
+	*	@param subAddress is the command to be read from, value receives its contents
+	*	@return true when the battery ic answered with both bytes
+	*/
+	bool readWord(uint16_t subAddress, uint16_t& value);
+	/**
 	*	@brief Read a 16-bit subcommand() from the battery ic control()
 	*	@param function is the subcommand of control() to be read
 	*	@return 16-bit value of the subcommand's contents
@@ -134,7 +141,7 @@ private:
 	*	@param subAddress is the 8-bit address of the data to be read dest is the data buffer to be written to count is the number of bytes to be read
 	*	@return true on success
 	*/
-	uint16_t i2cReadBytes(uint8_t subAddress, uint8_t* dest, uint8_t count);
+	bool i2cReadBytes(uint8_t subAddress, uint8_t* dest, uint8_t count);
 	/**
 	*	@brief Write a specified number of bytes over I2C to a given subAddress
 	*	@param subAddress is the 8-bit address of the data to be written to src is the data buffer to be written count is the number of bytes to be written
