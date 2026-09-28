@@ -215,7 +215,8 @@ const Editor = (() => {
       '      <label class="field"><span>Reference temperature (°C)</span><input type="number" inputmode="numeric" data-ref="reference_celcius"></label>' +
       '      <label class="field"><span>Beta</span><input type="number" inputmode="numeric" data-ref="reference_beta"></label>' +
       '    </div>' +
-      '    <div class="field"><span class="field-label">Calibration offset (°C)</span><div id="editor-offset"></div></div>' +
+      '    <div class="field"><span class="field-label">Calibration offset (°C)</span><div id="editor-offset"></div>' +
+      '      <p class="hint">Saved for this socket, not for the probe. If you move the probe to another socket, set it again there.</p></div>' +
       '  </details>' +
       '</fieldset>';
     document.body.append(backdrop, sheet);
