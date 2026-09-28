@@ -102,6 +102,10 @@ components:
           enum:
             - celcius
             - fahrenheit
+        alarm_sounding:
+          type: boolean
+          example: false
+          description: True while a probe alarm is actively beeping. Mute it with POST /alarm/mute or over MQTT.
         probes:
           type: array
           minItems: 8
@@ -577,6 +581,43 @@ paths:
                 minItems: 0
                 items:
                   $ref: '#/components/schemas/Wifinetwork'
+
+  /alarm/mute:
+    post:
+      tags:
+        - grill
+      summary: Mute a sounding alarm
+      description: >
+        Mutes a currently sounding alarm, the same as pressing the grill's button. Harmless, so no
+        admin auth is needed. It can take up to about 2 seconds for `alarm_sounding` to turn false.
+      requestBody:
+        required: true
+        description: Empty body
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '415':
+          description: Content-Type was not application/json
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Content-Type should be application/json"
 
   /update:
     post:

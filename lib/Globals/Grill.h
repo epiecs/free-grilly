@@ -13,6 +13,8 @@ namespace grill {
 
     // Buzzer
     extern Buzzer buzzer;
+    // True while an alarm is actively beeping, written only by task_alarm
+    extern volatile bool alarm_sounding;
 
     // Wifi
     extern bool wifi_connected;

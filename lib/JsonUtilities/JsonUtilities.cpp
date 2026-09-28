@@ -184,6 +184,7 @@ void JsonUtilities::load_json_status(char *buffer){
     jsondoc["local_ap_ssid"]      = config::local_ap_ssid;
     jsondoc["local_ap_ip"]        = config::local_ap_ip;
     jsondoc["temperature_unit"]   = config::temperature_unit;
+    jsondoc["alarm_sounding"]     = grill::alarm_sounding;
 
     JsonArray probeData = jsondoc["probes"].to<JsonArray>();
 
