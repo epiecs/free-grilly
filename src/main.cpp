@@ -440,6 +440,20 @@ void task_alarm(void* pvParameters) {
 // * Power Button
 // ***********************************
 
+// The power button pin (GPIO35) is input-only without a pull resistor, so electrical noise can look
+// like a press or a release, and one false release ends a long press early (shutdown instead of the
+// settings page, or the other way round). A change only counts when 5 readings over 40 ms agree.
+bool read_button_down(bool current_down){
+    bool raw_down = digitalRead(gpio::power_button) == LOW;
+    if(raw_down == current_down){ return current_down; }
+
+    for(int sample = 0; sample < 4; sample++){
+        delay(10);
+        if((digitalRead(gpio::power_button) == LOW) != raw_down){ return current_down; }
+    }
+    return raw_down;
+}
+
 void task_powerbutton(void* pvParameters) {
     Serial.println("Launching task :: POWER BUTTON");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
@@ -455,6 +469,7 @@ void task_powerbutton(void* pvParameters) {
     int long_press_time    = config::press_seconds_factory_reset * 1000;
 
     bool button_pressed    = false;
+    bool button_down       = false;     // Debounced state of the button
     bool buzzed_short      = false;
     bool buzzed_medium     = false;
     bool buzzed_long       = false;
@@ -464,11 +479,13 @@ void task_powerbutton(void* pvParameters) {
     }
 
     while(true){
-        if(digitalRead(gpio::power_button) == LOW && not button_pressed) {
+        button_down = read_button_down(button_down);
+
+        if(button_down && not button_pressed) {
             // Initialize millis counter
             button_pressed = true;
             millis_button_start = millis();
-        } else if(digitalRead(gpio::power_button) == LOW){
+        } else if(button_down){
             millis_pressed = millis() - millis_button_start;
 
             // beep if the button is held long enough to indicate the action
@@ -485,7 +502,7 @@ void task_powerbutton(void* pvParameters) {
                 grill::buzzer.beep(3, 500);
             }
         }
-        else if (digitalRead(gpio::power_button) == HIGH && button_pressed)
+        else if (!button_down && button_pressed)
         {
             button_pressed    = false;
             buzzed_short      = false;
