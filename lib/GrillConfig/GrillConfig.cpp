@@ -336,7 +336,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p1_ref_kohm");
     temp = config::settings_storage.getInt("p1_ref_temp");
     beta = config::settings_storage.getInt("p1_ref_beta");
-    offset = config::settings_storage.getFloat("p1_offset");
+    offset = config::settings_storage.getFloat("p1_offset", 0.0f);
     grill::probe_1.target_temperature = config::settings_storage.getFloat("p1_target_temp");
     grill::probe_1.minimum_temperature = config::settings_storage.getFloat("p1_min_temp");
     grill::probe_1.set_type(type, kohm, temp, beta);
@@ -348,7 +348,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p2_ref_kohm");
     temp = config::settings_storage.getInt("p2_ref_temp");
     beta = config::settings_storage.getInt("p2_ref_beta");
-    offset = config::settings_storage.getFloat("p2_offset");
+    offset = config::settings_storage.getFloat("p2_offset", 0.0f);
     grill::probe_2.target_temperature = config::settings_storage.getFloat("p2_target_temp");
     grill::probe_2.minimum_temperature = config::settings_storage.getFloat("p2_min_temp");
     grill::probe_2.set_type(type, kohm, temp, beta);
@@ -360,7 +360,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p3_ref_kohm");
     temp = config::settings_storage.getInt("p3_ref_temp");
     beta = config::settings_storage.getInt("p3_ref_beta");
-    offset = config::settings_storage.getFloat("p3_offset");
+    offset = config::settings_storage.getFloat("p3_offset", 0.0f);
     grill::probe_3.target_temperature = config::settings_storage.getFloat("p3_target_temp");
     grill::probe_3.minimum_temperature = config::settings_storage.getFloat("p3_min_temp");
     grill::probe_3.set_type(type, kohm, temp, beta);
@@ -372,7 +372,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p4_ref_kohm");
     temp = config::settings_storage.getInt("p4_ref_temp");
     beta = config::settings_storage.getInt("p4_ref_beta");
-    offset = config::settings_storage.getFloat("p4_offset");
+    offset = config::settings_storage.getFloat("p4_offset", 0.0f);
     grill::probe_4.target_temperature = config::settings_storage.getFloat("p4_target_temp");
     grill::probe_4.minimum_temperature = config::settings_storage.getFloat("p4_min_temp");
     grill::probe_4.set_type(type, kohm, temp, beta);
@@ -384,7 +384,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p5_ref_kohm");
     temp = config::settings_storage.getInt("p5_ref_temp");
     beta = config::settings_storage.getInt("p5_ref_beta");
-    offset = config::settings_storage.getFloat("p5_offset");
+    offset = config::settings_storage.getFloat("p5_offset", 0.0f);
     grill::probe_5.target_temperature = config::settings_storage.getFloat("p5_target_temp");
     grill::probe_5.minimum_temperature = config::settings_storage.getFloat("p5_min_temp");
     grill::probe_5.set_type(type, kohm, temp, beta);
@@ -396,7 +396,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p6_ref_kohm");
     temp = config::settings_storage.getInt("p6_ref_temp");
     beta = config::settings_storage.getInt("p6_ref_beta");
-    offset = config::settings_storage.getFloat("p6_offset");
+    offset = config::settings_storage.getFloat("p6_offset", 0.0f);
     grill::probe_6.target_temperature = config::settings_storage.getFloat("p6_target_temp");
     grill::probe_6.minimum_temperature = config::settings_storage.getFloat("p6_min_temp");
     grill::probe_6.set_type(type, kohm, temp, beta);
@@ -408,7 +408,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p7_ref_kohm");
     temp = config::settings_storage.getInt("p7_ref_temp");
     beta = config::settings_storage.getInt("p7_ref_beta");
-    offset = config::settings_storage.getFloat("p7_offset");
+    offset = config::settings_storage.getFloat("p7_offset", 0.0f);
     grill::probe_7.target_temperature = config::settings_storage.getFloat("p7_target_temp");
     grill::probe_7.minimum_temperature = config::settings_storage.getFloat("p7_min_temp");
     grill::probe_7.set_type(type, kohm, temp, beta);
@@ -420,7 +420,7 @@ void GrillConfig::load_probes(){
     kohm = config::settings_storage.getInt("p8_ref_kohm");
     temp = config::settings_storage.getInt("p8_ref_temp");
     beta = config::settings_storage.getInt("p8_ref_beta");
-    offset = config::settings_storage.getFloat("p8_offset");
+    offset = config::settings_storage.getFloat("p8_offset", 0.0f);
     grill::probe_8.target_temperature = config::settings_storage.getFloat("p8_target_temp");
     grill::probe_8.minimum_temperature = config::settings_storage.getFloat("p8_min_temp");
     grill::probe_8.set_type(type, kohm, temp, beta);
@@ -613,7 +613,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p1_ref_kohm");
     temp   = config::settings_storage.getInt("p1_ref_temp");
     beta   = config::settings_storage.getInt("p1_ref_beta");
-    offset = config::settings_storage.getFloat("p1_offset");
+    offset = config::settings_storage.getFloat("p1_offset", 0.0f);
     Serial.printf("Probe 1 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
@@ -624,7 +624,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p2_ref_kohm");
     temp   = config::settings_storage.getInt("p2_ref_temp");
     beta   = config::settings_storage.getInt("p2_ref_beta");
-    offset = config::settings_storage.getFloat("p2_offset");
+    offset = config::settings_storage.getFloat("p2_offset", 0.0f);
     Serial.printf("Probe 2 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
@@ -635,7 +635,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p3_ref_kohm");
     temp   = config::settings_storage.getInt("p3_ref_temp");
     beta   = config::settings_storage.getInt("p3_ref_beta");
-    offset = config::settings_storage.getFloat("p3_offset");
+    offset = config::settings_storage.getFloat("p3_offset", 0.0f);
     Serial.printf("Probe 3 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
@@ -646,7 +646,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p4_ref_kohm");
     temp   = config::settings_storage.getInt("p4_ref_temp");
     beta   = config::settings_storage.getInt("p4_ref_beta");
-    offset = config::settings_storage.getFloat("p4_offset");
+    offset = config::settings_storage.getFloat("p4_offset", 0.0f);
     Serial.printf("Probe 4 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
@@ -657,7 +657,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p5_ref_kohm");
     temp   = config::settings_storage.getInt("p5_ref_temp");
     beta   = config::settings_storage.getInt("p5_ref_beta");
-    offset = config::settings_storage.getFloat("p5_offset");
+    offset = config::settings_storage.getFloat("p5_offset", 0.0f);
     Serial.printf("Probe 5 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
@@ -668,7 +668,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p6_ref_kohm");
     temp   = config::settings_storage.getInt("p6_ref_temp");
     beta   = config::settings_storage.getInt("p6_ref_beta");
-    offset = config::settings_storage.getFloat("p6_offset");
+    offset = config::settings_storage.getFloat("p6_offset", 0.0f);
     Serial.printf("Probe 6 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
@@ -679,7 +679,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p7_ref_kohm");
     temp   = config::settings_storage.getInt("p7_ref_temp");
     beta   = config::settings_storage.getInt("p7_ref_beta");
-    offset = config::settings_storage.getFloat("p7_offset");
+    offset = config::settings_storage.getFloat("p7_offset", 0.0f);
     Serial.printf("Probe 7 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
@@ -690,7 +690,7 @@ void GrillConfig::print_probes(){
     kohm   = config::settings_storage.getInt("p8_ref_kohm");
     temp   = config::settings_storage.getInt("p8_ref_temp");
     beta   = config::settings_storage.getInt("p8_ref_beta");
-    offset = config::settings_storage.getFloat("p8_offset");
+    offset = config::settings_storage.getFloat("p8_offset", 0.0f);
     Serial.printf("Probe 8 :: %s :: %f %f - %s %d %d %d - offset %f\n", name.c_str(), target, min, type.c_str(), kohm, temp, beta, offset);
     Serial.println("");
 
