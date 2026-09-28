@@ -1,6 +1,7 @@
 #include <Network.h>
 
 #include <WiFi.h>
+#include <ESPmDNS.h>
 #include <Preferences.h>
 
 #include "Config.h"
@@ -38,6 +39,34 @@ void start_local_ap()
 
     Serial.printf("Local SSID: %s \n", local_ap_ssid.c_str());
     Serial.printf("Local IP: %s \n", WiFi.softAPIP().toString().c_str());
+}
+
+void start_mdns()
+{
+    // Copied under the shared lock like the rest of this file's setup. The TXT "name" value is only
+    // read here, at boot: renaming the grill later needs a restart before mDNS picks it up.
+    String name;
+    String uuid;
+    String firmware_version;
+    {
+        SharedLock lock;
+        name             = config::grill_name;
+        uuid             = config::grill_uuid;
+        firmware_version = config::grill_firmware_version;
+    }
+
+    if (!MDNS.begin(grill::hostname)){
+        Serial.println("Failed to start mDNS responder");
+        return;
+    }
+
+    MDNS.addService("http", "tcp", 80);
+    MDNS.addService("grilly-plus", "tcp", 80);
+    MDNS.addServiceTxt("grilly-plus", "tcp", "uuid", uuid);
+    MDNS.addServiceTxt("grilly-plus", "tcp", "name", name);
+    MDNS.addServiceTxt("grilly-plus", "tcp", "fw", firmware_version);
+
+    Serial.printf("mDNS responder started: %s.local \n", grill::hostname);
 }
 
 bool connect_to_wifi()

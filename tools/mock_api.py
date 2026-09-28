@@ -53,6 +53,7 @@ def temperature(probe):
 def grill():
     return {
         "name": SETTINGS["name"], "unique_id": SETTINGS["uuid"], "firmware_version": SETTINGS["firmware_version"],
+        "hostname": "grilly-plus-%s.local" % SETTINGS["uuid"].replace("-", "")[:8],
         "battery_percentage": 82, "battery_charging": True, "wifi_connected": True, "wifi_ssid": SETTINGS["wifi_ssid"],
         "wifi_ip": "192.168.1.50", "wifi_signal": -58,
         "local_ap_ssid": SETTINGS["local_ap_ssid"], "local_ap_ip": SETTINGS["local_ap_ip"], "temperature_unit": SETTINGS["temperature_unit"],

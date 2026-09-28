@@ -3,6 +3,10 @@
 
 String generate_hostname(String prefix);
 
+// "grilly-plus-" + the first 8 hex characters of the grill uuid (dashes removed, lowercase),
+// e.g. "grilly-plus-43c62ed2". Used for both the WiFi/mDNS hostname and the /api/grill response.
+String compute_grill_hostname(String uuid);
+
 // https://forum.arduino.cc/t/how-to-print-the-leading-zeroes/446702/17
 // https://cplusplus.com/doc/oldtutorial/templates/
 // templates need to be in the header; recipe, not a cake

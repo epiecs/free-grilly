@@ -16,6 +16,15 @@ String generate_hostname(String prefix){
     return hostname;
 }
 
+String compute_grill_hostname(String uuid){
+    String hex = uuid;
+    hex.replace("-", "");
+    hex = hex.substring(0, 8);
+    hex.toLowerCase();
+
+    return "grilly-plus-" + hex;
+}
+
 // // https://raw.githubusercontent.com/nayarsystems/posix_tz_db/refs/heads/master/zones.csv
 // std::string get_timezone_code(std::string timezone)
 // {

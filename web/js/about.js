@@ -11,6 +11,9 @@
     fields.ip.textContent = status.wifi_connected && status.wifi_ip ? status.wifi_ip : "Not on WiFi";
     // The hotspot is always on, so the grill can always be reached at this address
     fields.hotspot.textContent = status.local_ap_ssid + ", " + status.local_ap_ip;
+    // Some Android browsers don't resolve .local names; the IP above still works there
+    fields.address.href = "http://" + status.hostname;
+    fields.address.textContent = "http://" + status.hostname;
     fields.uuid.textContent = status.unique_id;
   }
 
@@ -23,6 +26,7 @@
       '    <dt>Firmware</dt><dd data-about="version"></dd>' +
       '    <dt>WiFi</dt><dd data-about="wifi"></dd>' +
       '    <dt>IP address</dt><dd data-about="ip"></dd>' +
+      '    <dt>Address</dt><dd><a data-about="address" target="_blank" rel="noopener"></a></dd>' +
       '    <dt>Hotspot</dt><dd data-about="hotspot"></dd>' +
       '    <dt>UUID</dt><dd data-about="uuid"></dd>' +
       '  </dl>' +

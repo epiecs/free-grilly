@@ -23,6 +23,9 @@ namespace grill {
     extern char wifi_ip[16];
     extern int wifi_signal;
     extern bool internet_connectivity;
+    // "grilly-plus-" + first 8 hex chars of config::grill_uuid, computed once at boot (Settings.h)
+    // after load_settings and before WiFi starts. Read-only after that, so no lock is needed.
+    extern char hostname[32];
 
     extern Probe probe_1;
     extern Probe probe_2;

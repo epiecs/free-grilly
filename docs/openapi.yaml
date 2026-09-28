@@ -62,6 +62,12 @@ components:
           type: string
           example: 25.03.01
           description: The current firmware version in CalVer
+        hostname:
+          type: string
+          example: grilly-plus-43c62ed2.local
+          description: >-
+            The grill's mDNS address, reachable from apps and browsers that support .local names.
+            Built from the first 8 hex characters of unique_id and fixed for the life of the device.
         battery_percentage:
           type: integer
           example: 95
