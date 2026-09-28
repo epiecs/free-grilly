@@ -1,5 +1,30 @@
 # Changelog (firmware only)
 
+## 2026-09-28
+Tested on a real Grilleye Max. Install it from Settings > Firmware updates with the `-ota.bin` file.
+
+### New
+- Reach the grill by name: `http://grilly-plus-xxxxxxxx.local` (mDNS), on your home WiFi and on its own hotspot. The name is on the device's Info screen and the About page, and your router shows it too
+- Mute a sounding alarm from the web app (a bar on every page) or over MQTT (`<prefix>/<uuid>/config/mute`)
+- The card of the probe that triggered an alarm is highlighted, and `/api/grill` reports `alarm_sounding` and a per-probe `alarm`
+- Calibration offset per probe (-10 to +10 °C) in the probe editor, for probes that read a little high or low
+- Diagnostics on the About page: why the grill last restarted or switched off, and the battery voltage (`last_reset_reason`, `last_off_reason`, `battery_millivolts` in `/api/grill`)
+- Show/hide button on every password field
+- The About page shows the hotspot name and address as well as the WiFi address
+- Favicon and iPhone home screen icon
+- Probe cards are shown two per row on tablets and desktops, so up to 8 probes always fill whole rows
+
+### Fixes
+- A failed battery reading is detected and ignored instead of showing 65535 %, so the low battery warning works again
+- The early warning beep ("degrees before") no longer pauses probe readings for 2.4 seconds or cuts off other beeps
+- The power button is debounced, so electrical noise can't cut a long press short or fake a press
+- Data shared between the firmware's tasks (settings, probe names, IP address) is locked while it's changed, preventing rare crashes
+- More stack for the probes, alarm and battery tasks
+- After a wrong current admin password, correcting it retries the change without typing the new password again
+
+### Other
+- Every pull request is built and tested automatically (GitHub Actions)
+
 ## 2026-09-27
 First Grilly+ release, a fork of Free-Grilly 2026-04-18. Settings are kept when upgrading from Free-Grilly (same settings storage), and the first update can be installed through Free-Grilly's existing /update page.
 
