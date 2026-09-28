@@ -26,6 +26,13 @@ public:
 
     void factory_reset();
 
+    // Diagnostics
+    // Records why the device is about to go off/restart on purpose, so grill::last_off_reason can
+    // show it after the next boot. reason must be <= 15 chars (NVS key "off_reason"). Do not call
+    // this for the "woken but button not held long enough" boot path, that would overwrite the
+    // reason that is actually interesting to see.
+    void save_off_reason(const char* reason);
+
 private:
     /**
      * @brief Checks if the wifi needs to be restarted

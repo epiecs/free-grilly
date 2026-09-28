@@ -76,6 +76,37 @@ components:
           type: boolean
           example: true
           description: If the battery is charging
+        battery_millivolts:
+          type: integer
+          example: 3950
+          description: The battery cell voltage in millivolts. 0 when the fuel gauge could not be read.
+        last_reset_reason:
+          type: string
+          example: software
+          description: >-
+            Why the device last (re)started, read from esp_reset_reason() once at boot.
+          enum:
+            - power_on
+            - software
+            - panic
+            - interrupt_watchdog
+            - task_watchdog
+            - watchdog
+            - deep_sleep_wake
+            - brownout
+            - external
+            - unknown
+        last_off_reason:
+          type: string
+          example: update
+          description: >-
+            Why the device was last switched off or restarted deliberately, persisted across the
+            power-off. Empty string when unknown, for example after the very first boot.
+          enum:
+            - button
+            - factory_reset
+            - update
+            - ""
         wifi_connected:
           type: boolean
           example: true

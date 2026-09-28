@@ -64,6 +64,7 @@ See the [Features](#features) list below for the full picture, and [changelog.md
     * A local Access Point (AP) mode (`http://192.168.200.10`) for initial setup.
     * Your home WiFi network (once configured) using the device's local IP address.
 * **mDNS discovery:** the grill is also reachable at `http://grilly-plus-xxxxxxxx.local`, no IP lookup needed, both on your home WiFi and on its own hotspot. The exact address is shown on the device's Info screen and the web app's About page. Some Android versions don't resolve `.local` names in the browser; the IP address still works there.
+* **Diagnostics on the About page:** battery voltage plus why the grill last restarted or was switched off (crash, watchdog, update, button, factory reset, ...), so an unexpected power-off no longer needs guesswork.
 * **Generated hotspot password:** new and factory-reset devices get a random hotspot password, shown on the device's Info screen, instead of an open access point. Devices upgraded from an earlier version keep whatever hotspot password (or lack of one) they already had.
 * **Probe Flexibility:**
     * **Custom Probe Configuration:** Manually configure support for various NTC thermistor probes by entering their specific resistance (kΩ at reference temperature), reference temperature (°C), and Beta coefficient value.

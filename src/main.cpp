@@ -80,6 +80,25 @@ void setup() {
     esp_reset_reason_t reset_reason = esp_reset_reason();
     Serial.printf("Reset reason: %d\n", reset_reason);
 
+    // A stable short code for the About page and the api, kept in a global since esp_reset_reason()
+    // can only be read once, right after boot.
+    switch (reset_reason){
+        case ESP_RST_POWERON:    grill::last_reset_reason = "power_on";            break;
+        case ESP_RST_SW:         grill::last_reset_reason = "software";            break;
+        case ESP_RST_PANIC:      grill::last_reset_reason = "panic";               break;
+        case ESP_RST_INT_WDT:    grill::last_reset_reason = "interrupt_watchdog";  break;
+        case ESP_RST_TASK_WDT:   grill::last_reset_reason = "task_watchdog";       break;
+        case ESP_RST_WDT:        grill::last_reset_reason = "watchdog";            break;
+        case ESP_RST_DEEPSLEEP:  grill::last_reset_reason = "deep_sleep_wake";     break;
+        case ESP_RST_BROWNOUT:   grill::last_reset_reason = "brownout";            break;
+        case ESP_RST_EXT:        grill::last_reset_reason = "external";            break;
+        default:                 grill::last_reset_reason = "unknown";             break;
+    }
+
+    // Loaded once at boot and kept until the next deliberate off, so it stays available for the
+    // whole run even though it was written just before the previous off/restart.
+    strlcpy(grill::last_off_reason, config::settings_storage.getString("off_reason", "").c_str(), sizeof(grill::last_off_reason));
+
     bool require_button_press = true;
     switch (reset_reason){
         case ESP_RST_SW:
@@ -536,6 +555,7 @@ void task_powerbutton(void* pvParameters) {
             }
             else if (millis_pressed < long_press_time) {
                 Serial.println("Button pressed 3-10 seconds");
+                config::config_helper.save_off_reason("button");
                 power.shutdown();
             }
             else if (millis_pressed > long_press_time) {
