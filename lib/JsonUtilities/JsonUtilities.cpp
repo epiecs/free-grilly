@@ -48,6 +48,16 @@ class FieldReader {
             if(apply){ target = value; }
         }
 
+        void number(const char* key, float& target, float min, float max){
+            float value;
+            if(!read_number(key, value)){ return; }
+            if(value < min || value > max){
+                error = String(key) + " should be between " + String(min) + " and " + String(max);
+                return;
+            }
+            if(apply){ target = value; }
+        }
+
         void number(const char* key, int& target, long min, long max){
             float value;
             if(!read_number(key, value)){ return; }
@@ -118,6 +128,7 @@ String update_probe(Probe& probe, JsonObjectConst item, bool apply, bool null_is
     int    kohm     = probe.reference_kohm;
     int    celcius  = probe.reference_celcius;
     int    beta     = probe.reference_beta;
+    float  offset   = probe.offset_celcius;
 
     // A missing key is unbound, an explicit null is bound but null
     bool target_null   = null_is_zero && !item["target_temperature"].isUnbound()  && item["target_temperature"].isNull();
@@ -134,6 +145,7 @@ String update_probe(Probe& probe, JsonObjectConst item, bool apply, bool null_is
     fields.number("reference_kohm", kohm, 0, 100000);
     fields.number("reference_celcius", celcius, -100, 500);
     fields.number("reference_beta", beta, 0, 100000);
+    fields.number("offset_celcius", offset, -10.0, 10.0);
     if(!fields.error.isEmpty()){ return fields.error; }
 
     bool type_given = fields.present("probe_type") || fields.present("reference_kohm")
@@ -148,6 +160,7 @@ String update_probe(Probe& probe, JsonObjectConst item, bool apply, bool null_is
         if(target_given || minimum_given){ probe.set_temperature(target, minimum); }
         if(type_given){ probe.set_type(type, kohm, celcius, beta); }
         if(fields.present("name")){ probe.set_name(name); }
+        if(fields.present("offset_celcius")){ probe.set_offset(offset); }
     }
     return "";
 }
@@ -411,6 +424,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_0["reference_kohm"] = grill::probe_1.reference_kohm;
     doc_0["reference_celcius"] = grill::probe_1.reference_celcius;
     doc_0["reference_beta"] = grill::probe_1.reference_beta;
+    doc_0["offset_celcius"] = grill::probe_1.offset_celcius;
 
     JsonObject doc_1 = jsondoc.add<JsonObject>();
     doc_1["probe_id"] = 2;
@@ -423,6 +437,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_1["reference_kohm"] = grill::probe_2.reference_kohm;
     doc_1["reference_celcius"] = grill::probe_2.reference_celcius;
     doc_1["reference_beta"] = grill::probe_2.reference_beta;
+    doc_1["offset_celcius"] = grill::probe_2.offset_celcius;
 
     JsonObject doc_2 = jsondoc.add<JsonObject>();
     doc_2["probe_id"] = 3;
@@ -435,6 +450,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_2["reference_kohm"] = grill::probe_3.reference_kohm;
     doc_2["reference_celcius"] = grill::probe_3.reference_celcius;
     doc_2["reference_beta"] = grill::probe_3.reference_beta;
+    doc_2["offset_celcius"] = grill::probe_3.offset_celcius;
 
     JsonObject doc_3 = jsondoc.add<JsonObject>();
     doc_3["probe_id"] = 4;
@@ -447,6 +463,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_3["reference_kohm"] = grill::probe_4.reference_kohm;
     doc_3["reference_celcius"] = grill::probe_4.reference_celcius;
     doc_3["reference_beta"] = grill::probe_4.reference_beta;
+    doc_3["offset_celcius"] = grill::probe_4.offset_celcius;
 
     JsonObject doc_4 = jsondoc.add<JsonObject>();
     doc_4["probe_id"] = 5;
@@ -459,6 +476,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_4["reference_kohm"] = grill::probe_5.reference_kohm;
     doc_4["reference_celcius"] = grill::probe_5.reference_celcius;
     doc_4["reference_beta"] = grill::probe_5.reference_beta;
+    doc_4["offset_celcius"] = grill::probe_5.offset_celcius;
 
     JsonObject doc_5 = jsondoc.add<JsonObject>();
     doc_5["probe_id"] = 6;
@@ -471,6 +489,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_5["reference_kohm"] = grill::probe_6.reference_kohm;
     doc_5["reference_celcius"] = grill::probe_6.reference_celcius;
     doc_5["reference_beta"] = grill::probe_6.reference_beta;
+    doc_5["offset_celcius"] = grill::probe_6.offset_celcius;
 
     JsonObject doc_6 = jsondoc.add<JsonObject>();
     doc_6["probe_id"] = 7;
@@ -483,6 +502,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_6["reference_kohm"] = grill::probe_7.reference_kohm;
     doc_6["reference_celcius"] = grill::probe_7.reference_celcius;
     doc_6["reference_beta"] = grill::probe_7.reference_beta;
+    doc_6["offset_celcius"] = grill::probe_7.offset_celcius;
 
     JsonObject doc_7 = jsondoc.add<JsonObject>();
     doc_7["probe_id"] = 8;
@@ -495,6 +515,7 @@ void JsonUtilities::load_json_probes(char* buffer){
     doc_7["reference_kohm"] = grill::probe_8.reference_kohm;
     doc_7["reference_celcius"] = grill::probe_8.reference_celcius;
     doc_7["reference_beta"] = grill::probe_8.reference_beta;
+    doc_7["offset_celcius"] = grill::probe_8.offset_celcius;
 
     jsondoc.shrinkToFit();
     serializeJson(jsondoc, buffer, config::json_buffer_size);

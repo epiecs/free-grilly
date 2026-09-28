@@ -20,14 +20,18 @@ SETTINGS = {
 
 PROBES = [
     {"probe_id": 1, "name": "Brisket", "target_temperature": 95.0, "minimum_temperature": 0.0, "connected": True,
-     "probe_type": "grilleye_iris", "reference_kohm": 100, "reference_celcius": 25, "reference_beta": 4250},
+     "probe_type": "grilleye_iris", "reference_kohm": 100, "reference_celcius": 25, "reference_beta": 4250,
+     "offset_celcius": 0.0},
     {"probe_id": 2, "name": "Ribs", "target_temperature": 93.0, "minimum_temperature": 88.0, "connected": True,
-     "probe_type": "grilleye_iris", "reference_kohm": 100, "reference_celcius": 25, "reference_beta": 4250},
+     "probe_type": "grilleye_iris", "reference_kohm": 100, "reference_celcius": 25, "reference_beta": 4250,
+     "offset_celcius": 0.0},
     {"probe_id": 3, "name": "Grill", "target_temperature": 0.0, "minimum_temperature": 0.0, "connected": True,
-     "probe_type": "maverick_et733", "reference_kohm": 200, "reference_celcius": 25, "reference_beta": 4250},
+     "probe_type": "maverick_et733", "reference_kohm": 200, "reference_celcius": 25, "reference_beta": 4250,
+     "offset_celcius": 0.0},
 ] + [
     {"probe_id": n, "name": "Probe %d" % n, "target_temperature": 0.0, "minimum_temperature": 0.0, "connected": False,
-     "probe_type": "grilleye_iris", "reference_kohm": 100, "reference_celcius": 25, "reference_beta": 4250}
+     "probe_type": "grilleye_iris", "reference_kohm": 100, "reference_celcius": 25, "reference_beta": 4250,
+     "offset_celcius": 0.0}
     for n in range(4, 9)
 ]
 
@@ -39,7 +43,7 @@ def temperature(probe):
     if not probe["connected"]:
         return 0.0
     drift = (time.time() - START) / 600.0
-    return round(BASE_TEMPERATURE[probe["probe_id"]] + drift, 1)
+    return round(BASE_TEMPERATURE[probe["probe_id"]] + drift + probe.get("offset_celcius", 0.0), 1)
 
 
 def grill():
@@ -94,10 +98,17 @@ def handle(method, path, body, headers=None):
     if method == "GET" and path == "/api/probes":
         return 200, probes()
     if method == "POST" and path == "/api/probes":
-        for update in json.loads(body or b"[]"):
+        updates = json.loads(body or b"[]")
+        for update in updates:
             probe = next((p for p in PROBES if p["probe_id"] == int(update["probe_id"])), None)
             if probe is None:
                 return 400, {"error": "probe_id should be between 1 and 8"}
+            if "offset_celcius" in update and update["offset_celcius"] is not None:
+                offset = float(update["offset_celcius"])
+                if not -10.0 <= offset <= 10.0:
+                    return 400, {"error": "offset_celcius should be between -10.0 and 10.0"}
+        for update in updates:
+            probe = next((p for p in PROBES if p["probe_id"] == int(update["probe_id"])), None)
             probe.update({k: v for k, v in update.items() if k != "probe_id"})
         return 200, probes()
     if method == "GET" and path == "/api/settings":

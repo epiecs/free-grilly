@@ -10,7 +10,7 @@ const Editor = (() => {
 
   let backdrop, sheet, form, title, live, note, nameInput, modeInputs;
   let targetGroup, targetLabel, minGroup, targetStepper, minStepper;
-  let typeSelect, typeName, customBox;
+  let typeSelect, typeName, customBox, offsetStepper;
   const refInputs = {};
   let saver;
   let probeId = null;
@@ -79,6 +79,10 @@ const Editor = (() => {
     };
   }
 
+  function onOffsetChange(value) {
+    save({ offset_celcius: value });
+  }
+
   function onTypeChange() {
     const type = typeSelect.value;
     customBox.hidden = type !== "custom";
@@ -115,6 +119,9 @@ const Editor = (() => {
     Object.keys(refInputs).forEach((key) => {
       if (document.activeElement !== refInputs[key]) refInputs[key].value = probe[key];
     });
+    if (!Controls.isEditing(offsetStepper.input.parentElement.parentElement)) {
+      offsetStepper.set(probe.offset_celcius || 0);
+    }
     form.disabled = false;
   }
 
@@ -208,6 +215,7 @@ const Editor = (() => {
       '      <label class="field"><span>Reference temperature (°C)</span><input type="number" inputmode="numeric" data-ref="reference_celcius"></label>' +
       '      <label class="field"><span>Beta</span><input type="number" inputmode="numeric" data-ref="reference_beta"></label>' +
       '    </div>' +
+      '    <div class="field"><span class="field-label">Calibration offset (°C)</span><div id="editor-offset"></div></div>' +
       '  </details>' +
       '</fieldset>';
     document.body.append(backdrop, sheet);
@@ -233,6 +241,9 @@ const Editor = (() => {
     });
     minStepper = Controls.stepper(sheet.querySelector("#editor-min"), {
       min: 1, max: 299, label: "Minimum temperature", onChange: onMinChange,
+    });
+    offsetStepper = Controls.stepper(sheet.querySelector("#editor-offset"), {
+      min: -10, max: 10, step: 0.1, label: "Calibration offset", suffix: "°C", onChange: onOffsetChange,
     });
 
     saver = createSaver({

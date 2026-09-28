@@ -1,5 +1,12 @@
 // Reusable controls shared by the probe editor and the settings view.
 const Controls = (() => {
+  // Rounds a value to a multiple of step, avoiding float noise like 0.1 + 0.2 -> 0.30000000000000004.
+  function roundToStep(value, step) {
+    const decimals = (String(step).split(".")[1] || "").length;
+    const rounded = Math.round(value / step) * step;
+    return decimals ? Number(rounded.toFixed(decimals)) : rounded;
+  }
+
   // Number stepper: big - and + buttons (hold to repeat) around a number you can also type in
   function stepper(el, { min = 0, max = 100, step = 1, label, suffix = "", onChange }) {
     el.classList.add("stepper");
@@ -21,7 +28,7 @@ const Controls = (() => {
     let repeatTimer = null;
     let held = false;
 
-    const clampValue = (v) => Math.min(max, Math.max(min, Math.round(v / step) * step));
+    const clampValue = (v) => Math.min(max, Math.max(min, roundToStep(v, step)));
     function render() {
       input.value = String(value);
       suffixEl.textContent = describe(value);
@@ -129,5 +136,7 @@ const Controls = (() => {
     });
   }
 
-  return { stepper, showNote, isEditing, addPasswordToggles };
+  return { stepper, showNote, isEditing, addPasswordToggles, roundToStep };
 })();
+
+if (typeof module === "object" && module.exports) module.exports = Controls;

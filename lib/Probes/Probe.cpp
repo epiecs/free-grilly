@@ -110,6 +110,11 @@ float Probe::calculate_temperature() {
         float log_volt = log(ref_volt);
 
         temperature = (1 / (ref_kelvin + ref_beta * log_volt)) - 273.15;
+
+        // Apply the user calibration offset to a valid reading only, before fahrenheit/temperature are derived
+        if (isfinite(temperature)) {
+            temperature += Probe::offset_celcius;
+        }
     }
     bool reading_connected = isfinite(temperature);
 
@@ -226,6 +231,11 @@ void Probe::check_temperature_status(){
 void Probe::set_name(String probe_name){
     SharedLock lock;    // name is read by the screen, web, mqtt and opengrill tasks
     Probe::name = probe_name;
+}
+
+void Probe::set_offset(float offset_celcius){
+    SharedLock lock;    // offset_celcius is read by the probes task on the next reading
+    Probe::offset_celcius = offset_celcius;
 }
 
 void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){

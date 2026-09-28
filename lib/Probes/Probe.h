@@ -38,6 +38,8 @@ public:
 	int reference_celcius;								// Reference temperature in C from the datasheet
 	int reference_beta;									// Beta value from the datasheet
 
+	float offset_celcius      = 0;							// User calibration offset in Celcius, added to a valid reading
+
 	String type = "grilleye_iris";						// The probe type
 	
 	String name = "Probe";      						// The probe name
@@ -108,6 +110,13 @@ public:
 	 * @param probe_name the name
 	 */
 	void set_name(String probe_name);
+
+	/**
+	 * @brief Set the user calibration offset, added to the Celsius reading of a valid measurement
+	 *
+	 * @param offset_celcius the offset in Celcius
+	 */
+	void set_offset(float offset_celcius);
 
 	/**
 	 * @brief Sets the temperature values of the probe. Also checks the probe alarms. If the minimum temperature is not set to 0 then we are in range mode.

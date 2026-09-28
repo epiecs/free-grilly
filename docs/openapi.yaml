@@ -251,6 +251,16 @@ components:
             - null
           default: 4250
           description: The reference beta coefficient value from the spec sheet - only used with type CUSTOM
+        offset_celcius:
+          type:
+            - "number"
+            - "null"
+          format: float
+          example: 1.5
+          default: 0
+          minimum: -10.0
+          maximum: 10.0
+          description: User calibration offset in Celcius, added to a valid reading before it is converted to the settings' temperature unit.
 
 
     Wifinetwork:
