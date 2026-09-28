@@ -10,14 +10,19 @@
 #include "Grill.h"
 #include "JsonUtilities.h"
 #include "Mqtt.h"
+#include "SharedLock.h"
 
 // Set this to config::json_buffer_size, cant do this dynamically
 char mqtt_json_buffer[3000];
 
 void Mqtt::setup(String mqtt_broker, int mqtt_port){
 
-    Mqtt::client_name            = "grilly-plus-" + config::grill_uuid;
-    String topic_prefix          = config::mqtt_topic + "/" + config::grill_uuid;
+    String topic_prefix;
+    {
+        SharedLock lock;    // mqtt_topic can be changed by the web task
+        Mqtt::client_name        = "grilly-plus-" + config::grill_uuid;
+        topic_prefix             = config::mqtt_topic + "/" + config::grill_uuid;
+    }
 
     Mqtt::pub_topic_grill        = topic_prefix + "/grill" ;
     Mqtt::pub_topic_settings     = topic_prefix + "/settings";
@@ -120,10 +125,19 @@ bool Mqtt::connect_once(){
 
     Serial.println("Trying to connect to MQTT server");
 
+    // Copied under the shared lock, connecting is network I/O
+    String mqtt_user, mqtt_password, topic_prefix;
+    {
+        SharedLock lock;
+        mqtt_user     = config::mqtt_user;
+        mqtt_password = config::mqtt_password;
+        topic_prefix  = config::mqtt_topic + "/" + config::grill_uuid;
+    }
+
     bool connected;
-    if(config::mqtt_user != "" && config::mqtt_password != ""){
+    if(mqtt_user != "" && mqtt_password != ""){
         Serial.println("Trying to connect to MQTT using user/pass");
-        connected = Mqtt::connect(Mqtt::client_name.c_str(), config::mqtt_user.c_str(), config::mqtt_password.c_str());
+        connected = Mqtt::connect(Mqtt::client_name.c_str(), mqtt_user.c_str(), mqtt_password.c_str());
     } else {
         Serial.println("Trying to connect to MQTT without authentication");
         connected = Mqtt::connect(Mqtt::client_name.c_str());
@@ -134,8 +148,6 @@ bool Mqtt::connect_once(){
         Serial.println(Mqtt::state());
         return false;
     }
-
-    String topic_prefix = config::mqtt_topic + "/" + config::grill_uuid;
 
     Serial.print("MQTT Connected to server with client ");
     Serial.println(Mqtt::client_name);

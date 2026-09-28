@@ -16,7 +16,9 @@ namespace grill {
 
     // Wifi
     extern bool wifi_connected;
-    extern String wifi_ip;                  // Current ip, config::wifi_ip is the static ip setting
+    // Current ip, config::wifi_ip is the static ip setting. A fixed buffer instead of a String: it is
+    // written by the wifi event task and read by others without a lock, a String could be freed mid-read.
+    extern char wifi_ip[16];
     extern int wifi_signal;
     extern bool internet_connectivity;
 

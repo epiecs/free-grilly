@@ -172,7 +172,7 @@ namespace grill{
     // ***********************************
 
     bool wifi_connected                 = false;
-    String wifi_ip                      = "";
+    char wifi_ip[16]                    = "";
     int wifi_signal                     = -99;
     bool internet_connectivity          = false;
 

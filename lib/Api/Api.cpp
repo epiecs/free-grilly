@@ -11,6 +11,7 @@
 #include "Config.h"
 #include "Grill.h"
 #include "JsonUtilities.h"
+#include "SharedLock.h"
 #include "Web.h"
 
 // Set this to config::json_buffer_size, cant do this dynamically
@@ -38,6 +39,12 @@ void setup_api_routes()
 // fails without those headers, so a web page on another site can't change settings.
 void allow_cross_origin_read(){
     web::webserver.sendHeader("Access-Control-Allow-Origin", "*");
+}
+
+// A copy taken under the shared lock, authenticate() reads it while talking to the client
+String current_admin_password(){
+    SharedLock lock;
+    return config::admin_password;
 }
 
 bool is_json_request(){
@@ -94,8 +101,9 @@ void post_api_settings(){
 
     web::webserver.arg("plain").toCharArray(api_json_buffer, config::json_buffer_size);
     // Basic auth with user admin. No WWW-Authenticate header is sent, so browsers show no login popup.
-    bool admin_authorized = config::admin_password.isEmpty()
-                         || web::webserver.authenticate("admin", config::admin_password.c_str());
+    String admin_password = current_admin_password();
+    bool admin_authorized = admin_password.isEmpty()
+                         || web::webserver.authenticate("admin", admin_password.c_str());
     jsonResult result = config::json_handler.save_json_settings(api_json_buffer, admin_authorized);
 
     if(!result.success){
@@ -153,7 +161,8 @@ void upload_api_update(){
             reject_update(403, "Missing X-Grilly-Update header");
             return;
         }
-        if(!config::admin_password.isEmpty() && !web::webserver.authenticate("admin", config::admin_password.c_str())){
+        String admin_password = current_admin_password();
+        if(!admin_password.isEmpty() && !web::webserver.authenticate("admin", admin_password.c_str())){
             reject_update(401, "Wrong admin password");
             return;
         }

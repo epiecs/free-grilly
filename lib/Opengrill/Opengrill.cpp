@@ -10,14 +10,19 @@
 #include "Grill.h"
 #include "JsonUtilities.h"
 #include "Opengrill.h"
+#include "SharedLock.h"
 
 // Set this to config::json_buffer_size, cant do this dynamically
 char mqtt_opengrill_buffer[3000];
 
 void Opengrill::setup(String opengrill_server, int mqtt_port){
 
-    Opengrill::client_name            = "grilly-plus-opengrill-" + config::grill_uuid;
-    String topic_prefix               = config::opengrill_topic + "/" + config::grill_uuid;
+    String topic_prefix;
+    {
+        SharedLock lock;    // Same lock as every other config String read from a task
+        Opengrill::client_name        = "grilly-plus-opengrill-" + config::grill_uuid;
+        topic_prefix                  = config::opengrill_topic + "/" + config::grill_uuid;
+    }
 
     Opengrill::pub_topic_grill        = topic_prefix + "/grill" ;
     Opengrill::pub_topic_probes       = topic_prefix + "/probes";
@@ -101,10 +106,19 @@ bool Opengrill::connect_once(){
 
     Serial.println("Trying to connect to Opengrill server");
 
+    // Copied under the shared lock, connecting is network I/O
+    String opengrill_user, opengrill_password, topic_prefix;
+    {
+        SharedLock lock;
+        opengrill_user     = config::opengrill_user;
+        opengrill_password = config::opengrill_password;
+        topic_prefix       = config::opengrill_topic + "/" + config::grill_uuid;
+    }
+
     bool connected;
-    if(config::opengrill_user != "" && config::opengrill_password != ""){
+    if(opengrill_user != "" && opengrill_password != ""){
         Serial.println("Trying to connect to Opengrill using user/pass");
-        connected = Opengrill::connect(Opengrill::client_name.c_str(), config::opengrill_user.c_str(), config::opengrill_password.c_str());
+        connected = Opengrill::connect(Opengrill::client_name.c_str(), opengrill_user.c_str(), opengrill_password.c_str());
     } else {
         Serial.println("Trying to connect to Opengrill without authentication");
         connected = Opengrill::connect(Opengrill::client_name.c_str());
@@ -115,8 +129,6 @@ bool Opengrill::connect_once(){
         Serial.println(Opengrill::state());
         return false;
     }
-
-    String topic_prefix = config::opengrill_topic + "/" + config::grill_uuid;
 
     Serial.print("Opengrill Connected to server with client ");
     Serial.println(Opengrill::client_name);

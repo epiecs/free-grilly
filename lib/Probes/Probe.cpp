@@ -9,6 +9,7 @@
 #include "Probe.h"
 #include "Gpio.h"
 #include "Grill.h"
+#include "SharedLock.h"
 
 Probe::Probe(int number, int reference_kohm, int reference_celcius, int reference_beta) {
     Probe::number = number;
@@ -144,11 +145,18 @@ float Probe::calculate_temperature() {
 
     Probe::temperature = 0;
 
-    if(config::temperature_unit == "celcius"){
+    bool unit_celcius, unit_fahrenheit;
+    {
+        SharedLock lock;    // temperature_unit can be changed by the web, mqtt or opengrill task
+        unit_celcius    = config::temperature_unit == "celcius";
+        unit_fahrenheit = config::temperature_unit == "fahrenheit";
+    }
+
+    if(unit_celcius){
         Probe::temperature = Probe::celcius;
     }
-    
-    if(config::temperature_unit == "fahrenheit"){
+
+    if(unit_fahrenheit){
         Probe::temperature = Probe::fahrenheit;
     }
 
@@ -216,12 +224,13 @@ void Probe::check_temperature_status(){
 }
 
 void Probe::set_name(String probe_name){
-    
+    SharedLock lock;    // name is read by the screen, web, mqtt and opengrill tasks
     Probe::name = probe_name;
 }
 
 void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){
-    
+    SharedLock lock;    // type is read by the web, mqtt and opengrill tasks. A no-op for the global constructors.
+
     if(probe_type == "grilleye_iris"){
         Probe::reference_beta    = 4250;
         Probe::reference_celcius = 25;

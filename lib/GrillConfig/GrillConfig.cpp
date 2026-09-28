@@ -17,6 +17,7 @@
 #include "Opengrill.h"
 #include "Power.h"
 #include "Probe.h"
+#include "SharedLock.h"
 #include "Util.h"
 
 UUID uuid_generator;
@@ -99,44 +100,50 @@ void GrillConfig::load_settings(){
 void GrillConfig::save_settings(){
     Serial.println("Saving settings");
 
-    config::settings_storage.putString("grill_name", config::grill_name);
+    bool reload_wifi, reload_local_ap;
+    {
+        // Only the NVS part runs under the shared lock, the wifi/ap restart below must run without it
+        SharedLock lock;
 
-    Serial.println("check if reload is needed");
-    bool reload_wifi     = check_wifi_reload_needed();
-    bool reload_local_ap = check_local_ap_reload_needed();
+        config::settings_storage.putString("grill_name", config::grill_name);
 
-    config::settings_storage.putString("temp_unit", config::temperature_unit);
-    config::settings_storage.putBool("beep_enabled", config::beep_enabled);
-    config::settings_storage.putBool("beep_on_ready", config::beep_on_ready);
-    config::settings_storage.putBool("beep_out_targ", config::beep_outside_target);
-    config::settings_storage.putBool("cucaracha", config::cucaracha_enabled);
-    config::settings_storage.putInt("beep_volume", config::beep_volume);
-    config::settings_storage.putInt("beep_before", config::beep_degrees_before);
-    config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
-    config::settings_storage.putInt("backl_to_mins", config::backlight_timeout_minutes);
-    config::settings_storage.putInt("backl_bright", config::backlight_brightness);
+        Serial.println("check if reload is needed");
+        reload_wifi     = check_wifi_reload_needed();
+        reload_local_ap = check_local_ap_reload_needed();
 
-    config::settings_storage.putString("opengrill_srv", config::opengrill_server);
+        config::settings_storage.putString("temp_unit", config::temperature_unit);
+        config::settings_storage.putBool("beep_enabled", config::beep_enabled);
+        config::settings_storage.putBool("beep_on_ready", config::beep_on_ready);
+        config::settings_storage.putBool("beep_out_targ", config::beep_outside_target);
+        config::settings_storage.putBool("cucaracha", config::cucaracha_enabled);
+        config::settings_storage.putInt("beep_volume", config::beep_volume);
+        config::settings_storage.putInt("beep_before", config::beep_degrees_before);
+        config::settings_storage.putInt("screen_to_mins", config::screen_timeout_minutes);
+        config::settings_storage.putInt("backl_to_mins", config::backlight_timeout_minutes);
+        config::settings_storage.putInt("backl_bright", config::backlight_brightness);
 
-    config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
-    config::settings_storage.putInt("mqtt_port", config::mqtt_port);
-    config::settings_storage.putString("mqtt_topic", config::mqtt_topic);
-    config::settings_storage.putString("mqtt_user", config::mqtt_user);
-    config::settings_storage.putString("mqtt_password", config::mqtt_password);
+        config::settings_storage.putString("opengrill_srv", config::opengrill_server);
 
-    config::settings_storage.putString("wifi_ssid", config::wifi_ssid);
-    config::settings_storage.putString("wifi_password", config::wifi_password);
-    config::settings_storage.putString("wifi_ip", config::wifi_ip);
-    config::settings_storage.putString("wifi_subnet", config::wifi_subnet);
-    config::settings_storage.putString("wifi_gateway", config::wifi_gateway);
-    config::settings_storage.putString("wifi_dns", config::wifi_dns);
+        config::settings_storage.putString("mqtt_broker", config::mqtt_broker);
+        config::settings_storage.putInt("mqtt_port", config::mqtt_port);
+        config::settings_storage.putString("mqtt_topic", config::mqtt_topic);
+        config::settings_storage.putString("mqtt_user", config::mqtt_user);
+        config::settings_storage.putString("mqtt_password", config::mqtt_password);
 
-    config::settings_storage.putString("l_ap_ssid", config::local_ap_ssid);
-    config::settings_storage.putString("l_ap_password", config::local_ap_password);
-    config::settings_storage.putString("admin_pw", config::admin_password);
-    config::settings_storage.putString("l_ap_ip", config::local_ap_ip);
-    config::settings_storage.putString("l_ap_subnet", config::local_ap_subnet);
-    config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
+        config::settings_storage.putString("wifi_ssid", config::wifi_ssid);
+        config::settings_storage.putString("wifi_password", config::wifi_password);
+        config::settings_storage.putString("wifi_ip", config::wifi_ip);
+        config::settings_storage.putString("wifi_subnet", config::wifi_subnet);
+        config::settings_storage.putString("wifi_gateway", config::wifi_gateway);
+        config::settings_storage.putString("wifi_dns", config::wifi_dns);
+
+        config::settings_storage.putString("l_ap_ssid", config::local_ap_ssid);
+        config::settings_storage.putString("l_ap_password", config::local_ap_password);
+        config::settings_storage.putString("admin_pw", config::admin_password);
+        config::settings_storage.putString("l_ap_ip", config::local_ap_ip);
+        config::settings_storage.putString("l_ap_subnet", config::local_ap_subnet);
+        config::settings_storage.putString("l_ap_gateway", config::local_ap_gateway);
+    }
 
     grill::buzzer.set_volume(config::beep_volume);
     // Wake the display with the new brightness and restart the backlight/screen timeouts, otherwise
@@ -238,6 +245,7 @@ void GrillConfig::initialize_settings(){
 }
 
 void GrillConfig::print_settings(){
+    SharedLock lock;    // Prints the shared config Strings
 
     Serial.println(" ");
     Serial.println("|++++++++++ NVRAM Settings ++++++++++|");
@@ -408,70 +416,73 @@ void GrillConfig::load_probes(){
 void GrillConfig::save_probes(){
     Serial.println("Saving probes");
 
-    // We can take the base values from the object since we already supply this in the constructor
-    config::settings_storage.putString("p1_type", grill::probe_1.type);
-    config::settings_storage.putString("p1_name", grill::probe_1.name);
-    config::settings_storage.putInt("p1_ref_kohm", grill::probe_1.reference_kohm);
-    config::settings_storage.putInt("p1_ref_beta", grill::probe_1.reference_beta);
-    config::settings_storage.putInt("p1_ref_temp", grill::probe_1.reference_celcius);
-    config::settings_storage.putFloat("p1_target_temp", grill::probe_1.target_temperature);
-    config::settings_storage.putFloat("p1_min_temp", grill::probe_1.minimum_temperature);
+    {
+        SharedLock lock;    // Reads the probe names and types
+        // We can take the base values from the object since we already supply this in the constructor
+        config::settings_storage.putString("p1_type", grill::probe_1.type);
+        config::settings_storage.putString("p1_name", grill::probe_1.name);
+        config::settings_storage.putInt("p1_ref_kohm", grill::probe_1.reference_kohm);
+        config::settings_storage.putInt("p1_ref_beta", grill::probe_1.reference_beta);
+        config::settings_storage.putInt("p1_ref_temp", grill::probe_1.reference_celcius);
+        config::settings_storage.putFloat("p1_target_temp", grill::probe_1.target_temperature);
+        config::settings_storage.putFloat("p1_min_temp", grill::probe_1.minimum_temperature);
 
-    config::settings_storage.putString("p2_type", grill::probe_2.type);
-    config::settings_storage.putString("p2_name", grill::probe_2.name);
-    config::settings_storage.putInt("p2_ref_kohm", grill::probe_2.reference_kohm);
-    config::settings_storage.putInt("p2_ref_beta", grill::probe_2.reference_beta);
-    config::settings_storage.putInt("p2_ref_temp", grill::probe_2.reference_celcius);
-    config::settings_storage.putFloat("p2_target_temp", grill::probe_2.target_temperature);
-    config::settings_storage.putFloat("p2_min_temp", grill::probe_2.minimum_temperature);
+        config::settings_storage.putString("p2_type", grill::probe_2.type);
+        config::settings_storage.putString("p2_name", grill::probe_2.name);
+        config::settings_storage.putInt("p2_ref_kohm", grill::probe_2.reference_kohm);
+        config::settings_storage.putInt("p2_ref_beta", grill::probe_2.reference_beta);
+        config::settings_storage.putInt("p2_ref_temp", grill::probe_2.reference_celcius);
+        config::settings_storage.putFloat("p2_target_temp", grill::probe_2.target_temperature);
+        config::settings_storage.putFloat("p2_min_temp", grill::probe_2.minimum_temperature);
 
-    config::settings_storage.putString("p3_type", grill::probe_3.type);
-    config::settings_storage.putString("p3_name", grill::probe_3.name);
-    config::settings_storage.putInt("p3_ref_kohm", grill::probe_3.reference_kohm);
-    config::settings_storage.putInt("p3_ref_beta", grill::probe_3.reference_beta);
-    config::settings_storage.putInt("p3_ref_temp", grill::probe_3.reference_celcius);
-    config::settings_storage.putFloat("p3_target_temp", grill::probe_3.target_temperature);
-    config::settings_storage.putFloat("p3_min_temp", grill::probe_3.minimum_temperature);
+        config::settings_storage.putString("p3_type", grill::probe_3.type);
+        config::settings_storage.putString("p3_name", grill::probe_3.name);
+        config::settings_storage.putInt("p3_ref_kohm", grill::probe_3.reference_kohm);
+        config::settings_storage.putInt("p3_ref_beta", grill::probe_3.reference_beta);
+        config::settings_storage.putInt("p3_ref_temp", grill::probe_3.reference_celcius);
+        config::settings_storage.putFloat("p3_target_temp", grill::probe_3.target_temperature);
+        config::settings_storage.putFloat("p3_min_temp", grill::probe_3.minimum_temperature);
 
-    config::settings_storage.putString("p4_type", grill::probe_4.type);
-    config::settings_storage.putString("p4_name", grill::probe_4.name);
-    config::settings_storage.putInt("p4_ref_kohm", grill::probe_4.reference_kohm);
-    config::settings_storage.putInt("p4_ref_beta", grill::probe_4.reference_beta);
-    config::settings_storage.putInt("p4_ref_temp", grill::probe_4.reference_celcius);
-    config::settings_storage.putFloat("p4_target_temp", grill::probe_4.target_temperature);
-    config::settings_storage.putFloat("p4_min_temp", grill::probe_4.minimum_temperature);
+        config::settings_storage.putString("p4_type", grill::probe_4.type);
+        config::settings_storage.putString("p4_name", grill::probe_4.name);
+        config::settings_storage.putInt("p4_ref_kohm", grill::probe_4.reference_kohm);
+        config::settings_storage.putInt("p4_ref_beta", grill::probe_4.reference_beta);
+        config::settings_storage.putInt("p4_ref_temp", grill::probe_4.reference_celcius);
+        config::settings_storage.putFloat("p4_target_temp", grill::probe_4.target_temperature);
+        config::settings_storage.putFloat("p4_min_temp", grill::probe_4.minimum_temperature);
 
-    config::settings_storage.putString("p5_type", grill::probe_5.type);
-    config::settings_storage.putString("p5_name", grill::probe_5.name);
-    config::settings_storage.putInt("p5_ref_kohm", grill::probe_5.reference_kohm);
-    config::settings_storage.putInt("p5_ref_beta", grill::probe_5.reference_beta);
-    config::settings_storage.putInt("p5_ref_temp", grill::probe_5.reference_celcius);
-    config::settings_storage.putFloat("p5_target_temp", grill::probe_5.target_temperature);
-    config::settings_storage.putFloat("p5_min_temp", grill::probe_5.minimum_temperature);
+        config::settings_storage.putString("p5_type", grill::probe_5.type);
+        config::settings_storage.putString("p5_name", grill::probe_5.name);
+        config::settings_storage.putInt("p5_ref_kohm", grill::probe_5.reference_kohm);
+        config::settings_storage.putInt("p5_ref_beta", grill::probe_5.reference_beta);
+        config::settings_storage.putInt("p5_ref_temp", grill::probe_5.reference_celcius);
+        config::settings_storage.putFloat("p5_target_temp", grill::probe_5.target_temperature);
+        config::settings_storage.putFloat("p5_min_temp", grill::probe_5.minimum_temperature);
 
-    config::settings_storage.putString("p6_type", grill::probe_6.type);
-    config::settings_storage.putString("p6_name", grill::probe_6.name);
-    config::settings_storage.putInt("p6_ref_kohm", grill::probe_6.reference_kohm);
-    config::settings_storage.putInt("p6_ref_beta", grill::probe_6.reference_beta);
-    config::settings_storage.putInt("p6_ref_temp", grill::probe_6.reference_celcius);
-    config::settings_storage.putFloat("p6_target_temp", grill::probe_6.target_temperature);
-    config::settings_storage.putFloat("p6_min_temp", grill::probe_6.minimum_temperature);
+        config::settings_storage.putString("p6_type", grill::probe_6.type);
+        config::settings_storage.putString("p6_name", grill::probe_6.name);
+        config::settings_storage.putInt("p6_ref_kohm", grill::probe_6.reference_kohm);
+        config::settings_storage.putInt("p6_ref_beta", grill::probe_6.reference_beta);
+        config::settings_storage.putInt("p6_ref_temp", grill::probe_6.reference_celcius);
+        config::settings_storage.putFloat("p6_target_temp", grill::probe_6.target_temperature);
+        config::settings_storage.putFloat("p6_min_temp", grill::probe_6.minimum_temperature);
 
-    config::settings_storage.putString("p7_type", grill::probe_7.type);
-    config::settings_storage.putString("p7_name", grill::probe_7.name);
-    config::settings_storage.putInt("p7_ref_kohm", grill::probe_7.reference_kohm);
-    config::settings_storage.putInt("p7_ref_beta", grill::probe_7.reference_beta);
-    config::settings_storage.putInt("p7_ref_temp", grill::probe_7.reference_celcius);
-    config::settings_storage.putFloat("p7_target_temp", grill::probe_7.target_temperature);
-    config::settings_storage.putFloat("p7_min_temp", grill::probe_7.minimum_temperature);
+        config::settings_storage.putString("p7_type", grill::probe_7.type);
+        config::settings_storage.putString("p7_name", grill::probe_7.name);
+        config::settings_storage.putInt("p7_ref_kohm", grill::probe_7.reference_kohm);
+        config::settings_storage.putInt("p7_ref_beta", grill::probe_7.reference_beta);
+        config::settings_storage.putInt("p7_ref_temp", grill::probe_7.reference_celcius);
+        config::settings_storage.putFloat("p7_target_temp", grill::probe_7.target_temperature);
+        config::settings_storage.putFloat("p7_min_temp", grill::probe_7.minimum_temperature);
 
-    config::settings_storage.putString("p8_type", grill::probe_8.type);
-    config::settings_storage.putString("p8_name", grill::probe_8.name);
-    config::settings_storage.putInt("p8_ref_kohm", grill::probe_8.reference_kohm);
-    config::settings_storage.putInt("p8_ref_beta", grill::probe_8.reference_beta);
-    config::settings_storage.putInt("p8_ref_temp", grill::probe_8.reference_celcius);
-    config::settings_storage.putFloat("p8_target_temp", grill::probe_8.target_temperature);
-    config::settings_storage.putFloat("p8_min_temp", grill::probe_8.minimum_temperature);
+        config::settings_storage.putString("p8_type", grill::probe_8.type);
+        config::settings_storage.putString("p8_name", grill::probe_8.name);
+        config::settings_storage.putInt("p8_ref_kohm", grill::probe_8.reference_kohm);
+        config::settings_storage.putInt("p8_ref_beta", grill::probe_8.reference_beta);
+        config::settings_storage.putInt("p8_ref_temp", grill::probe_8.reference_celcius);
+        config::settings_storage.putFloat("p8_target_temp", grill::probe_8.target_temperature);
+        config::settings_storage.putFloat("p8_min_temp", grill::probe_8.minimum_temperature);
+    }
 
     // Published by the mqtt and opengrill tasks on their next loop
     config::mqtt_client.request_publish_probes();

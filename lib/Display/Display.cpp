@@ -13,6 +13,7 @@
 #include "Probe.h"
 #include "Config.h"
 #include "Power.h"
+#include "SharedLock.h"
 
 
 U8G2_ST7565_64128N_F_4W_SW_SPI screen(U8G2_R2, /* clock=*/ 18, /* data=*/ 23, /* cs=*/ 5, /* dc=*/ 17, /* reset=*/ 16); 
@@ -186,14 +187,19 @@ bool disp::display_update(void) {
         current_screen_page = 0;
     }
 
-    if(current_screen_page == 0) {draw_screen_temp();}
-    else if (current_screen_page > 0 and current_screen_page < 9) {
-        screen.setFont(u8g2_font_4x6_tr);
-        screen.drawStr(2, 6, "Details");
-        draw_screen_details(connectedProbeInfo.second[current_screen_page-1]);
+    {
+        // The pages read probe names, the temperature unit and the grill/wifi/ap Strings. Only drawing
+        // into the buffer is locked, sending it to the screen is slow.
+        SharedLock lock;
+        if(current_screen_page == 0) {draw_screen_temp();}
+        else if (current_screen_page > 0 and current_screen_page < 9) {
+            screen.setFont(u8g2_font_4x6_tr);
+            screen.drawStr(2, 6, "Details");
+            draw_screen_details(connectedProbeInfo.second[current_screen_page-1]);
+        }
+        else if (current_screen_page == 10) {draw_screen_info();}
+        else {current_screen_page = 0;}
     }
-    else if (current_screen_page == 10) {draw_screen_info();}
-    else {current_screen_page = 0;}
 
     screen.sendBuffer();
     is_display_updating = false;

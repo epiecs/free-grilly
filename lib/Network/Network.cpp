@@ -5,6 +5,7 @@
 
 #include "Config.h"
 #include "Grill.h"
+#include "SharedLock.h"
 
 constexpr int CONNECT_TIMEOUT_SECONDS = 10;
 
@@ -14,31 +15,46 @@ IPAddress resolved_ip;
 
 void start_local_ap()
 {
-    IPAddress local_ip;         local_ip.fromString(config::local_ap_ip);
-    IPAddress local_subnet;     local_subnet.fromString(config::local_ap_subnet);
-    IPAddress local_gateway;    local_gateway.fromString(config::local_ap_gateway);
+    // Copied under the shared lock, starting the ap is too slow to hold it
+    IPAddress local_ip, local_subnet, local_gateway;
+    String local_ap_ssid, local_ap_password;
+    {
+        SharedLock lock;
+        local_ip.fromString(config::local_ap_ip);
+        local_subnet.fromString(config::local_ap_subnet);
+        local_gateway.fromString(config::local_ap_gateway);
+        local_ap_ssid     = config::local_ap_ssid;
+        local_ap_password = config::local_ap_password;
+    }
 
-    const char *local_password = NULL;
     Serial.println("Starting local wifi ap");
     WiFi.softAPConfig(local_ip, local_gateway, local_subnet);
 
-    if (config::local_ap_password != ""){
-        local_password = config::local_ap_password.c_str();
-        WiFi.softAP(config::local_ap_ssid.c_str(), local_password);
+    if (local_ap_password != ""){
+        WiFi.softAP(local_ap_ssid.c_str(), local_ap_password.c_str());
     } else {
-        WiFi.softAP(config::local_ap_ssid.c_str(), emptyString);
+        WiFi.softAP(local_ap_ssid.c_str(), emptyString);
     }
 
-    Serial.printf("Local SSID: %s \n", config::local_ap_ssid.c_str());
+    Serial.printf("Local SSID: %s \n", local_ap_ssid.c_str());
     Serial.printf("Local IP: %s \n", WiFi.softAPIP().toString().c_str());
 }
 
 bool connect_to_wifi()
 {
-    IPAddress wifi_ip;      wifi_ip.fromString(config::wifi_ip);
-    IPAddress wifi_subnet;  wifi_subnet.fromString(config::wifi_subnet);
-    IPAddress wifi_gateway; wifi_gateway.fromString(config::wifi_gateway);
-    IPAddress wifi_dns;     wifi_dns.fromString(config::wifi_dns);
+    // Copied under the shared lock, connecting takes up to CONNECT_TIMEOUT_SECONDS
+    IPAddress wifi_ip, wifi_subnet, wifi_gateway, wifi_dns;
+    String wifi_ip_setting, wifi_ssid, wifi_password;
+    {
+        SharedLock lock;
+        wifi_ip.fromString(config::wifi_ip);
+        wifi_subnet.fromString(config::wifi_subnet);
+        wifi_gateway.fromString(config::wifi_gateway);
+        wifi_dns.fromString(config::wifi_dns);
+        wifi_ip_setting = config::wifi_ip;
+        wifi_ssid       = config::wifi_ssid;
+        wifi_password   = config::wifi_password;
+    }
 
     // There is only one dns setting. Use the gateway as secondary dns, and as primary when no dns
     // is set, so a static ip without dns can still resolve hostnames.
@@ -51,9 +67,9 @@ bool connect_to_wifi()
     // makes the device unreachable, so fall back to dhcp instead.
     bool static_ip_incomplete = wifi_subnet == IPAddress(0, 0, 0, 0) || wifi_gateway == IPAddress(0, 0, 0, 0);
 
-    bool use_static_ip = config::wifi_ip != "0.0.0.0" && !static_ip_incomplete;
+    bool use_static_ip = wifi_ip_setting != "0.0.0.0" && !static_ip_incomplete;
 
-    if (config::wifi_ip != "0.0.0.0" && static_ip_incomplete){
+    if (wifi_ip_setting != "0.0.0.0" && static_ip_incomplete){
         Serial.println("Static IP set without subnet or gateway, using DHCP");
     }
 
@@ -72,8 +88,8 @@ bool connect_to_wifi()
 
     Serial.println("");
 
-    Serial.printf("Connecting to wifi SSID: %s \n", config::wifi_ssid.c_str());
-    WiFi.begin(config::wifi_ssid.c_str(), config::wifi_password.c_str());
+    Serial.printf("Connecting to wifi SSID: %s \n", wifi_ssid.c_str());
+    WiFi.begin(wifi_ssid.c_str(), wifi_password.c_str());
 
     unsigned long startAttempt = millis();
     const unsigned long timeout = CONNECT_TIMEOUT_SECONDS * 1000UL;
@@ -104,7 +120,7 @@ void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     // Don't write this to config::wifi_ip, that is the static ip setting and saving it would
     // switch a dhcp setup to a static ip without subnet/gateway/dns
-    grill::wifi_ip = WiFi.localIP().toString();
+    strlcpy(grill::wifi_ip, WiFi.localIP().toString().c_str(), sizeof(grill::wifi_ip));
 
     // Check for internet connectivity
     if (WiFi.hostByName(domainName, resolved_ip)){
@@ -122,7 +138,7 @@ void event_wifi_ip_acquired(WiFiEvent_t event, WiFiEventInfo_t info)
 void event_wifi_disconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
     grill::wifi_connected        = false;
-    grill::wifi_ip               = "";
+    grill::wifi_ip[0]            = '\0';
     grill::internet_connectivity = false;
 
     Serial.println("Wifi disconnected");
