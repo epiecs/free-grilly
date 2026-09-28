@@ -67,6 +67,7 @@ See the [Features](#features) list below for the full picture, and [changelog.md
 * **Probe Flexibility:**
     * **Custom Probe Configuration:** Manually configure support for various NTC thermistor probes by entering their specific resistance (kΩ at reference temperature), reference temperature (°C), and Beta coefficient value.
     * **Pre-configured Probes:** Includes ready-to-use settings for popular probes like the Ikea Fantast.
+    * **Calibration offset:** Fine-tune a probe that reads a little high or low with a per-probe offset (-10..10 °C), applied to every reading before it's shown, alarmed on or sent out.
     * Empty probe sockets no longer flicker between connected and disconnected.
 * **Firmware updates from the web app:** install a new `-ota.bin` from the Settings view. An optional admin password can protect updates; changing or removing it requires the current one, and it can't be changed over MQTT.
 * **Local REST API:** Provides a RESTful API endpoint on the device for integration with custom scripts, home automation systems, or other applications. Passwords are never returned by the API, and cross-site pages can't change your settings or push a firmware update.
