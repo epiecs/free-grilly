@@ -2,6 +2,7 @@
 (() => {
   let version, adminInput, adminRemove, warning, note, fileInput, authField, authInput, updateButton, progress, notice;
   let saver;
+  let retryAdmin = null;   // an admin password change waiting for the right current password
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -29,6 +30,7 @@
   }
 
   function changeAdmin(password) {
+    retryAdmin = password;
     if (currentPasswordMissing((text) => Controls.showNote(note, "error", new Error(text)))) return;
     saver.change({ admin_password: password }, { immediate: true });
   }
@@ -102,6 +104,9 @@
       },
       onStatus: (state, detail) => {
         Controls.showNote(note, state, detail);
+        if (state === "saved") retryAdmin = null;
+        // Only a wrong current password is worth retrying, other errors need a new change
+        if (state === "error" && !(detail && detail.status === 401)) retryAdmin = null;
         if (state === "saved" && detail) Settings.fill(detail);
       },
     });
@@ -109,6 +114,10 @@
       if (adminInput.value !== "") changeAdmin(adminInput.value);
     });
     adminRemove.addEventListener("click", () => changeAdmin(""));
+    // Correcting the current password retries a refused change, without typing the new one again
+    authInput.addEventListener("change", () => {
+      if (retryAdmin !== null && authInput.value !== "") changeAdmin(retryAdmin);
+    });
     fileInput.addEventListener("change", () => { updateButton.disabled = !fileInput.files[0]; notice.textContent = ""; });
     updateButton.addEventListener("click", runUpdate);
     return card;
