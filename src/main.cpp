@@ -367,17 +367,19 @@ void task_alarm(void* pvParameters) {
 
     while (true){
 
-        int alarm = 0;  // Counter for easy checks to see if there is an alarm
+        int alarm = 0;          // Counter for easy checks to see if there is an alarm
+        bool warn_before = false;   // A probe is getting close to its target
 
-        //* Check for alarms
-        if(grill::probe_1.alarm){ alarm++; };
-        if(grill::probe_2.alarm){ alarm++; };
-        if(grill::probe_3.alarm){ alarm++; };
-        if(grill::probe_4.alarm){ alarm++; };
-        if(grill::probe_5.alarm){ alarm++; };
-        if(grill::probe_6.alarm){ alarm++; };
-        if(grill::probe_7.alarm){ alarm++; };
-        if(grill::probe_8.alarm){ alarm++; };
+        //* Check for alarms and early warnings
+        Probe* probes[] = {&grill::probe_1, &grill::probe_2, &grill::probe_3, &grill::probe_4,
+                           &grill::probe_5, &grill::probe_6, &grill::probe_7, &grill::probe_8};
+        for (Probe* probe : probes){
+            if(probe->alarm){ alarm++; }
+            if(probe->warn_before){
+                probe->warn_before = false;
+                warn_before = true;
+            }
+        }
 
         //* Trigger alarms if needed
         if(alarm > 0 && alarm_beep_todo == 0){
@@ -391,7 +393,13 @@ void task_alarm(void* pvParameters) {
             delay(2000);
 
             alarm_beep_todo = 0;
+            warn_before = false;
             config::alarm_mute = false;
+        }
+
+        //* Early warning, skipped while an alarm is sounding
+        if(warn_before && alarm_beep_todo == 0){
+            grill::buzzer.beep(3, 400);
         }
 
         if(alarm_beep_todo > 0){

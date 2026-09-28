@@ -54,6 +54,7 @@ public:
 	long connected_time						   = 0;		// Time since probe is connected
 	
 	bool alarm                				   = false;	// Is the probe currently in an alarm state
+	volatile bool warn_before 				   = false;	// Set by the probes task, played and cleared by the alarm task
 
 	/**
 	 * @brief Construct a new Probe object
