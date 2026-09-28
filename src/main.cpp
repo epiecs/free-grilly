@@ -529,7 +529,9 @@ void task_battery(void* pvParameters) {
     Serial.println("Launching task :: BATTERY");
     delay(5);   //Give FreeRtos a chance to properly schedule the task
 
-    battery.init();
+    if (!battery.init()) {
+        Serial.println("Battery: fuel gauge not found, battery level can't be read");
+    }
     power.startup();
 
     for (;;) {
