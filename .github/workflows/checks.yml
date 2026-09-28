@@ -1,0 +1,42 @@
+# Builds the firmware (which also builds the web app from web/) and runs the unit tests on every
+# pull request and every push to master.
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: platformio-${{ runner.os }}-${{ hashFiles('platformio.ini') }}
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build script tests
+        run: python -m unittest discover -s tools -p "test_*.py"
+
+      - name: Web app tests
+        run: node --test "web/tests/*.test.js"
+
+      # tools/build_web.py runs as a pre-build step and fails the build when the gzipped page
+      # grows beyond its size limit
+      - name: Build firmware
+        run: pio run
