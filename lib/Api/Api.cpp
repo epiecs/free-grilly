@@ -251,6 +251,7 @@ void post_api_update(){
 
     web::webserver.send(200, "application/json", "{\"success\": true}");
     Serial.println("Firmware update installed, restarting");
+    config::config_helper.save_off_reason("update");
     delay(1000);    // Let the response reach the browser
     ESP.restart();
 }

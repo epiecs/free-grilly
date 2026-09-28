@@ -105,6 +105,14 @@ bool bat::read_battery(void) {
 	_readFailures = 0;
 	grill::battery_percentage  = percentage;
 	grill::battery_charging 	= !(flagState & BAT_FLAG_CHARGE);
+
+	// Best-effort: a failed voltage read must not block the percentage/flags update above, so it
+	// gets its own check instead of joining the condition that returns false.
+	uint16_t millivolts = 0;
+	if (readWord(BAT_VOLTAGE, millivolts)) {
+		grill::battery_millivolts = millivolts;
+	}
+
 	return true;
 }
 

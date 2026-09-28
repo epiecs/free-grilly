@@ -178,6 +178,9 @@ void JsonUtilities::load_json_status(char *buffer){
     jsondoc["hostname"]           = String(grill::hostname) + ".local";
     jsondoc["battery_percentage"] = grill::battery_percentage;
     jsondoc["battery_charging"]   = grill::battery_charging;
+    jsondoc["battery_millivolts"] = grill::battery_millivolts;
+    jsondoc["last_reset_reason"]  = grill::last_reset_reason;
+    jsondoc["last_off_reason"]    = grill::last_off_reason;
     jsondoc["wifi_connected"]     = grill::wifi_connected;
     jsondoc["wifi_ssid"]          = config::wifi_ssid;
     jsondoc["wifi_ip"]            = grill::wifi_ip;

@@ -10,6 +10,8 @@ namespace grill {
     // Battery
     extern int battery_percentage;
     extern bool battery_charging;
+    // Cell voltage in millivolts, read alongside the percentage. 0 = unknown (fuel gauge read failed).
+    extern int battery_millivolts;
 
     // Buzzer
     extern Buzzer buzzer;
@@ -26,6 +28,14 @@ namespace grill {
     // "grilly-plus-" + first 8 hex chars of config::grill_uuid, computed once at boot (Settings.h)
     // after load_settings and before WiFi starts. Read-only after that, so no lock is needed.
     extern char hostname[32];
+
+    // Diagnostics
+    // Short stable code for esp_reset_reason(), set once at boot from a string literal so the
+    // pointer stays valid for the life of the program. See main.cpp setup().
+    extern const char* last_reset_reason;
+    // Reason the device was last switched off deliberately, loaded from NVS at boot and kept until
+    // the next deliberate off. "" = unknown. See GrillConfig::save_off_reason.
+    extern char last_off_reason[16];
 
     extern Probe probe_1;
     extern Probe probe_2;

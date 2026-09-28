@@ -32,6 +32,41 @@ const Format = (() => {
     return { pct, level };
   }
 
+  // "82 %, charging, 3.95 V" - millivolts is omitted when 0 (fuel gauge read failed)
+  function batteryDiagnostics(percentage, charging, millivolts) {
+    const pct = Math.round(clamp(Number(percentage) || 0, 0, 100));
+    const parts = [pct + " %"];
+    if (charging) parts.push("charging");
+    if (isNumber(millivolts) && millivolts > 0) parts.push((millivolts / 1000).toFixed(2) + " V");
+    return parts.join(", ");
+  }
+
+  const RESET_REASON_LABELS = {
+    power_on: "Power on",
+    software: "After an update or restart",
+    panic: "Crash (panic)",
+    interrupt_watchdog: "Watchdog",
+    task_watchdog: "Watchdog",
+    watchdog: "Watchdog",
+    deep_sleep_wake: "Woken with the button",
+    brownout: "Low power (brownout)",
+    external: "Reset button",
+  };
+
+  function resetReasonText(code) {
+    return RESET_REASON_LABELS[code] || "Unknown";
+  }
+
+  const OFF_REASON_LABELS = {
+    button: "With the button",
+    factory_reset: "Factory reset",
+    update: "Firmware update",
+  };
+
+  function offReasonText(code) {
+    return OFF_REASON_LABELS[code] || "Unknown";
+  }
+
   // A minimum above 0 means range mode, a target above 0 without a minimum means target mode
   function alarmMode(probe) {
     if (!(probe.target_temperature > 0)) return "off";
@@ -90,8 +125,8 @@ const Format = (() => {
     return changed;
   }
 
-  return { unitSymbol, number, temperature, signal, battery, alarmMode, probeStatus, alarmLabel,
-           duration, emptySockets, changedFields };
+  return { unitSymbol, number, temperature, signal, battery, batteryDiagnostics, resetReasonText,
+           offReasonText, alarmMode, probeStatus, alarmLabel, duration, emptySockets, changedFields };
 })();
 
 if (typeof module === "object" && module.exports) module.exports = Format;

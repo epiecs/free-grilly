@@ -712,8 +712,15 @@ void GrillConfig::factory_reset() {
     config::settings_storage.putBool("initialized", false);
     Serial.println("Nvram erased");
 
+    // Written after the erase, or it would be wiped along with everything else
+    save_off_reason("factory_reset");
+
     Serial.println("Rebooting!");
     ESP.restart();
+}
+
+void GrillConfig::save_off_reason(const char* reason){
+    config::settings_storage.putString("off_reason", reason);
 }
 
 bool GrillConfig::check_wifi_reload_needed(){

@@ -183,6 +183,14 @@ namespace grill{
 
     int battery_percentage              = 0;
     bool battery_charging               = false;
+    int battery_millivolts              = 0;
+
+    // ***********************************
+    // * Diagnostics
+    // ***********************************
+
+    const char* last_reset_reason       = "unknown";
+    char last_off_reason[16]            = "";
 
     // ***********************************
     // * Buzzer
