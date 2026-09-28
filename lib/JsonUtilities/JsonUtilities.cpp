@@ -8,6 +8,7 @@
 #include "GrillConfig.h"
 #include "JsonUtilities.h"
 #include "Probe.h"
+#include "SharedLock.h"
 
 // Every function uses its own JsonDocument. The api, mqtt and opengrill tasks call these at the same
 // time, a shared document got cleared and filled by one task while another was serializing it.
@@ -156,6 +157,7 @@ String update_probe(Probe& probe, JsonObjectConst item, bool apply, bool null_is
 void JsonUtilities::load_json_status(char *buffer){
     JsonDocument jsondoc;
     jsondoc.clear();
+    SharedLock lock;    // Copies config and probe name Strings into the document
 
     jsondoc["name"]               = config::grill_name;
     jsondoc["unique_id"]          = config::grill_uuid;
@@ -252,6 +254,7 @@ void JsonUtilities::load_json_status(char *buffer){
 // mqtt broker. Only whether a password is set is included.
 void JsonUtilities::load_json_settings(char* buffer){
     JsonDocument jsondoc;
+    SharedLock lock;    // Copies config Strings into the document
 
     jsondoc.clear();
 
@@ -308,82 +311,86 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json, bool admin_authoriz
     if(!jsondoc.is<JsonObject>()){ return {false, "Settings should be a json object"}; }
     JsonObjectConst json_data = jsondoc.as<JsonObjectConst>();
 
-    // The admin password protects firmware updates, so changing or removing it needs the current
-    // one. The whole payload is rejected before anything is stored.
-    if(!json_data["admin_password"].isNull()){
-        if(from_mqtt){ return {false, "admin_password can't be changed over MQTT"}; }
-        if(!config::admin_password.isEmpty() && !admin_authorized){
-            return {false, "The current admin password is needed to change it", true};
+    {
+        SharedLock lock;    // The store pass writes the shared config Strings
+        // The admin password protects firmware updates, so changing or removing it needs the current
+        // one. The whole payload is rejected before anything is stored.
+        if(!json_data["admin_password"].isNull()){
+            if(from_mqtt){ return {false, "admin_password can't be changed over MQTT"}; }
+            if(!config::admin_password.isEmpty() && !admin_authorized){
+                return {false, "The current admin password is needed to change it", true};
+            }
+        }
+
+        // Missing keys keep their current value. The list is run twice: first to check every value,
+        // then to store them, so a payload with one bad value changes nothing.
+        auto read_settings = [](FieldReader& fields){
+            fields.text("name",                         config::grill_name);
+
+            fields.text("temperature_unit",             config::temperature_unit);
+            fields.boolean("beep_enabled",              config::beep_enabled);
+            fields.number("beep_volume",                config::beep_volume, 0, 5);
+            fields.number("beep_degrees_before",        config::beep_degrees_before, 0, 100);
+            fields.boolean("beep_outside_target",       config::beep_outside_target);
+            fields.boolean("beep_on_ready",             config::beep_on_ready);
+            fields.boolean("cucaracha_enabled",         config::cucaracha_enabled);
+
+            fields.number("screen_timeout_minutes",     config::screen_timeout_minutes, 0, 10000);
+            fields.number("backlight_timeout_minutes",  config::backlight_timeout_minutes, 0, 10000);
+            fields.number("backlight_brightness",       config::backlight_brightness, 0, 5);
+
+            fields.text("opengrill_server",             config::opengrill_server);
+
+            fields.text("mqtt_broker",                  config::mqtt_broker);
+            fields.number("mqtt_port",                  config::mqtt_port, 1, 65535);
+            fields.text("mqtt_topic",                   config::mqtt_topic);
+            fields.text("mqtt_user",                    config::mqtt_user);
+            fields.text("mqtt_password",                config::mqtt_password);
+
+            fields.text("wifi_ssid",                    config::wifi_ssid);
+            fields.text("wifi_password",                config::wifi_password);
+            fields.text("wifi_ip",                      config::wifi_ip);
+            fields.text("wifi_subnet",                  config::wifi_subnet);
+            fields.text("wifi_gateway",                 config::wifi_gateway);
+            fields.text("wifi_dns",                     config::wifi_dns);
+
+            fields.text("local_ap_ssid",                config::local_ap_ssid);
+            fields.text("local_ap_password",            config::local_ap_password);
+            fields.text("local_ap_ip",                  config::local_ap_ip);
+            fields.text("local_ap_subnet",              config::local_ap_subnet);
+            fields.text("local_ap_gateway",             config::local_ap_gateway);
+
+            fields.text("admin_password",               config::admin_password);
+        };
+
+        FieldReader check(json_data, false);
+        read_settings(check);
+        if(!check.error.isEmpty()){ return {false, check.error}; }
+
+        if(check.present("local_ap_password")){
+            size_t length = json_data["local_ap_password"].as<String>().length();
+            if(length > 0 && length < 8){
+                return {false, "local_ap_password should be empty or at least 8 characters"};
+            }
+        }
+
+        if(check.present("temperature_unit")){
+            String unit = json_data["temperature_unit"].as<String>();
+            if(unit != "celcius" && unit != "fahrenheit"){
+                return {false, "temperature_unit should be celcius or fahrenheit"};
+            }
+        }
+
+        FieldReader store(json_data, true);
+        read_settings(store);
+
+        // Set default value for empty topics
+        if(config::mqtt_topic.length() == 0){
+            config::mqtt_topic = "grilly-plus";
         }
     }
 
-    // Missing keys keep their current value. The list is run twice: first to check every value,
-    // then to store them, so a payload with one bad value changes nothing.
-    auto read_settings = [](FieldReader& fields){
-        fields.text("name",                         config::grill_name);
-
-        fields.text("temperature_unit",             config::temperature_unit);
-        fields.boolean("beep_enabled",              config::beep_enabled);
-        fields.number("beep_volume",                config::beep_volume, 0, 5);
-        fields.number("beep_degrees_before",        config::beep_degrees_before, 0, 100);
-        fields.boolean("beep_outside_target",       config::beep_outside_target);
-        fields.boolean("beep_on_ready",             config::beep_on_ready);
-        fields.boolean("cucaracha_enabled",         config::cucaracha_enabled);
-
-        fields.number("screen_timeout_minutes",     config::screen_timeout_minutes, 0, 10000);
-        fields.number("backlight_timeout_minutes",  config::backlight_timeout_minutes, 0, 10000);
-        fields.number("backlight_brightness",       config::backlight_brightness, 0, 5);
-
-        fields.text("opengrill_server",             config::opengrill_server);
-
-        fields.text("mqtt_broker",                  config::mqtt_broker);
-        fields.number("mqtt_port",                  config::mqtt_port, 1, 65535);
-        fields.text("mqtt_topic",                   config::mqtt_topic);
-        fields.text("mqtt_user",                    config::mqtt_user);
-        fields.text("mqtt_password",                config::mqtt_password);
-
-        fields.text("wifi_ssid",                    config::wifi_ssid);
-        fields.text("wifi_password",                config::wifi_password);
-        fields.text("wifi_ip",                      config::wifi_ip);
-        fields.text("wifi_subnet",                  config::wifi_subnet);
-        fields.text("wifi_gateway",                 config::wifi_gateway);
-        fields.text("wifi_dns",                     config::wifi_dns);
-
-        fields.text("local_ap_ssid",                config::local_ap_ssid);
-        fields.text("local_ap_password",            config::local_ap_password);
-        fields.text("local_ap_ip",                  config::local_ap_ip);
-        fields.text("local_ap_subnet",              config::local_ap_subnet);
-        fields.text("local_ap_gateway",             config::local_ap_gateway);
-
-        fields.text("admin_password",               config::admin_password);
-    };
-
-    FieldReader check(json_data, false);
-    read_settings(check);
-    if(!check.error.isEmpty()){ return {false, check.error}; }
-
-    if(check.present("local_ap_password")){
-        size_t length = json_data["local_ap_password"].as<String>().length();
-        if(length > 0 && length < 8){
-            return {false, "local_ap_password should be empty or at least 8 characters"};
-        }
-    }
-
-    if(check.present("temperature_unit")){
-        String unit = json_data["temperature_unit"].as<String>();
-        if(unit != "celcius" && unit != "fahrenheit"){
-            return {false, "temperature_unit should be celcius or fahrenheit"};
-        }
-    }
-
-    FieldReader store(json_data, true);
-    read_settings(store);
-
-    // Set default value for empty topics
-    if(config::mqtt_topic.length() == 0){
-        config::mqtt_topic = "grilly-plus";
-    }
-
+    // Not under the lock, it may reconnect the wifi. It takes the lock itself for the NVS writes.
     config::config_helper.save_settings();
     return {true, "Ok"};
 }
@@ -391,6 +398,7 @@ jsonResult JsonUtilities::save_json_settings(char* raw_json, bool admin_authoriz
 void JsonUtilities::load_json_probes(char* buffer){
     JsonDocument jsondoc;
     jsondoc.clear();
+    SharedLock lock;    // Copies probe name and type Strings into the document
 
     JsonObject doc_0 = jsondoc.add<JsonObject>();
     doc_0["probe_id"] = 1;
@@ -499,16 +507,19 @@ jsonResult JsonUtilities::save_json_probes(char* raw_json){
     if(err){ return {false, "Could not deserialize json"}; }
     if(!jsondoc.is<JsonArray>()){ return {false, "Probes should be a json array"}; }
 
-    // Check every probe first so a payload with one bad entry changes nothing, then store them
-    for (int pass = 0; pass < 2; pass++){
-        bool apply = pass == 1;
+    {
+        SharedLock lock;    // update_probe reads and writes the probe name and type
+        // Check every probe first so a payload with one bad entry changes nothing, then store them
+        for (int pass = 0; pass < 2; pass++){
+            bool apply = pass == 1;
 
-        for (JsonObjectConst item : jsondoc.as<JsonArrayConst>()) {
-            Probe* probe = probe_by_id(item["probe_id"].as<int>());
-            if(probe == nullptr){ return {false, "probe_id should be between 1 and 8"}; }
+            for (JsonObjectConst item : jsondoc.as<JsonArrayConst>()) {
+                Probe* probe = probe_by_id(item["probe_id"].as<int>());
+                if(probe == nullptr){ return {false, "probe_id should be between 1 and 8"}; }
 
-            String error = update_probe(*probe, item, apply, false);
-            if(!error.isEmpty()){ return {false, "Probe " + item["probe_id"].as<String>() + ": " + error}; }
+                String error = update_probe(*probe, item, apply, false);
+                if(!error.isEmpty()){ return {false, "Probe " + item["probe_id"].as<String>() + ": " + error}; }
+            }
         }
     }
 
@@ -520,6 +531,7 @@ jsonResult JsonUtilities::save_json_probes(char* raw_json){
 void JsonUtilities::load_opengrill_grill(char *buffer){
     JsonDocument jsondoc;
     jsondoc.clear();
+    SharedLock lock;    // Copies config Strings into the document
 
     jsondoc["name"]                 = config::grill_name;
     jsondoc["battery_percentage"]   = grill::battery_percentage;
@@ -547,14 +559,18 @@ jsonResult JsonUtilities::save_opengrill_grill(char* raw_json){
     if(err){ return {false, "Could not deserialize json"}; }
     if(!jsondoc.is<JsonObject>()){ return {false, "Grill should be a json object"}; }
 
-    FieldReader check(jsondoc.as<JsonObjectConst>(), false);
-    check.text("name", config::grill_name);
-    if(!check.error.isEmpty()){ return {false, check.error}; }
-    if(!check.present("name")){ return {true, "Ok"}; }
+    {
+        SharedLock lock;    // The store pass writes config::grill_name
+        FieldReader check(jsondoc.as<JsonObjectConst>(), false);
+        check.text("name", config::grill_name);
+        if(!check.error.isEmpty()){ return {false, check.error}; }
+        if(!check.present("name")){ return {true, "Ok"}; }
 
-    FieldReader store(jsondoc.as<JsonObjectConst>(), true);
-    store.text("name", config::grill_name);
+        FieldReader store(jsondoc.as<JsonObjectConst>(), true);
+        store.text("name", config::grill_name);
+    }
 
+    // Not under the lock, see save_json_settings
     config::config_helper.save_settings();
     return {true, "Ok"};
 }
@@ -562,6 +578,7 @@ jsonResult JsonUtilities::save_opengrill_grill(char* raw_json){
 void JsonUtilities::load_opengrill_probes(char* buffer){
     JsonDocument jsondoc;
     jsondoc.clear();
+    SharedLock lock;    // Copies probe name Strings into the document
 
     JsonObject p1 = jsondoc["1"].to<JsonObject>();
     p1["name"] = grill::probe_1.name;
@@ -654,17 +671,20 @@ jsonResult JsonUtilities::save_opengrill_probes(char* raw_json){
     if(err){ return {false, "Could not deserialize json"}; }
     if(!jsondoc.is<JsonObject>()){ return {false, "Probes should be a json object"}; }
 
-    // Opengrill sends {"<probe_id>": {...}}. Check every probe first, then store them.
-    for (int pass = 0; pass < 2; pass++){
-        bool apply = pass == 1;
+    {
+        SharedLock lock;    // update_probe reads and writes the probe name and type
+        // Opengrill sends {"<probe_id>": {...}}. Check every probe first, then store them.
+        for (int pass = 0; pass < 2; pass++){
+            bool apply = pass == 1;
 
-        for (JsonPairConst item : jsondoc.as<JsonObjectConst>()) {
-            Probe* probe = probe_by_id(atoi(item.key().c_str()));
-            if(probe == nullptr){ return {false, "probe_id should be between 1 and 8"}; }
-            if(!item.value().is<JsonObjectConst>()){ return {false, "Probe " + String(item.key().c_str()) + " should be a json object"}; }
+            for (JsonPairConst item : jsondoc.as<JsonObjectConst>()) {
+                Probe* probe = probe_by_id(atoi(item.key().c_str()));
+                if(probe == nullptr){ return {false, "probe_id should be between 1 and 8"}; }
+                if(!item.value().is<JsonObjectConst>()){ return {false, "Probe " + String(item.key().c_str()) + " should be a json object"}; }
 
-            String error = update_probe(*probe, item.value().as<JsonObjectConst>(), apply, true);
-            if(!error.isEmpty()){ return {false, "Probe " + String(item.key().c_str()) + ": " + error}; }
+                String error = update_probe(*probe, item.value().as<JsonObjectConst>(), apply, true);
+                if(!error.isEmpty()){ return {false, "Probe " + String(item.key().c_str()) + ": " + error}; }
+            }
         }
     }
 

@@ -17,6 +17,7 @@
 #include "Website.h"
 #include "Web.h"
 #include "Display.h"
+#include "SharedLock.h"
 
 #include "esp_heap_caps.h"
 
@@ -44,6 +45,9 @@ void setup() {
 
     Serial.begin(115200); // Initialize serial communication at 115200 bits per second
     // delay(5000);          // Give serial monitor time to catch up
+
+    // Guards the Strings shared between tasks, must exist before the first task starts
+    create_shared_lock();
 
     // ***********************************
     // * Load nvram settings and init
@@ -231,15 +235,23 @@ void task_opengrill(void* pvParameters) {
 
     while (true){
 
-        if(first_run || opengrill_server != config::opengrill_server || opengrill_port != config::opengrill_port
-           || opengrill_user != config::opengrill_user || opengrill_password != config::opengrill_password){
+        bool settings_changed = false;
+        {
+            SharedLock lock;    // Only compare and copy under the lock, the reconnect below is network I/O
+            if(first_run || opengrill_server != config::opengrill_server || opengrill_port != config::opengrill_port
+               || opengrill_user != config::opengrill_user || opengrill_password != config::opengrill_password){
+                settings_changed = true;
+                opengrill_server = config::opengrill_server;
+                opengrill_port = config::opengrill_port;
+                opengrill_user = config::opengrill_user;
+                opengrill_password = config::opengrill_password;
+            }
+        }
+
+        if(settings_changed){
             Serial.println("(Re)loaded Opengrill Settings");
             // Settings have changed. Drop the current connection so the new settings are used.
             first_run = false;
-            opengrill_server = config::opengrill_server;
-            opengrill_port = config::opengrill_port;
-            opengrill_user = config::opengrill_user;
-            opengrill_password = config::opengrill_password;
 
             if(config::opengrill_client.connected()){
                 config::opengrill_client.disconnect();
@@ -304,17 +316,25 @@ void task_mqtt(void* pvParameters) {
 
     while (true){
 
-        if(first_run || mqtt_broker != config::mqtt_broker || mqtt_port != config::mqtt_port || mqtt_topic != config::mqtt_topic
-           || mqtt_user != config::mqtt_user || mqtt_password != config::mqtt_password){
+        bool settings_changed = false;
+        {
+            SharedLock lock;    // Only compare and copy under the lock, the reconnect below is network I/O
+            if(first_run || mqtt_broker != config::mqtt_broker || mqtt_port != config::mqtt_port || mqtt_topic != config::mqtt_topic
+               || mqtt_user != config::mqtt_user || mqtt_password != config::mqtt_password){
+                settings_changed = true;
+                mqtt_broker = config::mqtt_broker;
+                mqtt_port = config::mqtt_port;
+                mqtt_topic = config::mqtt_topic;
+                mqtt_user = config::mqtt_user;
+                mqtt_password = config::mqtt_password;
+            }
+        }
+
+        if(settings_changed){
             Serial.println("(Re)loaded MQTT Settings");
             // Settings have changed. Drop the current connection so the new broker, credentials and
             // topics are used, reconnecting also subscribes to the new config topics.
             first_run = false;
-            mqtt_broker = config::mqtt_broker;
-            mqtt_port = config::mqtt_port;
-            mqtt_topic = config::mqtt_topic;
-            mqtt_user = config::mqtt_user;
-            mqtt_password = config::mqtt_password;
 
             if(config::mqtt_client.connected()){
                 config::mqtt_client.disconnect();
