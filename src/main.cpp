@@ -430,6 +430,8 @@ void task_alarm(void* pvParameters) {
                 grill::buzzer.beep(1, config::alarm_beep_duration_ms);
         }
 
+        grill::alarm_sounding = alarm_beep_todo > 0;
+
         delay(100);
     }
 

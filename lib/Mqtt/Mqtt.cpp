@@ -31,6 +31,7 @@ void Mqtt::setup(String mqtt_broker, int mqtt_port){
 
     Mqtt::sub_topic_settings     = topic_prefix + "/config/settings";
     Mqtt::sub_topic_probes       = topic_prefix + "/config/probes";
+    Mqtt::sub_topic_mute         = topic_prefix + "/config/mute";
 
     Mqtt::server_host            = mqtt_broker;
     Mqtt::setServer(Mqtt::server_host.c_str(), mqtt_port);
@@ -96,17 +97,24 @@ void Mqtt::receive_callback(char* topic, byte* payload, unsigned int length){
 
     bool is_probes   = received_topic == Mqtt::sub_topic_probes;
     bool is_settings = received_topic == Mqtt::sub_topic_settings;
-    if(!is_probes && !is_settings){ return; }
+    bool is_mute     = received_topic == Mqtt::sub_topic_mute;
+    if(!is_probes && !is_settings && !is_mute){ return; }
 
-    jsonResult result = {false, "Message is too large"};
-    if(length < sizeof(mqtt_json_buffer)){
-        memcpy(mqtt_json_buffer, payload, length);
-        mqtt_json_buffer[length] = '\0';
+    jsonResult result = {true, ""};
+    if(is_mute){
+        // Any payload mutes, same as the grill's button
+        config::alarm_mute = true;
+    } else {
+        result = {false, "Message is too large"};
+        if(length < sizeof(mqtt_json_buffer)){
+            memcpy(mqtt_json_buffer, payload, length);
+            mqtt_json_buffer[length] = '\0';
 
-        if(is_probes){
-            result = config::json_handler.save_json_probes(mqtt_json_buffer);
-        } else {
-            result = config::json_handler.save_json_settings(mqtt_json_buffer, false, true);
+            if(is_probes){
+                result = config::json_handler.save_json_probes(mqtt_json_buffer);
+            } else {
+                result = config::json_handler.save_json_settings(mqtt_json_buffer, false, true);
+            }
         }
     }
 
@@ -156,6 +164,7 @@ bool Mqtt::connect_once(){
 
     Mqtt::subscribe(Mqtt::sub_topic_settings.c_str());
     Mqtt::subscribe(Mqtt::sub_topic_probes.c_str());
+    Mqtt::subscribe(Mqtt::sub_topic_mute.c_str());
 
     Mqtt::publish_grill();
     Mqtt::publish_probes();

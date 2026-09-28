@@ -5,6 +5,10 @@ import time
 
 START = time.time()
 
+# Mock-only: set True to make /api/grill report alarm_sounding, cleared by /api/alarm/mute.
+# POST /api/_mock/alarm sets it True, for testing the web app's mute control without real hardware.
+ALARM_SOUNDING = False
+
 SETTINGS = {
     "name": "Big Green Egg", "uuid": "43c62ed2-4dc0-41a5-8f71-16db60155739", "firmware_version": "26.09.27",
     "temperature_unit": "celcius", "beep_enabled": True, "beep_volume": 4, "beep_degrees_before": 5,
@@ -52,6 +56,7 @@ def grill():
         "battery_percentage": 82, "battery_charging": True, "wifi_connected": True, "wifi_ssid": SETTINGS["wifi_ssid"],
         "wifi_ip": "192.168.1.50", "wifi_signal": -58,
         "local_ap_ssid": SETTINGS["local_ap_ssid"], "local_ap_ip": SETTINGS["local_ap_ip"], "temperature_unit": SETTINGS["temperature_unit"],
+        "alarm_sounding": ALARM_SOUNDING,
         "probes": [
             {"probe_id": p["probe_id"], "name": p["name"], "temperature": temperature(p),
              "minimum_temperature": p["minimum_temperature"], "target_temperature": p["target_temperature"],
@@ -91,10 +96,19 @@ WIFI_SCAN = [
 
 def handle(method, path, body, headers=None):
     """Returns (status, json_body) for an /api request."""
-    global ADMIN_PASSWORD
+    global ADMIN_PASSWORD, ALARM_SOUNDING
     headers = headers or {}
     if method == "GET" and path == "/api/grill":
         return 200, grill()
+    if method == "POST" and path == "/api/alarm/mute":
+        if not (headers or {}).get("Content-Type", "").startswith("application/json"):
+            return 415, {"error": "Content-Type should be application/json"}
+        ALARM_SOUNDING = False
+        return 200, {"success": True}
+    if method == "POST" and path == "/api/_mock/alarm":
+        # Mock-only helper, not part of the real firmware API: lets the web app be tested without hardware.
+        ALARM_SOUNDING = True
+        return 200, {"success": True}
     if method == "GET" and path == "/api/probes":
         return 200, probes()
     if method == "POST" and path == "/api/probes":

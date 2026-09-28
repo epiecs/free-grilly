@@ -30,6 +30,16 @@ const App = (() => {
     }
   }
 
+  // Suppress re-showing the mute control for a bit after a successful mute: the alarm task takes
+  // up to ~2s to actually clear alarm_sounding, and we don't want it to flicker back in the meantime.
+  let muteSuppressedUntil = 0;
+
+  function renderAlarmMute(s) {
+    const wrap = document.getElementById("alarm-mute-wrap");
+    const showing = Date.now() < muteSuppressedUntil ? false : !!s.alarm_sounding;
+    wrap.hidden = !showing;
+  }
+
   function renderHeader(s) {
     document.getElementById("grill-subtitle").textContent = s.name + " · " + Format.unitSymbol(s.temperature_unit);
 
@@ -64,6 +74,7 @@ const App = (() => {
       document.body.classList.remove("offline");
       document.getElementById("offline-banner").hidden = true;
       renderHeader(status);
+      renderAlarmMute(status);
       listeners.forEach((listener) => listener(status));
     } catch (error) {
       failures += 1;
@@ -83,10 +94,34 @@ const App = (() => {
     pollTimer = setTimeout(poll, delay);
   }
 
+  function setupAlarmMute() {
+    const wrap = document.getElementById("alarm-mute-wrap");
+    const button = document.getElementById("alarm-mute-btn");
+    const text = document.getElementById("alarm-mute-text");
+    const defaultText = text.textContent;
+    let resetTimer = null;
+
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      try {
+        await Api.post("/api/alarm/mute", {});
+        muteSuppressedUntil = Date.now() + 3000;
+        wrap.hidden = true;
+      } catch (error) {
+        clearTimeout(resetTimer);
+        text.textContent = error.message || "Couldn't mute the alarm";
+        resetTimer = setTimeout(() => { text.textContent = defaultText; }, 2500);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
   function start() {
     Object.entries(views).forEach(([name, view]) => {
       if (view.mount) view.mount(document.getElementById("view-" + name));
     });
+    setupAlarmMute();
     window.addEventListener("hashchange", route);
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {

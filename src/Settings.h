@@ -188,6 +188,8 @@ namespace grill{
     // ***********************************
 
     Buzzer buzzer;
+    // True while an alarm is actively beeping, written only by task_alarm
+    volatile bool alarm_sounding        = false;
 
     // ***********************************
     // * Probes

@@ -31,6 +31,9 @@ void setup_api_routes()
     
     web::webserver.on("/api/wifiscan", HTTP_GET, get_api_wifiscan);
 
+    web::webserver.on("/api/alarm/mute", HTTP_POST, post_api_alarm_mute);
+    web::webserver.on("/api/alarm/mute", HTTP_OPTIONS, cors_api_alarm_mute);
+
     web::webserver.on("/api/update", HTTP_POST, post_api_update, upload_api_update);
 }
 
@@ -123,6 +126,21 @@ void get_api_wifiscan(){
     config::json_handler.load_json_wifiscan(api_json_buffer);
     allow_cross_origin_read();
     web::webserver.send(200, "application/json", api_json_buffer);
+    return;
+}
+
+// Muting is harmless (same effect as pressing the grill's button), so this needs no admin auth,
+// just the json content type check to keep cross-site pages from triggering it.
+void post_api_alarm_mute(){
+    if(!is_json_request()) { return; }
+
+    config::alarm_mute = true;
+    web::webserver.send(200, "application/json", "{\"success\": true}");
+}
+
+// Preflight for a cross-origin write. Answered without CORS headers, so the browser blocks it.
+void cors_api_alarm_mute(){
+    web::webserver.send(204);
     return;
 }
 
