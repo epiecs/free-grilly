@@ -224,12 +224,14 @@ namespace task{
     TaskHandle_t webserverTask;
     TaskHandle_t stackmonitorTask;
 
-    int alarmStackSize        = 1000;
-    int batteryStackSize      = 2000;
+    // Probes and alarm used about 600 of 1000 bytes with little margin for the lock and float math,
+    // battery about 1150 of 2000 with its serial logging. Heap has well over 100 KB free.
+    int alarmStackSize        = 2048;
+    int batteryStackSize      = 3072;
     int mqttStackSize         = 8000;
     int opengrillStackSize    = 8000;
     int powerbuttonStackSize  = 10000; //Needed to be able to handle factory reset
-    int probesStackSize       = 1000;
+    int probesStackSize       = 2048;
     int screenStackSize       = 3000;
     int webserverStackSize    = 8000;
     int stackmonitorStackSize = 4000;
