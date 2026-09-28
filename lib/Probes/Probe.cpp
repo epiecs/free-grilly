@@ -235,7 +235,9 @@ void Probe::set_name(String probe_name){
 
 void Probe::set_offset(float offset_celcius){
     SharedLock lock;    // offset_celcius is read by the probes task on the next reading
-    Probe::offset_celcius = offset_celcius;
+    // A NaN offset makes every reading NaN, so the probe looks unplugged. Preferences returns NaN
+    // for a missing key, which is how upgraded devices got it; a stored NaN heals on the next save.
+    Probe::offset_celcius = isfinite(offset_celcius) ? offset_celcius : 0.0f;
 }
 
 void Probe::set_type(String probe_type, int reference_kohm, int reference_celcius, int reference_beta){
