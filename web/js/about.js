@@ -8,7 +8,9 @@
     fields.wifi.textContent = status.wifi_connected
       ? "Connected to " + status.wifi_ssid
       : "Not connected to WiFi, reachable through the grill's hotspot";
-    fields.ip.textContent = status.wifi_connected && status.wifi_ip ? status.wifi_ip : "–";
+    fields.ip.textContent = status.wifi_connected && status.wifi_ip ? status.wifi_ip : "Not on WiFi";
+    // The hotspot is always on, so the grill can always be reached at this address
+    fields.hotspot.textContent = status.local_ap_ssid + ", " + status.local_ap_ip;
     fields.uuid.textContent = status.unique_id;
   }
 
@@ -21,6 +23,7 @@
       '    <dt>Firmware</dt><dd data-about="version"></dd>' +
       '    <dt>WiFi</dt><dd data-about="wifi"></dd>' +
       '    <dt>IP address</dt><dd data-about="ip"></dd>' +
+      '    <dt>Hotspot</dt><dd data-about="hotspot"></dd>' +
       '    <dt>UUID</dt><dd data-about="uuid"></dd>' +
       '  </dl>' +
       '  <p><a class="button" href="https://github.com/bardesss/grilly-plus" target="_blank" rel="noopener">Grilly+ on GitHub</a></p>' +

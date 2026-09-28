@@ -86,6 +86,14 @@ components:
           type: string
           example: 192.168.0.10
           description: The wifi ip when connected to your network
+        local_ap_ssid:
+          type: string
+          example: GrillyPlus_A1B2C3
+          description: The name of the grill's own hotspot, which is always on
+        local_ap_ip:
+          type: string
+          example: 192.168.200.10
+          description: The grill's address on its own hotspot
         temperature_unit:
           type: string
           description: The temperature_unit that is used

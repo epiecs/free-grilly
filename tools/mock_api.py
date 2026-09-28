@@ -46,7 +46,8 @@ def grill():
     return {
         "name": SETTINGS["name"], "unique_id": SETTINGS["uuid"], "firmware_version": SETTINGS["firmware_version"],
         "battery_percentage": 82, "battery_charging": True, "wifi_connected": True, "wifi_ssid": SETTINGS["wifi_ssid"],
-        "wifi_ip": "192.168.1.50", "wifi_signal": -58, "temperature_unit": SETTINGS["temperature_unit"],
+        "wifi_ip": "192.168.1.50", "wifi_signal": -58,
+        "local_ap_ssid": SETTINGS["local_ap_ssid"], "local_ap_ip": SETTINGS["local_ap_ip"], "temperature_unit": SETTINGS["temperature_unit"],
         "probes": [
             {"probe_id": p["probe_id"], "name": p["name"], "temperature": temperature(p),
              "minimum_temperature": p["minimum_temperature"], "target_temperature": p["target_temperature"],
